@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Despre Noi - JoburiPentruRomani{% endblock %}
+
+{% block content %}
+<div class="bg-white">
+    <div class="container mx-auto px-4 py-12">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
+
+            <!-- Main Content Area -->
+            <div class="lg:col-span-2">
+                <!-- About Section -->
+                <section class="mb-12">
+                    <h1 class="text-3xl font-bold text-gray-800 mb-4">Despre JoburipentruRomani</h1>
+                    <p class="text-gray-600 mb-4 leading-relaxed">
+                        Platforma JoburipentruRomani a fost creată cu scopul de a conecta angajatorii cu potențiali candidați din clasa muncitoare - operatori, constructori, șoferi, asistenți medicali și multe alte profesii tehnice și de specialitate.
+                    </p>
+                    <p class="text-gray-600 mb-4 leading-relaxed">
+                        Ne-am dat seama că majoritatea platformelor de recrutare online se concentrează pe joburi pentru profesioniști din domenii precum IT, financiar sau management, iar cerințele pentru candidați care lucrează în domenii tehnice sau operaționale sunt adesea neglijate.
+                    </p>
+                    <p class="text-gray-600 leading-relaxed">
+                        JoburipentruRomani vine să umple acest gol, oferind o platformă dedicată locurilor de muncă pentru clasa muncitoare, cu funcționalități adaptate nevoilor specifice ale acestor domenii de activitate.
+                    </p>
+                </section>
+
+                <!-- Mission Section -->
+                <section class="mb-12">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-6">Misiunea noastră</h2>
+                    <p class="text-gray-600 mb-6 leading-relaxed">
+                        Misiunea JoburipentruRomani este să faciliteze accesul la locuri de muncă de calitate pentru lucrătorii din domeniile tehnice, operaționale și de specialitate din România.
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                        <div class="bg-gray-50 p-6 rounded-lg shadow">
+                            <i class="fas fa-handshake text-4xl text-blue-600 mb-3"></i>
+                            <h3 class="font-semibold text-lg mb-2">Conectăm oamenii</h3>
+                            <p class="text-sm text-gray-600">Facilităm întâlnirea dintre candidați calificați și angajatorii care au nevoie de ei.</p>
+                        </div>
+                        <div class="bg-gray-50 p-6 rounded-lg shadow">
+                            <i class="fas fa-award text-4xl text-blue-600 mb-3"></i>
+                            <h3 class="font-semibold text-lg mb-2">Promovăm calitatea</h3>
+                            <p class="text-sm text-gray-600">Susținem joburile cu condiții de muncă bune și salarii corecte.</p>
+                        </div>
+                        <div class="bg-gray-50 p-6 rounded-lg shadow">
+                            <i class="fas fa-rocket text-4xl text-blue-600 mb-3"></i>
+                            <h3 class="font-semibold text-lg mb-2">Sprijinim dezvoltarea</h3>
+                            <p class="text-sm text-gray-600">Oferim resurse și informații pentru dezvoltarea carierei.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Team Section -->
+                <section class="mb-12">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-6">Echipa noastră</h2>
+                    <p class="text-gray-600 mb-8 leading-relaxed">
+                        Suntem o echipă de profesioniști cu experiență în recrutare, IT și marketing, dedicați creării unei platforme de joburi accesibile și eficiente.
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                        <!-- Team Member 1 -->
+                        <div class="flex flex-col items-center">
+                            <div class="w-24 h-24 rounded-full bg-blue-100 flex items-center justify-center mb-3">
+                                <i class="fas fa-user text-4xl text-blue-600"></i> {# Placeholder Icon #}
+                            </div>
+                            <h3 class="font-semibold text-lg">Andrei Popescu</h3>
+                            <p class="text-sm text-gray-500 mb-2">Fondator & CEO</p>
+                            <p class="text-xs text-gray-600">Cu peste 10 ani de experiență în industria de recrutare și resurse umane.</p>
+                        </div>
+                        <!-- Team Member 2 -->
+                        <div class="flex flex-col items-center">
+                             <div class="w-24 h-24 rounded-full bg-blue-100 flex items-center justify-center mb-3">
+                                <i class="fas fa-user text-4xl text-blue-600"></i> {# Placeholder Icon #}
+                            </div>
+                            <h3 class="font-semibold text-lg">Maria Ionescu</h3>
+                            <p class="text-sm text-gray-500 mb-2">Director Operațional</p>
+                            <p class="text-xs text-gray-600">Specialistă în procese de recrutare și managementul relațiilor cu clienții.</p>
+                        </div>
+                        <!-- Team Member 3 -->
+                        <div class="flex flex-col items-center">
+                             <div class="w-24 h-24 rounded-full bg-blue-100 flex items-center justify-center mb-3">
+                                <i class="fas fa-user text-4xl text-blue-600"></i> {# Placeholder Icon #}
+                            </div>
+                            <h3 class="font-semibold text-lg">Mihai Dumitrescu</h3>
+                            <p class="text-sm text-gray-500 mb-2">CTO & Lead Developer</p>
+                            <p class="text-xs text-gray-600">Expert în dezvoltarea platformelor web și mobile pentru recrutare.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Contact Section -->
+                <section>
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-6">Contactează-ne</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 bg-gray-50 p-8 rounded-lg shadow">
+                        <!-- Contact Info -->
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-700 mb-4">Informații de contact</h3>
+                            <ul class="space-y-3 text-sm text-gray-600">
+                                <li class="flex items-start">
+                                    <i class="fas fa-map-marker-alt w-5 mr-3 mt-1 text-blue-600"></i>
+                                    <span>Str. Exemplului nr. 123<br>București, România</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-phone-alt w-5 mr-3 text-blue-600"></i>
+                                    <span>+40 712 345 678</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-envelope w-5 mr-3 text-blue-600"></i>
+                                    <a href="mailto:contact@joburipentruromani.ro" class="hover:text-blue-700">contact@joburipentruromani.ro</a>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fas fa-clock w-5 mr-3 text-blue-600"></i>
+                                    <span>Luni-Vineri: 9:00 - 18:00</span>
+                                </li>
+                            </ul>
+                            <h4 class="text-md font-semibold text-gray-700 mt-6 mb-3">Urmărește-ne</h4>
+                            <div class="flex space-x-4">
+                                <a href="#" class="text-blue-600 hover:text-blue-800"><i class="fab fa-facebook-f fa-lg"></i></a>
+                                <a href="#" class="text-blue-600 hover:text-blue-800"><i class="fab fa-linkedin-in fa-lg"></i></a>
+                                <a href="#" class="text-blue-600 hover:text-blue-800"><i class="fab fa-instagram fa-lg"></i></a>
+                                <a href="#" class="text-blue-600 hover:text-blue-800"><i class="fab fa-twitter fa-lg"></i></a>
+                            </div>
+                        </div>
+                        <!-- Contact Form (Static) -->
+                        <div>
+                             <h3 class="text-lg font-semibold text-gray-700 mb-4">Trimite-ne un mesaj</h3>
+                             <form action="#" method="post"> {# Placeholder action #}
+                                <div class="mb-4">
+                                    <label for="name" class="block text-sm font-medium text-gray-700">Nume complet</label>
+                                    <input type="text" id="name" name="name" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                                    <input type="email" id="email" name="email" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="subject" class="block text-sm font-medium text-gray-700">Subiect</label>
+                                    <input type="text" id="subject" name="subject" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                </div>
+                                <div class="mb-4">
+                                    <label for="message" class="block text-sm font-medium text-gray-700">Mesaj</label>
+                                    <textarea id="message" name="message" rows="4" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
+                                </div>
+                                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300">
+                                    Trimite mesajul
+                                </button>
+                             </form>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Sidebar -->
+            <aside class="lg:col-span-1 space-y-8">
+                 <!-- Placeholder: Servicii pentru angajatori -->
+                 <div class="bg-gray-50 p-6 rounded-lg shadow">
+                     <h3 class="text-lg font-semibold text-gray-700 mb-3">Servicii pentru angajatori</h3>
+                     <p class="text-sm text-gray-600">Descoperiți soluțiile noastre dedicate...</p>
+                     {# Add link or more info later #}
+                 </div>
+
+                 <!-- Newsletter Signup (Static) -->
+                 <div class="bg-gray-50 p-6 rounded-lg shadow">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-3">Abonează-te la newsletter</h3>
+                    <p class="text-sm text-gray-600 mb-4">Fii la curent cu cele mai noi joburi și sfaturi pentru carieră.</p>
+                    <form action="#" method="post"> {# Placeholder action #}
+                        <div class="mb-3">
+                            <label for="newsletter-email" class="sr-only">Adresa ta de email</label>
+                            <input type="email" id="newsletter-email" name="email" placeholder="Adresa ta de email" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        </div>
+                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300">
+                            Abonează-te
+                        </button>
+                    </form>
+                 </div>
+
+                 <!-- Recent Articles (Static) -->
+                 <div class="bg-gray-50 p-6 rounded-lg shadow">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-4">Articole recente</h3>
+                    <ul class="space-y-4">
+                        <li class="border-b border-gray-200 pb-3">
+                            <a href="#" class="text-sm font-medium text-blue-600 hover:underline">Cum să te pregătești pentru un interviu în domeniul tehnic</a>
+                            <p class="text-xs text-gray-500 mt-1">15 Februarie 2023</p>
+                        </li>
+                        <li class="border-b border-gray-200 pb-3">
+                            <a href="#" class="text-sm font-medium text-blue-600 hover:underline">Top 10 cele mai căutate meserii din România în 2023</a>
+                            <p class="text-xs text-gray-500 mt-1">3 Februarie 2023</p>
+                        </li>
+                        <li>
+                            <a href="#" class="text-sm font-medium text-blue-600 hover:underline">Avantajele reconversiei profesionale în domeniul tehnic</a>
+                            <p class="text-xs text-gray-500 mt-1">28 Ianuarie 2023</p>
+                        </li>
+                    </ul>
+                 </div>
+            </aside>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

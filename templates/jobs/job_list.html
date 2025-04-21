@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Locuri de muncă - JoburiPentruRomani{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">Locuri de muncă disponibile</h1>
+
+    <!-- Search/Filter Bar Section -->
+    <div class="bg-white rounded-lg shadow-md mb-8 p-6">
+        {# Adjusted grid for better responsiveness: 1 col default, 2 cols medium, 4 cols large #}
+        <form action="{% url 'jobs:job_list' %}" method="get" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+            <div class="lg:col-span-1"> {# Keywords take 1 col on lg #}
+                <label for="keywords" class="block text-sm font-medium text-gray-700 mb-1">Ce job cauți?</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-search text-gray-400"></i>
+                    </div>
+                    <input type="text" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500" id="keywords" name="q" placeholder="Ex: șofer, constructor, IT" value="{{ request.GET.q }}">
+                </div>
+            </div>
+            <div class="md:col-span-1">
+                <label for="location" class="block text-sm font-medium text-gray-700 mb-1">Unde?</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-map-marker-alt text-gray-400"></i>
+                    </div>
+                    <input type="text" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500" id="location" name="location" placeholder="Țară, Oraș" value="{{ request.GET.location }}">
+                </div>
+            </div>
+            {# Uncommented Category Filter #}
+            <div class="lg:col-span-1"> {# Category takes 1 col on lg #}
+                <label for="category" class="block text-sm font-medium text-gray-700 mb-1">Categorie</label>
+                {# Use category.slug for filtering as per the view logic #}
+                <select id="category" name="category" class="w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <option value="">Toate</option>
+                    {% for category in categories %}
+                    <option value="{{ category.slug }}" {% if request.GET.category == category.slug %}selected{% endif %}>{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="md:col-span-2 lg:col-span-1"> {# Button spans 2 on md, 1 on lg #}
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md transition duration-300">Filtrează</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Job Listings Section -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for job in page_obj %}
+        <div class="bg-white rounded-lg shadow p-6 border border-gray-200 hover:border-indigo-300 transition duration-300">
+            <div class="flex justify-between items-start mb-2">
+                <h3 class="text-lg font-semibold text-gray-900 hover:text-indigo-600">
+                    <a href="{% url 'jobs:job_detail' job.pk %}">{{ job.title }}</a>
+                </h3>
+                {# Optional: Add company logo #}
+                {# {% if job.company.logo %} <img src="{{ job.company.logo.url }}" alt="{{ job.company.name }}" class="h-10 w-10 rounded-full object-cover"> {% endif %} #}
+            </div>
+            <p class="text-sm text-gray-600 mb-1">{{ job.company_name }}</p>
+            <p class="text-sm text-gray-500 mb-3">
+                <i class="fas fa-map-marker-alt mr-1"></i> {{ job.location }}
+            </p>
+            <p class="text-sm text-gray-700 mb-4 line-clamp-3">{{ job.short_description|default:"Nicio descriere disponibilă." }}</p>
+            <div class="flex justify-between items-center text-xs text-gray-500">
+                <span>{{ job.job_type|capfirst }}</span>
+                <span>Publicat: {{ job.date_posted|date:"d M Y" }}</span>
+            </div>
+        </div>
+        {% empty %}
+        <p class="md:col-span-2 lg:col-span-3 text-center text-gray-500 py-10">Nu s-au găsit joburi care să corespundă criteriilor tale.</p>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+    <div class="mt-8 flex justify-center">
+        <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+            {% if page_obj.has_previous %}
+            <a href="?page=1{{ request.GET.urlencode|cut:'page=' }}" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                <span class="sr-only">Prima</span>
+                <i class="fas fa-angle-double-left h-5 w-5"></i>
+            </a>
+            <a href="?page={{ page_obj.previous_page_number }}{{ request.GET.urlencode|cut:'page=' }}" class="relative inline-flex items-center px-2 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                <span class="sr-only">Precedenta</span>
+                <i class="fas fa-angle-left h-5 w-5"></i>
+            </a>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <span aria-current="page" class="relative inline-flex items-center px-4 py-2 border border-indigo-500 bg-indigo-50 text-sm font-medium text-indigo-600 z-10">
+                        {{ num }}
+                    </span>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <a href="?page={{ num }}{{ request.GET.urlencode|cut:'page=' }}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                        {{ num }}
+                    </a>
+                {% elif num == page_obj.number|add:'-3' or num == page_obj.number|add:'3' %}
+                     <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
+                        ...
+                    </span>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{{ request.GET.urlencode|cut:'page=' }}" class="relative inline-flex items-center px-2 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                <span class="sr-only">Următoarea</span>
+                <i class="fas fa-angle-right h-5 w-5"></i>
+            </a>
+            <a href="?page={{ page_obj.paginator.num_pages }}{{ request.GET.urlencode|cut:'page=' }}" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                <span class="sr-only">Ultima</span>
+                <i class="fas fa-angle-double-right h-5 w-5"></i>
+            </a>
+            {% endif %}
+        </nav>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

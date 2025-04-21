@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Planuri de Abonament - JoburiPentruRomani{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <div class="text-center mb-12">
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Planuri de Abonament</h1>
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto">Alegeți planul potrivit pentru nevoile companiei dumneavoastră. Toate planurile includ acces la instrumentele de recrutare și dashboard-ul angajatorului.</p>
+    </div>
+
+    {% if messages %}
+        <div class="mb-6 max-w-4xl mx-auto">
+            {% for message in messages %}
+                <div class="p-4 rounded {% if message.tags == 'success' %} bg-green-100 border border-green-400 text-green-700 {% elif message.tags == 'error' %} bg-red-100 border border-red-400 text-red-700 {% else %} bg-blue-100 border border-blue-400 text-blue-700 {% endif %}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {# Using a grid that allows items to span columns for flexibility if needed later, but aiming for 3 columns on large screens #}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto items-stretch">
+        {% for plan in plans %}
+        <div class="relative border rounded-lg shadow-lg flex flex-col {% if plan.is_featured %}border-blue-500 border-2{% else %}border-gray-200{% endif %}">
+
+            {% if plan.is_featured %}
+            <span class="absolute top-0 right-0 bg-yellow-400 text-gray-800 text-xs font-bold px-3 py-1 rounded-bl-lg rounded-tr-lg">Popular</span>
+            {% endif %}
+
+            <div class="p-6 {% if plan.is_featured %}bg-blue-50{% else %}bg-gray-50{% endif %} rounded-t-lg">
+                <h2 class="text-2xl font-semibold text-center text-gray-800 mb-4">{{ plan.name }}</h2>
+                <p class="text-4xl font-bold text-center text-gray-900 mb-1">
+                    {{ plan.price|floatformat:0 }}{{ plan.currency }}<span class="text-lg font-normal text-gray-500">/lună</span>
+                </p>
+            </div>
+
+            <ul class="p-6 space-y-3 text-sm text-gray-700 flex-grow">
+                {# Max Active Jobs #}
+                <li class="flex items-center">
+                    {% if plan.max_active_jobs > 0 %}
+                        <i class="fas fa-check text-green-500 w-5 mr-2"></i>
+                        {% if plan.max_active_jobs >= 9999 %} {# Check for 'unlimited' #}
+                            Anunțuri nelimitate
+                        {% else %}
+                            {{ plan.max_active_jobs }} anunț{% if plan.max_active_jobs > 1 %}uri{% endif %} active
+                        {% endif %}
+                    {% else %}
+                         <i class="fas fa-times text-red-500 w-5 mr-2"></i>
+                         <span class="text-gray-500">Fără anunțuri active</span>
+                    {% endif %}
+                </li>
+                 {# Visibility Days #}
+                <li class="flex items-center">
+                    {% if plan.visibility_days > 0 %}
+                        <i class="fas fa-check text-green-500 w-5 mr-2"></i>
+                        {{ plan.visibility_days }} zile vizibilitate
+                    {% else %}
+                         <i class="fas fa-times text-red-500 w-5 mr-2"></i>
+                         <span class="text-gray-500">Vizibilitate limitată</span> {# Or adjust text #}
+                    {% endif %}
+                </li>
+                 {# Company Dashboard #}
+                <li class="flex items-center">
+                    {% if plan.has_company_dashboard %}
+                        <i class="fas fa-check text-green-500 w-5 mr-2"></i>
+                        Dashboard angajator
+                    {% else %}
+                         <i class="fas fa-times text-red-500 w-5 mr-2"></i>
+                         <span class="text-gray-500">Fără dashboard angajator</span>
+                    {% endif %}
+                </li>
+                 {# CV Access #}
+                <li class="flex items-center">
+                    {% if plan.has_cv_access %}
+                        <i class="fas fa-check text-green-500 w-5 mr-2"></i>
+                        Acces la CV-uri candidați
+                    {% else %}
+                         <i class="fas fa-times text-red-500 w-5 mr-2"></i>
+                         <span class="text-gray-500">Fără acces la CV-uri</span>
+                    {% endif %}
+                </li>
+                 {# Promoted Jobs Limit #}
+                 <li class="flex items-center">
+                    {% if plan.promoted_jobs_limit > 0 %}
+                        <i class="fas fa-check text-green-500 w-5 mr-2"></i>
+                        {{ plan.promoted_jobs_limit }} anunț{% if plan.promoted_jobs_limit > 1 %}uri{% endif %} promovate
+                    {% else %}
+                         <i class="fas fa-times text-red-500 w-5 mr-2"></i>
+                         <span class="text-gray-500">Fără anunțuri promovate</span>
+                    {% endif %}
+                </li>
+                 {# Priority Support #}
+                <li class="flex items-center">
+                    {% if plan.has_priority_support %}
+                        <i class="fas fa-check text-green-500 w-5 mr-2"></i>
+                        Suport prioritar
+                    {% else %}
+                         <i class="fas fa-times text-red-500 w-5 mr-2"></i>
+                         <span class="text-gray-500">Fără suport prioritar</span>
+                    {% endif %}
+                </li>
+                 {# Add other features similarly #}
+
+            </ul>
+
+            <div class="p-6 mt-auto">
+                 {# Link Free plan to company signup, others remain placeholders #}
+                 {% if plan.price == 0 %}
+                     <a href="{% url 'accounts:company_signup' %}" class="block w-full bg-white hover:bg-gray-100 text-indigo-600 border border-indigo-600 font-bold py-2 px-4 rounded text-center transition duration-300">
+                         Înregistrează-te acum
+                     </a>
+                 {% else %}
+                     <a href="#" class="block w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded text-center transition duration-300">
+                         Alege acest plan
+                     </a>
+                 {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-gray-600 md:col-span-2 lg:col-span-3 text-center py-10">Momentan nu sunt disponibile planuri de abonament.</p>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}

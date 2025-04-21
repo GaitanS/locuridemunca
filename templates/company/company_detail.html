@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ company.name }} - Detalii Companie - JoburiPentruRomani{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Company Header -->
+    <div class="bg-white rounded-lg shadow border border-gray-200 mb-8 overflow-hidden">
+        <div class="md:flex">
+            <!-- Company Logo -->
+            <div class="md:flex-shrink-0 p-4 md:p-6 flex justify-center md:justify-start">
+                {# Placeholder for company logo #}
+                <div class="h-24 w-24 md:h-32 md:w-32 rounded-lg bg-gray-200 flex items-center justify-center">
+                    <i class="fas fa-building text-gray-500 text-4xl"></i>
+                </div>
+            </div>
+            <!-- Company Info -->
+            <div class="p-6 flex-grow">
+                <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">{{ company.name|default:"Nume Companie" }}</h1>
+                {% if company.website %}
+                    <a href="{{ company.website }}" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:underline text-sm mb-3 block">
+                        <i class="fas fa-link mr-1"></i> Website Oficial
+                    </a>
+                {% endif %}
+                <p class="text-sm text-gray-600 mb-1"><i class="fas fa-map-marker-alt mr-1 text-gray-400"></i> {{ company.location|default:"Locație nedisponibilă" }}</p>
+                <p class="text-sm text-gray-600"><i class="fas fa-industry mr-1 text-gray-400"></i> {{ company.industry|default:"Industrie nedisponibilă" }}</p>
+                {# Optional: Add social media links or other quick info #}
+            </div>
+        </div>
+    </div>
+
+    <div class="flex flex-wrap -mx-4">
+        <!-- Main Content Column -->
+        <div class="w-full lg:w-2/3 px-4 mb-8 lg:mb-0">
+            <!-- About Company Section -->
+            <div class="bg-white rounded-lg shadow border border-gray-200 p-6 mb-8">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Despre Companie</h2>
+                <div class="prose max-w-none text-gray-700">
+                    {{ company.description|linebreaksbr|default:"Descrierea companiei nu este disponibilă." }}
+                </div>
+            </div>
+
+            <!-- Jobs Offered Section -->
+            <div class="bg-white rounded-lg shadow border border-gray-200 p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Joburi Oferite de {{ company.name|default:"Companie" }}</h2>
+                <div class="space-y-4">
+                    {# Loop through jobs offered by this company later #}
+                    {% for i in '123'|make_list %}
+                    <div class="border border-gray-200 rounded-md p-4 hover:border-indigo-300 transition duration-300">
+                        <h3 class="text-md font-semibold text-gray-900 hover:text-indigo-600">
+                            <a href="#">Titlu Job {{ i }}</a> {# Link to job_detail later #}
+                        </h3>
+                        <p class="text-sm text-gray-500 mb-2">
+                            <i class="fas fa-map-marker-alt mr-1"></i> Locație Job {{ i }}
+                        </p>
+                        <div class="flex justify-between items-center text-xs text-gray-500">
+                            <span>Tip Job</span>
+                            <span>Publicat: Data</span>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-gray-500">Această companie nu are momentan joburi publicate pe platformă.</p>
+                    {% endfor %}
+                </div>
+                {# Optional: Link to see all jobs from this company #}
+                <div class="mt-4 text-center">
+                    <a href="#" class="text-indigo-600 hover:underline text-sm font-medium">Vezi toate joburile companiei <i class="fas fa-arrow-right text-xs ml-1"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar Column (Quick Info/Map) -->
+        <div class="w-full lg:w-1/3 px-4">
+            <div class="bg-white rounded-lg shadow border border-gray-200 p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Informații Rapide</h3>
+                <ul class="space-y-2 text-sm text-gray-700">
+                    <li><strong>Industrie:</strong> {{ company.industry|default:"N/A" }}</li>
+                    <li><strong>Locație Sediu:</strong> {{ company.location|default:"N/A" }}</li>
+                    <li><strong>Mărime Companie:</strong> {{ company.size|default:"N/A" }}</li> {# Add company size field later #}
+                    <li><strong>An Înființare:</strong> {{ company.founded_year|default:"N/A" }}</li> {# Add founded year field later #}
+                </ul>
+                {# Placeholder for Map #}
+                <div class="mt-6 h-48 bg-gray-200 rounded flex items-center justify-center text-gray-500">
+                    Hartă locație (placeholder)
+                </div>
+            </div>
+        </div>
+    </div>
+
+     <div class="mt-8">
+        <a href="{% url 'company_list' %}" class="text-indigo-600 hover:underline"><i class="fas fa-arrow-left mr-1"></i> Înapoi la lista de companii</a> {# Update url name if needed #}
+    </div>
+
+</div>
+{% endblock %}

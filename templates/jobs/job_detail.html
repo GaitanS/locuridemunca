@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ job.title }} - JoburiPentruRomani{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="flex flex-wrap -mx-4">
+        <!-- Main Job Details Column -->
+        <div class="w-full lg:w-2/3 px-4 mb-8 lg:mb-0">
+            <div class="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
+                <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                    <h1 class="text-2xl font-semibold text-gray-800">{{ job.title }}</h1>
+                    {# Add Bookmark/Save button later #}
+                    {# <button class="text-gray-500 hover:text-indigo-600"><i class="far fa-bookmark text-xl"></i></button> #}
+                </div>
+                <div class="p-6">
+                    <div class="flex items-center mb-4">
+                        {# Add Company Logo Later #}
+                        {# <img src="..." alt="{{ job.company.companyprofile.company_name }} Logo" class="h-16 w-16 rounded-full mr-4 object-cover"> #}
+                        <div>
+                            <h2 class="text-lg font-semibold text-gray-900">{{ job.company_name }}</h2>
+                            {% if job.company_website %}
+                                <a href="{{ job.company_website }}" target="_blank" class="text-sm text-indigo-600 hover:underline"><i class="fas fa-link mr-1"></i> Website companie</a>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4 text-sm text-gray-600">
+                        <div><i class="fas fa-map-marker-alt mr-1 text-gray-400"></i> {{ job.location }}</div>
+                        <div><i class="fas fa-briefcase mr-1 text-gray-400"></i> {{ job.job_type|capfirst }}</div>
+                        <div><i class="fas fa-tags mr-1 text-gray-400"></i> {{ job.category.name|default:"N/A" }}</div>
+                    </div>
+
+                    {% if job.salary_min and job.salary_max %}
+                        <p class="text-xl font-bold text-indigo-600 mb-4"><i class="fas fa-coins mr-1"></i> {{ job.salary_min|floatformat:0 }} - {{ job.salary_max|floatformat:0 }} {{ job.salary_currency }}/lună</p>
+                    {% elif job.salary_min %}
+                        <p class="text-xl font-bold text-indigo-600 mb-4"><i class="fas fa-coins mr-1"></i> De la {{ job.salary_min|floatformat:0 }} {{ job.salary_currency }}/lună</p>
+                    {% endif %}
+
+                    <hr class="my-4">
+
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3">Descrierea jobului</h3>
+                    <div class="prose max-w-none text-gray-700">
+                        {{ job.description|linebreaksbr }}
+                    </div>
+
+                    <hr class="my-6">
+
+                    {# Add application instructions/link later #}
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <a href="#" class="w-full sm:w-auto inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300">
+                            Aplică acum <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                        {# <a href="#" class="w-full sm:w-auto inline-flex justify-center items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300">Contactează compania</a> #}
+                    </div>
+
+                </div>
+                <div class="bg-gray-50 px-6 py-3 border-t border-gray-200 text-sm text-gray-500">
+                    Publicat: {{ job.date_posted|date:"d M Y" }} ({{ job.date_posted|timesince }} în urmă)
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar Column (Company Info / Related Jobs) -->
+        <div class="w-full lg:w-1/3 px-4">
+            <div class="bg-white rounded-lg shadow border border-gray-200 mb-6 overflow-hidden">
+                <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-800">Despre companie</h3>
+                </div>
+                <div class="p-6">
+                    {# Add Company Logo Later #}
+                    {# <img src="..." alt="{{ job.company.companyprofile.company_name }} Logo" class="w-full h-auto rounded mb-4"> #}
+                    <h4 class="font-semibold text-gray-900 mb-1">{{ job.company_name }}</h4>
+                    {% if job.company_location %}
+                        <p class="text-sm text-gray-500 mb-3"><i class="fas fa-map-marker-alt mr-1"></i> {{ job.company_location }}</p>
+                    {% endif %}
+                    <p class="text-sm text-gray-600 mb-4">{{ job.company_description|truncatewords:30|linebreaksbr|default:"Informații despre companie nu sunt disponibile." }}</p>
+                    {# Add link to company profile page later #}
+                    <a href="#" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition duration-300">
+                        Vezi profilul companiei
+                    </a>
+                </div>
+            </div>
+
+            {# Placeholder for Related Jobs #}
+            <div class="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
+                <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-800">Joburi similare</h3>
+                </div>
+                <div class="divide-y divide-gray-200">
+                    {# Loop through related jobs later #}
+                    <a href="#" class="block px-6 py-4 hover:bg-gray-50 transition duration-150">
+                        <div class="flex justify-between items-center mb-1">
+                            <h5 class="text-sm font-semibold text-gray-900 truncate">Titlu Job Similar 1</h5>
+                            <span class="text-xs text-gray-500">3 zile</span>
+                        </div>
+                        <p class="text-xs text-gray-600">Nume Companie - Locație</p>
+                    </a>
+                    <a href="#" class="block px-6 py-4 hover:bg-gray-50 transition duration-150">
+                        <div class="flex justify-between items-center mb-1">
+                            <h5 class="text-sm font-semibold text-gray-900 truncate">Titlu Job Similar 2</h5>
+                            <span class="text-xs text-gray-500">5 zile</span>
+                        </div>
+                        <p class="text-xs text-gray-600">Altă Companie - Altă Locație</p>
+                    </a>
+                    {# ... #}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-8">
+        <a href="{% url 'jobs:job_list' %}" class="text-indigo-600 hover:underline"><i class="fas fa-arrow-left mr-1"></i> Înapoi la lista de joburi</a>
+    </div>
+</div>
+{% endblock %}

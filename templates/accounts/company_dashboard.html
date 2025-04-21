@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Company Dashboard - JoburiPentruRomani{% endblock %}
+
+{% block content %}
+  <h2>Company Dashboard</h2>
+  <p>Welcome, {{ user.username }}!</p>
+
+  <h3>Company Profile</h3>
+  <p><strong>Company Name:</strong> {{ profile.company_name }}</p>
+  <p><strong>Website:</strong> {{ profile.website|default:"Not set" }}</p>
+  <p><strong>Location:</strong> {{ profile.location|default:"Not set" }}</p>
+  <p><strong>Description:</strong> {{ profile.description|default:"Not set"|linebreaksbr }}</p>
+  <p><strong>Logo:</strong> {% if profile.logo %}<img src="{{ profile.logo.url }}" alt="{{ profile.company_name }} Logo" style="max-height: 50px;">{% else %}Not uploaded{% endif %}</p>
+  {# Add link to edit profile later #}
+  <a href="#">Edit Profile</a>
+
+  <hr>
+
+  <h3>Subscription Plan</h3>
+  <p><strong>Current Plan:</strong> {{ profile.plan.name|default:"N/A" }}</p>
+  {# Add link to manage plan later #}
+  <a href="#">Manage Plan</a>
+
+  <hr>
+
+  <h3>Posted Jobs</h3>
+  {# List posted jobs later #}
+  <p>You haven't posted any jobs yet.</p>
+  {# Add link to post a new job later #}
+  <a href="#">Post a New Job</a>
+
+  <hr>
+
+  <h3>Received Applications</h3>
+  {# List received applications later #}
+  <p>No applications received yet.</p>
+
+{% endblock %}

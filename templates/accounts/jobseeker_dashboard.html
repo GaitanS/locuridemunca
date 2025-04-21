@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Job Seeker Dashboard - JoburiPentruRomani{% endblock %}
+
+{% block content %}
+  <h2>Job Seeker Dashboard</h2>
+  <p>Welcome, {{ user.username }}!</p>
+
+  <h3>Your Profile</h3>
+  <p><strong>Name:</strong> {{ profile.full_name|default:"Not set" }}</p>
+  <p><strong>Location:</strong> {{ profile.location|default:"Not set" }}</p>
+  <p><strong>Phone:</strong> {{ profile.phone_number|default:"Not set" }}</p>
+  <p><strong>CV:</strong> {% if profile.cv %}<a href="{{ profile.cv.url }}" target="_blank">View CV</a>{% else %}Not uploaded{% endif %}</p>
+  <p><strong>Bio:</strong> {{ profile.bio|default:"Not set"|linebreaksbr }}</p>
+  {# Add link to edit profile later #}
+  <a href="#">Edit Profile</a>
+
+  <hr>
+
+  <h3>Your Applications</h3>
+  {# List applications later #}
+  <p>You haven't applied to any jobs yet.</p>
+
+  <hr>
+
+  <h3>Saved Jobs</h3>
+  {# List saved jobs later #}
+  <p>You haven't saved any jobs yet.</p>
+
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Autentificare - JoburiPentruRomani{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto mt-10 bg-white p-8 rounded-lg shadow-md border border-gray-200">
+  <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Autentificare</h2>
+
+  {% if form.errors %}
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+      <strong class="font-bold">Eroare!</strong>
+      <span class="block sm:inline">Numele de utilizator sau parola incorectă. Vă rugăm să încercați din nou.</span>
+    </div>
+  {% endif %}
+
+  {% if next %}
+    {% if user.is_authenticated %}
+      <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative mb-4" role="alert">
+        <strong class="font-bold">Acces restricționat!</strong>
+        <span class="block sm:inline">Contul dvs. nu are acces la această pagină. Vă rugăm să vă autentificați cu un cont care are acces.</span>
+      </div>
+    {% else %}
+       <div class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative mb-4" role="alert">
+        <strong class="font-bold">Autentificare necesară!</strong>
+        <span class="block sm:inline">Vă rugăm să vă autentificați pentru a vedea această pagină.</span>
+      </div>
+    {% endif %}
+  {% endif %}
+
+  <form method="post" action="{% url 'accounts:login' %}">
+    {% csrf_token %}
+
+    <div class="mb-4">
+      <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium text-gray-700">Nume utilizator</label>
+      <input type="text" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}" required
+             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+    </div>
+
+    <div class="mb-6">
+      <label for="{{ form.password.id_for_label }}" class="block text-sm font-medium text-gray-700">Parolă</label>
+      <input type="password" name="{{ form.password.name }}" id="{{ form.password.id_for_label }}" required
+             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+    </div>
+
+    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition duration-300">
+      Autentificare
+    </button>
+    <input type="hidden" name="next" value="{{ next }}">
+  </form>
+
+  <div class="mt-4 text-center">
+    <a href="{% url 'accounts:password_reset' %}" class="text-sm text-indigo-600 hover:underline">Ai uitat parola?</a>
+  </div>
+  <div class="mt-2 text-center">
+    <a href="{% url 'accounts:signup' %}" class="text-sm text-indigo-600 hover:underline">Nu ai cont? Înregistrează-te</a>
+  </div>
+</div>
+{% endblock %}
