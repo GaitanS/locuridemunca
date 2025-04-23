@@ -1,30 +1,126 @@
 {% extends 'base.html' %}
 
-{% block title %}Job Seeker Dashboard - JoburiPentruRomani{% endblock %}
+{% block title %}Dashboard Candidat - {{ user.username }} - JoburiPentruRomani{% endblock %}
 
 {% block content %}
-  <h2>Job Seeker Dashboard</h2>
-  <p>Welcome, {{ user.username }}!</p>
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-gray-800 mb-8">Dashboard Candidat</h1>
 
-  <h3>Your Profile</h3>
-  <p><strong>Name:</strong> {{ profile.full_name|default:"Not set" }}</p>
-  <p><strong>Location:</strong> {{ profile.location|default:"Not set" }}</p>
-  <p><strong>Phone:</strong> {{ profile.phone_number|default:"Not set" }}</p>
-  <p><strong>CV:</strong> {% if profile.cv %}<a href="{{ profile.cv.url }}" target="_blank">View CV</a>{% else %}Not uploaded{% endif %}</p>
-  <p><strong>Bio:</strong> {{ profile.bio|default:"Not set"|linebreaksbr }}</p>
-  {# Add link to edit profile later #}
-  <a href="#">Edit Profile</a>
+    {# Display Messages #}
+    {% if messages %}
+        <div class="mb-6">
+            {% for message in messages %}
+                <div class="p-4 rounded {% if message.tags == 'success' %} bg-green-100 border border-green-400 text-green-700 {% elif message.tags == 'error' %} bg-red-100 border border-red-400 text-red-700 {% else %} bg-blue-100 border border-blue-400 text-blue-700 {% endif %}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
 
-  <hr>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-  <h3>Your Applications</h3>
-  {# List applications later #}
-  <p>You haven't applied to any jobs yet.</p>
+        <!-- Profile Summary Card -->
+        <div class="md:col-span-1 bg-white rounded-lg shadow border border-gray-200 p-6">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4 border-b pb-2">Profilul Meu</h2>
+            {% if profile %}
+                <div class="space-y-3 mb-4">
+                    <div>
+                        <p class="text-sm text-gray-500">Nume</p>
+                        <p class="font-medium text-gray-800">{{ user.get_full_name|default:"Nespecificat" }}</p>
+                    </div>
+                     <div>
+                        <p class="text-sm text-gray-500">Email</p>
+                        <p class="font-medium text-gray-800">{{ user.email }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Oraș de reședință</p>
+                        <p class="font-medium text-gray-800">{{ profile.city_of_residence|default:"<span class='text-gray-400 italic'>Nespecificat</span>" }}</p>
+                    </div>
+                     <div>
+                        <p class="text-sm text-gray-500">Data nașterii</p>
+                        <p class="font-medium text-gray-800">{{ profile.date_of_birth|date:"d M Y"|default:"<span class='text-gray-400 italic'>Nespecificat</span>" }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">CV</p>
+                        <p class="font-medium text-gray-800">
+                            {% if profile.cv %}
+                                <a href="{{ profile.cv.url }}" target="_blank" class="text-indigo-600 hover:underline">Vezi CV</a>
+                                {# Add upload/change link later #}
+                            {% else %}
+                                <span class="text-gray-400 italic">Neîncărcat</span>
+                                {# Add upload link later #}
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                <a href="{% url 'accounts:jobseeker_profile_edit' %}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+                    Editează Profilul
+                </a> {# Link to jobseeker_profile_edit URL #}
+            {% else %}
+                 <p class="text-gray-500 italic">Profilul nu a fost completat.</p>
+                 <a href="#" class="mt-4 inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+                    Completează Profilul
+                 </a> {# Placeholder link for profile edit/create #}
+            {% endif %}
+        </div>
 
-  <hr>
+        <!-- Applications & Saved Jobs Cards -->
+        <div class="md:col-span-2 space-y-6">
+            <div class="bg-white rounded-lg shadow border border-gray-200 p-6">
+                <h2 class="text-xl font-semibold text-gray-700 mb-4 border-b pb-2">Aplicațiile Mele ({{ applications_count }})</h2>
+                {% if applications %}
+                    <ul class="divide-y divide-gray-200">
+                        {% for app in applications|slice:":5" %} {# Show latest 5 applications #}
+                            <li class="py-3">
+                                <div class="flex justify-between items-center">
+                                    <a href="{% url 'jobs:job_detail' app.job.pk %}" class="text-sm font-medium text-indigo-600 hover:underline truncate">{{ app.job.title }}</a>
+                                    <span class="text-xs text-gray-500 ml-2 whitespace-nowrap">{{ app.applied_at|timesince }} în urmă</span>
+                                </div>
+                                <p class="text-xs text-gray-500">{{ app.job.company.companyprofile.company_name|default:app.job.company.username }} - {{ app.job.city }}</p>
+                                <p class="text-xs mt-1">Status: <span class="font-medium">{{ app.get_status_display }}</span></p>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    {% if applications_count > 5 %}
+                         <a href="#" class="text-indigo-600 hover:underline mt-3 text-sm inline-block">Vezi toate aplicațiile</a> {# Placeholder for full list view #}
+                    {% endif %}
+                {% else %}
+                    <p class="text-gray-500 italic">Nu ați aplicat la niciun job încă.</p>
+                {% endif %}
+                 <a href="{% url 'jobs:job_list' %}" class="mt-4 inline-flex items-center px-4 py-2 bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-300 focus:outline-none focus:border-gray-400 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
+                    Caută Joburi
+                 </a>
+            </div>
 
-  <h3>Saved Jobs</h3>
-  {# List saved jobs later #}
-  <p>You haven't saved any jobs yet.</p>
+            <div class="bg-white rounded-lg shadow border border-gray-200 p-6">
+                <h2 class="text-xl font-semibold text-gray-700 mb-4 border-b pb-2">Joburi Salvate ({{ saved_jobs_count }})</h2>
+                 {% if saved_jobs_list %}
+                    <ul class="divide-y divide-gray-200">
+                        {% for job in saved_jobs_list|slice:":5" %} {# Show latest 5 saved jobs #}
+                             <li class="py-3">
+                                <div class="flex justify-between items-center">
+                                    <a href="{% url 'jobs:job_detail' job.pk %}" class="text-sm font-medium text-indigo-600 hover:underline truncate">{{ job.title }}</a>
+                                    {# Unsave button #}
+                                    <form action="{% url 'jobs:job_unsave' job.pk %}" method="post" class="inline ml-2">
+                                        {% csrf_token %}
+                                        <button type="submit" class="text-red-500 hover:text-red-700" title="Anulează salvarea">
+                                            <i class="fas fa-trash-alt text-xs"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                                <p class="text-xs text-gray-500">{{ job.company.companyprofile.company_name|default:job.company.username }} - {{ job.city }}</p>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                     {% if saved_jobs_count > 5 %}
+                         <a href="#" class="text-indigo-600 hover:underline mt-3 text-sm inline-block">Vezi toate joburile salvate</a> {# Placeholder for full list view #}
+                    {% endif %}
+                {% else %}
+                    <p class="text-gray-500 italic">Nu aveți niciun job salvat.</p>
+                {% endif %}
+            </div>
+        </div>
 
+    </div>
+</div>
 {% endblock %}

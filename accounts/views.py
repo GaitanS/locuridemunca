@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, TemplateView, View
-from .forms import JobSeekerSignUpForm, CompanySignUpForm, CompanyProfileForm # Import CompanyProfileForm
+from .forms import JobSeekerSignUpForm, CompanySignUpForm, CompanyProfileForm, JobSeekerProfileForm # Import JobSeekerProfileForm
 from .models import User, JobSeekerProfile, CompanyProfile # Import profile models
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_str
@@ -9,8 +9,8 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from .tokens import account_activation_token
 from django.core.mail import EmailMessage
-from jobs.models import Job # Import Job model
-from django.contrib import messages # For displaying messages
+from jobs.models import Job, Application # Import Job and Application models
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin # Import UserPassesTestMixin
@@ -31,6 +31,7 @@ class JobSeekerSignUpView(CreateView):
         return super().get_context_data(**kwargs)
 
     def form_valid(self, form):
+        # print("--- JobSeekerSignUpView: form_valid called ---") # Removed Debug print
         user = form.save(commit=False)
         user.is_active = False # User is inactive until email confirmation
         user.save()
@@ -51,6 +52,11 @@ class JobSeekerSignUpView(CreateView):
 
         messages.success(self.request, 'Please check your email to complete the registration.')
         return redirect(self.success_url)
+
+    def form_invalid(self, form):
+        # print("--- JobSeekerSignUpView: form_invalid called ---") # Removed Debug print
+        # print("Form Errors:", form.errors.as_json()) # Removed Debug print errors
+        return super().form_invalid(form)
 
 
 class CompanySignUpView(CreateView):
@@ -134,8 +140,34 @@ class JobSeekerDashboardView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['profile'] = self.request.user.jobseekerprofile
-        # Add other context like saved jobs, applications later
+        try:
+            # Ensure profile exists, handle potential DoesNotExist
+            profile = self.request.user.jobseekerprofile
+            context['profile'] = profile
+        except JobSeekerProfile.DoesNotExist:
+             context['profile'] = None
+        else:
+            # Fetch saved jobs if profile exists
+            context['saved_jobs_list'] = profile.saved_jobs.all().select_related('company__companyprofile', 'category') # Fetch related data
+            context['saved_jobs_count'] = context['saved_jobs_list'].count()
+
+        # Fetch actual applications
+        try:
+            # Need to import Application model from jobs app
+            from jobs.models import Application
+            applications = Application.objects.filter(applicant=self.request.user).select_related('job', 'job__company__companyprofile').order_by('-applied_at')
+            context['applications'] = applications
+            context['applications_count'] = applications.count()
+        except Exception as e: # Catch potential errors during query
+            print(f"Error fetching applications: {e}") # Basic error logging
+            context['applications'] = []
+            context['applications_count'] = 0
+        
+        # Ensure saved jobs context exists even if profile doesn't (though unlikely for logged-in seeker)
+        if 'saved_jobs_list' not in context:
+             context['saved_jobs_list'] = []
+             context['saved_jobs_count'] = 0
+
         return context
 
 @method_decorator(login_required, name='dispatch')
@@ -147,9 +179,12 @@ class CompanyDashboardView(TemplateView):
         company_profile = self.request.user.companyprofile
         context['profile'] = company_profile
         # Fetch jobs posted by this company
-        context['posted_jobs'] = Job.objects.filter(company=self.request.user).order_by('-created_at')
-        # Calculate stats (example: active jobs)
-        context['active_job_count'] = context['posted_jobs'].filter(is_published=True).count()
+        posted_jobs = Job.objects.filter(company=self.request.user).order_by('-created_at')
+        context['posted_jobs'] = posted_jobs
+        # Calculate stats
+        context['active_job_count'] = posted_jobs.filter(is_published=True).count()
+        # Calculate total applications received for all posted jobs
+        context['total_applications_count'] = Application.objects.filter(job__in=posted_jobs).count()
         # Fetch subscription details (assuming CompanySubscription model exists and is linked)
         # try:
         #     context['subscription'] = CompanySubscription.objects.get(company=company_profile)
@@ -225,3 +260,40 @@ class CompanyProfileUpdateView(UserPassesTestMixin, UpdateView):
         return context
 
 # Add JobSeekerProfileUpdateView later
+@method_decorator(login_required, name='dispatch')
+class JobSeekerProfileUpdateView(UserPassesTestMixin, UpdateView):
+    model = JobSeekerProfile
+    form_class = JobSeekerProfileForm
+    template_name = 'accounts/profile_edit_form.html' # Reuse the same template for now
+    success_url = reverse_lazy('accounts:jobseeker_dashboard') # Redirect to job seeker dashboard
+
+    def test_func(self):
+        # Ensure the logged-in user is a job seeker and is editing their own profile
+        profile = self.get_object()
+        return self.request.user.is_authenticated and self.request.user.user_type == 'job_seeker' and profile.user == self.request.user
+
+    def handle_no_permission(self):
+        messages.error(self.request, "Nu aveți permisiunea să editați acest profil.")
+        # Redirect to their own dashboard or profile view
+        if self.request.user.is_authenticated:
+            if self.request.user.user_type == 'job_seeker':
+                 return redirect('accounts:jobseeker_dashboard')
+            elif self.request.user.user_type == 'company':
+                 return redirect('accounts:company_dashboard')
+        return redirect('core:home') # Fallback redirect
+
+    def get_object(self, queryset=None):
+        # Get the profile object associated with the logged-in user
+        # This assumes a JobSeekerProfile always exists for a job seeker user (created by signal)
+        return self.request.user.jobseekerprofile
+
+    def form_valid(self, form):
+        messages.success(self.request, "Profilul a fost actualizat cu succes.")
+        # The form's save method handles saving both User and Profile fields
+        form.save()
+        return super().form_valid(form) # Let UpdateView handle the redirect
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = "Editează Profilul Candidat"
+        return context

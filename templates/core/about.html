@@ -161,10 +161,11 @@
                  <div class="bg-gray-50 p-6 rounded-lg shadow">
                     <h3 class="text-lg font-semibold text-gray-700 mb-3">Abonează-te la newsletter</h3>
                     <p class="text-sm text-gray-600 mb-4">Fii la curent cu cele mai noi joburi și sfaturi pentru carieră.</p>
-                    <form action="#" method="post"> {# Placeholder action #}
+                    <form action="" method="get"> {# Changed method to GET, action to empty #}
+                        {# Removed CSRF token as it's not needed for GET #}
                         <div class="mb-3">
                             <label for="newsletter-email" class="sr-only">Adresa ta de email</label>
-                            <input type="email" id="newsletter-email" name="email" placeholder="Adresa ta de email" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            <input type="email" id="newsletter-email" name="email" placeholder="Adresa ta de email" required class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"> {# Added required #}
                         </div>
                         <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300">
                             Abonează-te

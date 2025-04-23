@@ -5,14 +5,33 @@
 
 {% block content %}
 <div class="container mx-auto px-4 py-8">
-    <div class="flex flex-wrap -mx-4">
+    {# Simplified Grid layout attempt #}
+    <div class="lg:grid lg:grid-cols-3 lg:gap-8"> {# Apply grid only on lg+, default is block stacking #}
         <!-- Main Job Details Column -->
-        <div class="w-full lg:w-2/3 px-4 mb-8 lg:mb-0">
+        <div class="lg:col-span-2 mb-8 lg:mb-0"> {# Ensure bottom margin only on smaller screens #}
             <div class="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
                 <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-                    <h1 class="text-2xl font-semibold text-gray-800">{{ job.title }}</h1>
-                    {# Add Bookmark/Save button later #}
-                    {# <button class="text-gray-500 hover:text-indigo-600"><i class="far fa-bookmark text-xl"></i></button> #}
+                    <h1 class="text-2xl font-semibold text-gray-800 mr-4">{{ job.title }}</h1>
+                    {# Save/Unsave Button - Show only for logged-in job seekers #}
+                    {% if user.is_authenticated and user.user_type == 'job_seeker' %}
+                        {% if job in user.jobseekerprofile.saved_jobs.all %}
+                            {# Already Saved - Show Unsave Button #}
+                            <form action="{% url 'jobs:job_unsave' job.pk %}" method="post" class="inline">
+                                {% csrf_token %}
+                                <button type="submit" class="text-indigo-600 hover:text-indigo-800" title="Anulează salvarea">
+                                    <i class="fas fa-bookmark text-xl"></i> {# Solid bookmark #}
+                                </button>
+                            </form>
+                        {% else %}
+                            {# Not Saved - Show Save Button #}
+                             <form action="{% url 'jobs:job_save' job.pk %}" method="post" class="inline">
+                                {% csrf_token %}
+                                <button type="submit" class="text-gray-500 hover:text-indigo-600" title="Salvează jobul">
+                                    <i class="far fa-bookmark text-xl"></i> {# Outline bookmark #}
+                                </button>
+                            </form>
+                        {% endif %}
+                    {% endif %}
                 </div>
                 <div class="p-6">
                     <div class="flex items-center mb-4">
@@ -53,11 +72,17 @@
 
                     <hr class="my-6">
 
-                    {# Add application instructions/link later #}
+                    {# Application Button - Show only for logged-in job seekers #}
+                    {% if user.is_authenticated and user.user_type == 'job_seeker' %}
                     <div class="flex flex-col sm:flex-row gap-3">
-                        <a href="#" class="w-full sm:w-auto inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300">
-                            Aplică acum <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
+                        {# Form to submit the application via POST #}
+                        <form action="{% url 'jobs:job_apply' job.pk %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="w-full sm:w-auto inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300">
+                                Aplică acum <i class="fas fa-arrow-right ml-2"></i>
+                            </button>
+                        </form>
+                    {% endif %}
                         {# <a href="#" class="w-full sm:w-auto inline-flex justify-center items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300">Contactează compania</a> #}
                     </div>
 
@@ -69,8 +94,8 @@
         </div>
 
         <!-- Sidebar Column (Company Info / Related Jobs) -->
-        <div class="w-full lg:w-1/3 px-4">
-            <div class="bg-white rounded-lg shadow border border-gray-200 mb-6 overflow-hidden">
+        <div class="lg:col-span-1 space-y-6">
+            <div class="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
                 <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
                     <h3 class="text-lg font-semibold text-gray-800">Despre companie</h3>
                 </div>

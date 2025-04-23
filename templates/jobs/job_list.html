@@ -54,6 +54,28 @@
                 <h3 class="text-lg font-semibold text-gray-900 hover:text-indigo-600">
                     <a href="{% url 'jobs:job_detail' job.pk %}">{{ job.title }}</a>
                 </h3>
+                {# Save/Unsave Button - Show only for logged-in job seekers #}
+                <div class="flex-shrink-0 ml-4">
+                    {% if user.is_authenticated and user.user_type == 'job_seeker' %}
+                        {% if job in user.jobseekerprofile.saved_jobs.all %}
+                            {# Already Saved - Show Unsave Button #}
+                            <form action="{% url 'jobs:job_unsave' job.pk %}" method="post" class="inline">
+                                {% csrf_token %}
+                                <button type="submit" class="text-indigo-600 hover:text-indigo-800" title="Anulează salvarea">
+                                    <i class="fas fa-bookmark text-lg"></i> {# Solid bookmark #}
+                                </button>
+                            </form>
+                        {% else %}
+                            {# Not Saved - Show Save Button #}
+                             <form action="{% url 'jobs:job_save' job.pk %}" method="post" class="inline">
+                                {% csrf_token %}
+                                <button type="submit" class="text-gray-400 hover:text-indigo-600" title="Salvează jobul">
+                                    <i class="far fa-bookmark text-lg"></i> {# Outline bookmark #}
+                                </button>
+                            </form>
+                        {% endif %}
+                    {% endif %}
+                </div>
                 {# Display company logo or default icon #}
                 {% if job.company.companyprofile.logo %}
                     <img src="{{ job.company.companyprofile.logo.url }}" alt="{{ job.company.companyprofile.company_name }}" class="h-10 w-10 rounded-full object-cover ml-auto">

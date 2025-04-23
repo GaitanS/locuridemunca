@@ -50,4 +50,31 @@ class Job(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return f"{self.title} at {self.company.companyprofile.company_name}" # Assumes CompanyProfile exists
+        company_name = self.company.companyprofile.company_name if hasattr(self.company, 'companyprofile') else self.company.username
+        return f"{self.title} at {company_name}"
+
+class Application(models.Model):
+    """
+    Represents a job application submitted by a Job Seeker for a Job.
+    """
+    STATUS_CHOICES = (
+        ('submitted', 'Submitted'),
+        ('viewed', 'Viewed'),
+        ('shortlisted', 'Shortlisted'),
+        ('rejected', 'Rejected'),
+        ('accepted', 'Accepted'), # Optional: If you track hiring status
+    )
+
+    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='applications')
+    applicant = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='applications', limit_choices_to={'user_type': 'job_seeker'})
+    applied_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='submitted')
+    cover_letter = models.TextField(blank=True, null=True, help_text="Optional cover letter.")
+    # You might add fields for CV snapshot at time of application if profiles change
+
+    class Meta:
+        ordering = ['-applied_at']
+        unique_together = ('job', 'applicant') # Ensure a user can only apply once per job
+
+    def __str__(self):
+        return f"Application by {self.applicant.username} for {self.job.title}"

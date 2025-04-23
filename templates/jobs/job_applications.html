@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% block title %}Aplicații pentru {{ job.title }} - JoburiPentruRomani{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="mb-6 pb-4 border-b">
+        <h1 class="text-3xl font-bold text-gray-800">Aplicații pentru "{{ job.title }}"</h1>
+        <a href="{% url 'accounts:company_dashboard' %}" class="text-sm text-indigo-600 hover:underline">&larr; Înapoi la Dashboard</a>
+    </div>
+
+    {# Display Messages #}
+    {% if messages %}
+        <div class="mb-6">
+            {% for message in messages %}
+                <div class="p-4 rounded {% if message.tags == 'success' %} bg-green-100 border border-green-400 text-green-700 {% elif message.tags == 'error' %} bg-red-100 border border-red-400 text-red-700 {% else %} bg-blue-100 border border-blue-400 text-blue-700 {% endif %}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
+        {% if applications %}
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nume Candidat</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Telefon</th> {# Added Phone column #}
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Data Aplicării</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CV</th>
+                            {# Add other columns like Cover Letter link if needed #}
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for app in applications %}
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm font-medium text-gray-900">{{ app.applicant.get_full_name|default:app.applicant.username }}</div>
+                            </td>
+                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {{ app.applicant.email }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {{ app.applicant.jobseekerprofile.phone_number|default:"-" }} {# Display phone number #}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {{ app.applied_at|date:"d M Y, H:i" }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                {# Add styling based on status later if desired #}
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                    {{ app.get_status_display }}
+                                </span>
+                            </td>
+                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {% if app.applicant.jobseekerprofile.cv %}
+                                    <a href="{{ app.applicant.jobseekerprofile.cv.url }}" target="_blank" class="text-indigo-600 hover:underline">Descarcă CV</a>
+                                {% else %}
+                                    <span class="text-gray-400 italic">N/A</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {# Pagination (if added to view) #}
+            {% if is_paginated %}
+            <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+                <div class="flex-1 flex justify-between sm:hidden">
+                    {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"> Precedenta </a>
+                    {% endif %}
+                    {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"> Următoarea </a>
+                    {% endif %}
+                </div>
+                <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                    <div>
+                    <p class="text-sm text-gray-700">
+                        Afișare de la
+                        <span class="font-medium">{{ page_obj.start_index }}</span>
+                        până la
+                        <span class="font-medium">{{ page_obj.end_index }}</span>
+                        din
+                        <span class="font-medium">{{ page_obj.paginator.count }}</span>
+                        rezultate
+                    </p>
+                    </div>
+                    <div>
+                    <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                        {% if page_obj.has_previous %}
+                        <a href="?page=1" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                            <span class="sr-only">Prima</span>
+                            <i class="fas fa-angle-double-left h-5 w-5"></i>
+                        </a>
+                        <a href="?page={{ page_obj.previous_page_number }}" class="relative inline-flex items-center px-2 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                            <span class="sr-only">Precedenta</span>
+                             <i class="fas fa-angle-left h-5 w-5"></i>
+                        </a>
+                        {% endif %}
+
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == num %}
+                                <span aria-current="page" class="relative inline-flex items-center px-4 py-2 border border-indigo-500 bg-indigo-50 text-sm font-medium text-indigo-600 z-10"> {{ num }} </span>
+                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                <a href="?page={{ num }}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"> {{ num }} </a>
+                            {% elif num == page_obj.number|add:'-3' or num == page_obj.number|add:'3' %}
+                                 <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700"> ... </span>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}" class="relative inline-flex items-center px-2 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                            <span class="sr-only">Următoarea</span>
+                            <i class="fas fa-angle-right h-5 w-5"></i>
+                        </a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                            <span class="sr-only">Ultima</span>
+                            <i class="fas fa-angle-double-right h-5 w-5"></i>
+                        </a>
+                        {% endif %}
+                    </nav>
+                    </div>
+                </div>
+            </div>
+            {% endif %} {# End Pagination #}
+
+        {% else %}
+            <p class="text-center text-gray-500 py-10">Nu există aplicații pentru acest job încă.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

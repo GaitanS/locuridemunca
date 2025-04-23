@@ -57,6 +57,7 @@ class JobSeekerProfile(models.Model):
     phone_number = models.CharField(max_length=20, blank=True, null=True)
     cv = models.FileField(upload_to='cvs/', blank=True, null=True) # Requires Pillow installation
     bio = models.TextField(blank=True, null=True)
+    saved_jobs = models.ManyToManyField('jobs.Job', blank=True, related_name='saved_by_seekers')
     # Add other relevant fields like experience, education, skills etc. later
 
     def __str__(self):

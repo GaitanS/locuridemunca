@@ -109,6 +109,54 @@ class CompanyProfileForm(forms.ModelForm):
 
     # If editing User fields too, you'd need a separate User form or combine logic carefully.
 
+class JobSeekerProfileForm(forms.ModelForm):
+    # Fields from User model
+    first_name = forms.CharField(required=False, label="Prenume")
+    last_name = forms.CharField(required=False, label="Nume")
+    email = forms.EmailField(required=True, label="E-mail")
+
+    # Fields from JobSeekerProfile model
+    class Meta:
+        model = JobSeekerProfile
+        fields = [
+            'city_of_residence', 'date_of_birth', 'phone_number', 'cv', 'bio'
+        ]
+        widgets = {
+            'city_of_residence': forms.TextInput(attrs={'placeholder': 'Ex: București'}),
+            'date_of_birth': forms.DateInput(attrs={'type': 'date'}),
+            'phone_number': forms.TextInput(attrs={'placeholder': '+40...'}),
+            'cv': forms.ClearableFileInput(),
+            'bio': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Scurtă descriere despre tine...'}),
+        }
+        labels = {
+            'city_of_residence': "Oraș de reședință",
+            'date_of_birth': "Data nașterii",
+            'phone_number': "Număr de telefon",
+            'cv': "CV (.pdf, .doc, .docx)",
+            'bio': "Despre mine / Bio",
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Populate User fields from the instance's user
+        if self.instance and self.instance.user:
+            self.fields['first_name'].initial = self.instance.user.first_name
+            self.fields['last_name'].initial = self.instance.user.last_name
+            self.fields['email'].initial = self.instance.user.email
+
+    def save(self, commit=True):
+        # Save JobSeekerProfile fields
+        profile = super().save(commit=commit)
+        # Save User fields
+        user = profile.user
+        user.first_name = self.cleaned_data.get('first_name')
+        user.last_name = self.cleaned_data.get('last_name')
+        user.email = self.cleaned_data.get('email')
+        if commit:
+            user.save()
+        return profile
+
+
 class CompanySignUpForm(UserCreationForm):
     email = forms.EmailField(
         required=True,

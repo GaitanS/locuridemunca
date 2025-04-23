@@ -1,4 +1,5 @@
-from django.urls import path, include # Import include
+from django.urls import path, include, reverse_lazy # Import reverse_lazy
+from django.contrib.auth import views as auth_views # Import auth views
 from . import views
 
 app_name = 'accounts'
@@ -16,10 +17,22 @@ urlpatterns = [
     path('dashboard/company/', views.CompanyDashboardView.as_view(), name='company_dashboard'),
 
     # Profile
-    path('profile/', views.ProfileView.as_view(), name='profile'),
-    path('profile/edit/', views.CompanyProfileUpdateView.as_view(), name='company_profile_edit'), # Company profile edit URL
+    path('profile/', views.ProfileView.as_view(), name='profile'), # Generic profile view (maybe remove later if dashboards are sufficient)
+    path('profile/company/edit/', views.CompanyProfileUpdateView.as_view(), name='company_profile_edit'), # Company profile edit URL
+    path('profile/jobseeker/edit/', views.JobSeekerProfileUpdateView.as_view(), name='jobseeker_profile_edit'),
 
-    # Include default auth urls (login, logout, password_reset, etc.)
-    # These expect templates in a 'registration' directory
-    path('', include('django.contrib.auth.urls')),
+    # Auth URLs - Override password_change to set success_url
+    path(
+        'password_change/',
+        auth_views.PasswordChangeView.as_view(
+            template_name='registration/password_change_form.html', # Use our custom template
+            success_url=reverse_lazy('accounts:password_change_done') # Explicitly set namespaced success URL
+        ),
+        name='password_change'
+    ),
+    path( # Keep the rest of the default auth URLs
+        '',
+        include('django.contrib.auth.urls')
+    ),
+    # Note: password_change_done URL name is included via the line above
 ]
