@@ -2,16 +2,18 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, TemplateView, View
 from .forms import JobSeekerSignUpForm, CompanySignUpForm
-from .models import User
+from .models import User, JobSeekerProfile, CompanyProfile # Import profile models
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from .tokens import account_activation_token
 from django.core.mail import EmailMessage
+from jobs.models import Job # Import Job model
 from django.contrib import messages # For displaying messages
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.contrib.auth.mixins import LoginRequiredMixin # Import LoginRequiredMixin
 
 # Basic signup choice view (can be expanded later)
 class SignUpView(TemplateView):
@@ -141,8 +143,43 @@ class CompanyDashboardView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['profile'] = self.request.user.companyprofile
-        # Add other context like posted jobs, applications received later
+        company_profile = self.request.user.companyprofile
+        context['profile'] = company_profile
+        # Fetch jobs posted by this company
+        context['posted_jobs'] = Job.objects.filter(company=self.request.user).order_by('-created_at')
+        # Calculate stats (example: active jobs)
+        context['active_job_count'] = context['posted_jobs'].filter(is_published=True).count()
+        # Fetch subscription details (assuming CompanySubscription model exists and is linked)
+        # try:
+        #     context['subscription'] = CompanySubscription.objects.get(company=company_profile)
+        # except CompanySubscription.DoesNotExist:
+        #     context['subscription'] = None
+        # Add other context like applications received later
+        return context
+
+
+# --- Profile View ---
+
+@method_decorator(login_required, name='dispatch') # Ensure user is logged in
+class ProfileView(TemplateView):
+    template_name = 'accounts/profile.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        context['user'] = user
+        if user.user_type == 'job_seeker':
+            try:
+                context['profile'] = user.jobseekerprofile
+            except JobSeekerProfile.DoesNotExist:
+                context['profile'] = None # Handle case where profile might not exist yet
+        elif user.user_type == 'company':
+            try:
+                context['profile'] = user.companyprofile
+            except CompanyProfile.DoesNotExist:
+                context['profile'] = None # Handle case where profile might not exist yet
+        else:
+            context['profile'] = None
         return context
 
 

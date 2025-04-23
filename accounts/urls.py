@@ -15,6 +15,9 @@ urlpatterns = [
     path('dashboard/jobseeker/', views.JobSeekerDashboardView.as_view(), name='jobseeker_dashboard'),
     path('dashboard/company/', views.CompanyDashboardView.as_view(), name='company_dashboard'),
 
+    # Profile
+    path('profile/', views.ProfileView.as_view(), name='profile'), # Add profile URL
+
     # Include default auth urls (login, logout, password_reset, etc.)
     # These expect templates in a 'registration' directory
     path('', include('django.contrib.auth.urls')),

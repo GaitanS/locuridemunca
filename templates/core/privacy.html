@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}Politică de Confidențialitate - JoburiPentruRomani{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12">
+    <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md border border-gray-200">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6 border-b pb-4">Politică de Confidențialitate</h1>
+
+        <p class="text-gray-600 mb-4">Ultima actualizare: {% now "d M Y" %}</p>
+
+        <section class="mb-6">
+            <h2 class="text-xl font-semibold text-gray-700 mb-3">1. Introducere</h2>
+            <p class="text-gray-600 leading-relaxed">
+                Această Politică de Confidențialitate descrie cum JoburiPentruRomani colectează, utilizează și protejează informațiile personale pe care le furnizați atunci când utilizați platforma noastră. Ne angajăm să protejăm confidențialitatea datelor dumneavoastră.
+            </p>
+        </section>
+
+        <section class="mb-6">
+            <h2 class="text-xl font-semibold text-gray-700 mb-3">2. Ce informații colectăm</h2>
+            <p class="text-gray-600 leading-relaxed">
+                Putem colecta următoarele tipuri de informații:
+                <ul class="list-disc list-inside text-gray-600 leading-relaxed mt-2 ml-4">
+                    <li>Informații de identificare personală (nume, prenume, adresă de email, număr de telefon, data nașterii etc.) furnizate la înregistrare sau la completarea profilului.</li>
+                    <li>Informații legate de experiența profesională și educație (CV, istoric joburi, abilități etc.).</li>
+                    <li>Informații despre companie (nume companie, adresă, date de contact etc.) pentru conturile de angajator.</li>
+                    <li>Informații tehnice (adresă IP, tip browser, pagini vizitate) colectate automat prin cookie-uri și tehnologii similare.</li>
+                </ul>
+            </p>
+        </section>
+
+        <section class="mb-6">
+            <h2 class="text-xl font-semibold text-gray-700 mb-3">3. Cum utilizăm informațiile</h2>
+            <p class="text-gray-600 leading-relaxed">
+                Utilizăm informațiile colectate pentru:
+                 <ul class="list-disc list-inside text-gray-600 leading-relaxed mt-2 ml-4">
+                    <li>A furniza și îmbunătăți serviciile platformei.</li>
+                    <li>A facilita potrivirea între candidați și angajatori.</li>
+                    <li>A personaliza experiența dumneavoastră pe platformă.</li>
+                    <li>A comunica cu dumneavoastră (notificări, newslettere - cu consimțământul dvs.).</li>
+                    <li>A asigura securitatea platformei și a preveni fraudele.</li>
+                </ul>
+            </p>
+        </section>
+
+        {# Add sections for Data Sharing, Security, Cookies, User Rights, Changes, Contact etc. #}
+        <section class="mb-6">
+            <h2 class="text-xl font-semibold text-gray-700 mb-3">4. Partajarea informațiilor</h2>
+             <p class="text-gray-600 leading-relaxed">
+                [Placeholder: Detaliați cu cine și în ce condiții se partajează datele - ex: angajatori la aplicare, furnizori de servicii etc.]
+            </p>
+        </section>
+         <section class="mb-6">
+            <h2 class="text-xl font-semibold text-gray-700 mb-3">5. Securitatea datelor</h2>
+             <p class="text-gray-600 leading-relaxed">
+                [Placeholder: Descrieți măsurile de securitate implementate.]
+            </p>
+        </section>
+         <section class="mb-6">
+            <h2 class="text-xl font-semibold text-gray-700 mb-3">6. Drepturile dumneavoastră</h2>
+             <p class="text-gray-600 leading-relaxed">
+                [Placeholder: Detaliați drepturile utilizatorilor conform GDPR - acces, rectificare, ștergere etc.]
+            </p>
+        </section>
+
+        <section>
+             <h2 class="text-xl font-semibold text-gray-700 mb-3">7. Contact</h2>
+             <p class="text-gray-600 leading-relaxed">
+                 Pentru întrebări legate de această Politică de Confidențialitate, vă rugăm să ne contactați folosind informațiile disponibile pe pagina de Contact.
+             </p>
+        </section>
+
+    </div>
+</div>
+{% endblock %}

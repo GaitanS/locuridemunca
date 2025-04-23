@@ -1,39 +1,98 @@
 {% extends 'base.html' %}
 
-{% block title %}Company Dashboard - JoburiPentruRomani{% endblock %}
+{% block title %}Dashboard Angajator - {{ profile.company_name|default:user.username }} - JoburiPentruRomani{% endblock %}
 
 {% block content %}
-  <h2>Company Dashboard</h2>
-  <p>Welcome, {{ user.username }}!</p>
+<div class="container mx-auto px-4 py-8">
+    <div class="flex flex-col md:flex-row justify-between items-center mb-8 border-b pb-4">
+        <h1 class="text-3xl font-bold text-gray-800">Dashboard Angajator</h1>
+        <a href="{% url 'jobs:job_post' %}" class="mt-4 md:mt-0 inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-5 rounded-md transition duration-300">
+            <i class="fas fa-plus mr-2"></i>Postează Anunț Nou
+        </a>
+    </div>
 
-  <h3>Company Profile</h3>
-  <p><strong>Company Name:</strong> {{ profile.company_name }}</p>
-  <p><strong>Website:</strong> {{ profile.website|default:"Not set" }}</p>
-  <p><strong>Location:</strong> {{ profile.location|default:"Not set" }}</p>
-  <p><strong>Description:</strong> {{ profile.description|default:"Not set"|linebreaksbr }}</p>
-  <p><strong>Logo:</strong> {% if profile.logo %}<img src="{{ profile.logo.url }}" alt="{{ profile.company_name }} Logo" style="max-height: 50px;">{% else %}Not uploaded{% endif %}</p>
-  {# Add link to edit profile later #}
-  <a href="#">Edit Profile</a>
+    {# Quick Stats Section #}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white p-6 rounded-lg shadow border border-gray-200">
+            <h3 class="text-sm font-medium text-gray-500 mb-1">Anunțuri Active</h3>
+            <p class="text-3xl font-semibold text-gray-900">{{ active_job_count }}</p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow border border-gray-200">
+            <h3 class="text-sm font-medium text-gray-500 mb-1">Total Anunțuri Postate</h3>
+            <p class="text-3xl font-semibold text-gray-900">{{ posted_jobs.count }}</p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow border border-gray-200">
+            <h3 class="text-sm font-medium text-gray-500 mb-1">Aplicații Primite (Total)</h3>
+            <p class="text-3xl font-semibold text-gray-900">0</p> {# Placeholder #}
+            {# <p class="text-xs text-gray-500 mt-1">View Applications</p> #}
+        </div>
+         <div class="bg-white p-6 rounded-lg shadow border border-gray-200">
+            <h3 class="text-sm font-medium text-gray-500 mb-1">Plan Abonament</h3>
+            <p class="text-xl font-semibold text-gray-900">{{ profile.plan.name|default:"N/A" }}</p>
+            <a href="{% url 'payments:plan_list' %}" class="text-xs text-indigo-600 hover:underline mt-1 inline-block">Vezi Planuri</a>
+        </div>
+    </div>
 
-  <hr>
+    {# Posted Jobs Section #}
+    <div class="bg-white rounded-lg shadow p-6 md:p-8 border border-gray-200">
+        <h2 class="text-xl font-semibold text-gray-800 mb-6">Anunțurile Mele</h2>
+        {% if posted_jobs %}
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Titlu</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Data Creării</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aplicații</th>
+                            <th scope="col" class="relative px-6 py-3">
+                                <span class="sr-only">Acțiuni</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for job in posted_jobs %}
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm font-medium text-gray-900">{{ job.title }}</div>
+                                <div class="text-xs text-gray-500">{{ job.location }}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                {% if job.is_published %}
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                      Publicat
+                                    </span>
+                                {% else %}
+                                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                      Draft
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {{ job.created_at|date:"d M Y" }}
+                            </td>
+                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                0 {# Placeholder for application count #}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                <a href="{% url 'jobs:job_detail' job.pk %}" target="_blank" class="text-indigo-600 hover:text-indigo-900" title="Vezi Anunț"><i class="fas fa-eye"></i></a>
+                                <a href="#" class="text-yellow-600 hover:text-yellow-900" title="Editează"><i class="fas fa-pencil-alt"></i></a> {# Placeholder for Edit URL #}
+                                <a href="#" class="text-red-600 hover:text-red-900" title="Șterge"><i class="fas fa-trash"></i></a> {# Placeholder for Delete URL #}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-center text-gray-500 py-10">Nu ați postat niciun anunț încă.</p>
+        {% endif %}
+    </div>
 
-  <h3>Subscription Plan</h3>
-  <p><strong>Current Plan:</strong> {{ profile.plan.name|default:"N/A" }}</p>
-  {# Add link to manage plan later #}
-  <a href="#">Manage Plan</a>
+     {# Placeholder for other sections like Company Profile Edit Link #}
+     <div class="mt-8 text-center">
+         <a href="#" class="text-indigo-600 hover:underline">Editează Profilul Companiei</a> {# Placeholder #}
+     </div>
 
-  <hr>
-
-  <h3>Posted Jobs</h3>
-  {# List posted jobs later #}
-  <p>You haven't posted any jobs yet.</p>
-  {# Add link to post a new job later #}
-  <a href="#">Post a New Job</a>
-
-  <hr>
-
-  <h3>Received Applications</h3>
-  {# List received applications later #}
-  <p>No applications received yet.</p>
-
+</div>
 {% endblock %}

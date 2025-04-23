@@ -1,0 +1,50 @@
+from django import forms
+from .models import Job, Category
+
+class JobForm(forms.ModelForm):
+    category = forms.ModelChoiceField(
+        queryset=Category.objects.all(),
+        widget=forms.Select(attrs={'class': 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'}),
+        required=True,
+        label="Categorie"
+    )
+    title = forms.CharField(
+        widget=forms.TextInput(attrs={'placeholder': 'Ex: Inginer Software Senior', 'class': 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'}),
+        label="Titlu Job"
+    )
+    description = forms.CharField(
+        widget=forms.Textarea(attrs={'rows': 6, 'placeholder': 'Descrieți responsabilitățile, cerințele, beneficiile...', 'class': 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'}),
+        label="Descriere Job"
+    )
+    location = forms.CharField(
+        widget=forms.TextInput(attrs={'placeholder': 'Ex: București, România', 'class': 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'}),
+        label="Locație"
+    )
+    job_type = forms.ChoiceField(
+        choices=Job.JOB_TYPE_CHOICES,
+        widget=forms.Select(attrs={'class': 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'}),
+        label="Tip Job"
+    )
+    salary_min = forms.DecimalField(
+        required=False,
+        widget=forms.NumberInput(attrs={'placeholder': 'Ex: 5000', 'class': 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'}),
+        label="Salariu Minim (Opțional)"
+    )
+    salary_max = forms.DecimalField(
+        required=False,
+        widget=forms.NumberInput(attrs={'placeholder': 'Ex: 8000', 'class': 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'}),
+        label="Salariu Maxim (Opțional)"
+    )
+    salary_currency = forms.CharField(
+        initial='RON',
+        widget=forms.TextInput(attrs={'placeholder': 'RON', 'class': 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'}),
+        label="Valută Salariu (Opțional)"
+    )
+
+    class Meta:
+        model = Job
+        fields = [
+            'title', 'category', 'description', 'location', 'job_type',
+            'salary_min', 'salary_max', 'salary_currency'
+        ]
+        # Exclude 'company', 'is_published', 'is_featured' as they will be handled in the view or later

@@ -1,7 +1,7 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from .models import User, JobSeekerProfile, CompanyProfile
-from payments.models import Plan # Import Plan model
+from payments.models import SubscriptionPlan # Corrected model name import
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
@@ -14,7 +14,7 @@ def create_user_profile(sender, instance, created, **kwargs):
             JobSeekerProfile.objects.create(user=instance)
         elif instance.user_type == 'company':
             # Try to find the default (cheapest, active) plan
-            default_plan = Plan.objects.filter(is_active=True).order_by('price').first()
+            default_plan = SubscriptionPlan.objects.filter(is_active=True).order_by('price').first() # Corrected model name
             CompanyProfile.objects.create(
                 user=instance,
                 company_name=f"{instance.username}'s Company", # Placeholder, will be updated by form

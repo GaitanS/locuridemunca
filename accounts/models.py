@@ -50,8 +50,10 @@ class JobSeekerProfile(models.Model):
     Profile specific to Job Seekers.
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name='jobseekerprofile')
-    full_name = models.CharField(max_length=255, blank=True, null=True)
-    location = models.CharField(max_length=100, blank=True, null=True)
+    # Note: first_name and last_name are on the User model itself
+    # full_name = models.CharField(max_length=255, blank=True, null=True) # Consider removing if using User's fields
+    city_of_residence = models.CharField("Oraș de reședință", max_length=100, blank=True, null=True) # Renamed from location
+    date_of_birth = models.DateField("Data nașterii", blank=True, null=True)
     phone_number = models.CharField(max_length=20, blank=True, null=True)
     cv = models.FileField(upload_to='cvs/', blank=True, null=True) # Requires Pillow installation
     bio = models.TextField(blank=True, null=True)
@@ -65,12 +67,17 @@ class CompanyProfile(models.Model):
     Profile specific to Companies.
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name='companyprofile')
-    company_name = models.CharField(max_length=255)
+    company_name = models.CharField("Numele companiei", max_length=255)
+    # Address fields
+    street_address = models.CharField("Adresă sediu social (stradă, număr...)", max_length=255, blank=True, null=True)
+    city = models.CharField("Oraș", max_length=100, blank=True, null=True)
+    country = models.CharField("Țară", max_length=100, default="România", blank=True, null=True) # Default to Romania?
+    # Other fields
     website = models.URLField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     logo = models.ImageField(upload_to='company_logos/', blank=True, null=True) # Requires Pillow installation
-    location = models.CharField(max_length=100, blank=True, null=True)
-    plan = models.ForeignKey('payments.Plan', on_delete=models.SET_NULL, null=True, blank=True, related_name='companies')
+    # Corrected ForeignKey to point to SubscriptionPlan
+    plan = models.ForeignKey('payments.SubscriptionPlan', on_delete=models.SET_NULL, null=True, blank=True, related_name='companies')
     # Add other relevant fields like industry, company size etc. later
 
     def __str__(self):

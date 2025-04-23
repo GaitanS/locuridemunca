@@ -2,39 +2,136 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from .models import User, JobSeekerProfile, CompanyProfile
 
+# Common Romanian error messages
+error_messages_ro = {
+    'required': "Acest câmp este obligatoriu.",
+    'invalid_email': "Introduceți o adresă de email validă.",
+    # Add more common messages if needed
+}
+
 class JobSeekerSignUpForm(UserCreationForm):
-    email = forms.EmailField(required=True)
-    # Add any other fields needed at signup for job seekers
+    first_name = forms.CharField(
+        max_length=150, required=True,
+        widget=forms.TextInput(attrs={'placeholder': 'ex. Ion'}),
+        error_messages={'required': error_messages_ro['required']}
+    )
+    last_name = forms.CharField(
+        max_length=150, required=True,
+        widget=forms.TextInput(attrs={'placeholder': 'ex. Popescu'}),
+        error_messages={'required': error_messages_ro['required']}
+    )
+    email = forms.EmailField(
+        required=True,
+        widget=forms.EmailInput(attrs={'placeholder': 'ex. ion.popescu@email.com'}),
+        error_messages={'required': error_messages_ro['required'], 'invalid': error_messages_ro['invalid_email']}
+    )
+    date_of_birth = forms.DateField(
+        required=True,
+        widget=forms.DateInput(attrs={'type': 'date', 'placeholder': 'ZZ/LL/AAAA'}),
+        label="Data nașterii",
+        error_messages={'required': error_messages_ro['required'], 'invalid': 'Introduceți o dată validă.'}
+    )
+    city_of_residence = forms.CharField(
+        max_length=100, required=True,
+        widget=forms.TextInput(attrs={'placeholder': 'ex. București'}),
+        label="Oraș de reședință",
+        error_messages={'required': error_messages_ro['required']}
+    )
+    terms_agreement = forms.BooleanField(
+        required=True,
+        label="Sunt de acord cu",
+        error_messages={'required': "Trebuie să fiți de acord cu termenii și condițiile."}
+    )
 
     class Meta(UserCreationForm.Meta):
         model = User
-        fields = UserCreationForm.Meta.fields + ('email', 'first_name', 'last_name') # Add email, first_name, last_name
+        fields = ('username', 'first_name', 'last_name', 'email')
+        # Add custom error messages for UserCreationForm fields if needed
+        # error_messages = {
+        #     'username': {'required': error_messages_ro['required']},
+        #     # ...
+        # }
+
+    # Override default UserCreationForm error messages if needed
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Example: Customize password mismatch error
+        if 'password2' in self.fields:
+            self.fields['password2'].help_text = "" # Remove default help text if desired
+            self.error_messages['password_mismatch'] = 'Cele două parole introduse nu se potrivesc.'
+        # Customize other UserCreationForm errors here
 
     def save(self, commit=True):
         user = super().save(commit=False)
         user.user_type = 'job_seeker'
         if commit:
             user.save()
-            # Profile is created automatically by signal
+            JobSeekerProfile.objects.update_or_create(
+                user=user,
+                defaults={
+                    'date_of_birth': self.cleaned_data.get('date_of_birth'),
+                    'city_of_residence': self.cleaned_data.get('city_of_residence'),
+                }
+            )
         return user
 
 class CompanySignUpForm(UserCreationForm):
-    email = forms.EmailField(required=True)
-    company_name = forms.CharField(required=True, max_length=255)
-    # Add any other fields needed at signup for companies
+    email = forms.EmailField(
+        required=True,
+        error_messages={'required': error_messages_ro['required'], 'invalid': error_messages_ro['invalid_email']}
+    )
+    company_name = forms.CharField(
+        required=True, max_length=255, label="Numele companiei",
+        widget=forms.TextInput(attrs={'placeholder': 'Numele companiei'}),
+        error_messages={'required': error_messages_ro['required']}
+    )
+    street_address = forms.CharField(
+        required=True, max_length=255, label="Adresă sediu social",
+        widget=forms.TextInput(attrs={'placeholder': 'Strada, numărul...'}),
+        error_messages={'required': error_messages_ro['required']}
+    )
+    city = forms.CharField(
+        required=True, max_length=100, label="Oraș",
+        widget=forms.TextInput(attrs={'placeholder': 'Oraș'}),
+        error_messages={'required': error_messages_ro['required']}
+    )
+    country = forms.CharField(
+        required=True, max_length=100, initial="România", label="Țară",
+        widget=forms.TextInput(attrs={'placeholder': 'România'}),
+        error_messages={'required': error_messages_ro['required']}
+    )
+    terms_agreement = forms.BooleanField(
+        required=True,
+        label="Sunt de acord cu",
+        error_messages={'required': "Trebuie să fiți de acord cu termenii și condițiile."}
+    )
 
     class Meta(UserCreationForm.Meta):
         model = User
-        fields = UserCreationForm.Meta.fields + ('email',) # Only email needed for User model here
+        fields = ('username', 'email',)
+        # error_messages = {
+        #     'username': {'required': error_messages_ro['required']},
+        # }
+
+    # Override default UserCreationForm error messages if needed
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if 'password2' in self.fields:
+            self.fields['password2'].help_text = ""
+            self.error_messages['password_mismatch'] = 'Cele două parole introduse nu se potrivesc.'
 
     def save(self, commit=True):
         user = super().save(commit=False)
         user.user_type = 'company'
         if commit:
             user.save()
-            # Update the company profile created by the signal
-            company_profile = user.companyprofile # Access profile via related_name
-            company_profile.company_name = self.cleaned_data.get('company_name')
-            # Add other company profile fields from the form here
-            company_profile.save()
+            CompanyProfile.objects.update_or_create(
+                user=user,
+                defaults={
+                    'company_name': self.cleaned_data.get('company_name'),
+                    'street_address': self.cleaned_data.get('street_address'),
+                    'city': self.cleaned_data.get('city'),
+                    'country': self.cleaned_data.get('country'),
+                }
+            )
         return user
