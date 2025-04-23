@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, TemplateView, View
-from .forms import JobSeekerSignUpForm, CompanySignUpForm
+from .forms import JobSeekerSignUpForm, CompanySignUpForm, CompanyProfileForm # Import CompanyProfileForm
 from .models import User, JobSeekerProfile, CompanyProfile # Import profile models
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_str
@@ -13,7 +13,8 @@ from jobs.models import Job # Import Job model
 from django.contrib import messages # For displaying messages
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from django.contrib.auth.mixins import LoginRequiredMixin # Import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin # Import UserPassesTestMixin
+from django.views.generic.edit import UpdateView # Import UpdateView
 
 # Basic signup choice view (can be expanded later)
 class SignUpView(TemplateView):
@@ -184,4 +185,43 @@ class ProfileView(TemplateView):
 
 
 # Add Login, Logout, Password Reset views later (some are included via django.contrib.auth.urls)
-# Add Profile Edit views later
+
+# --- Profile Edit View ---
+
+@method_decorator(login_required, name='dispatch')
+class CompanyProfileUpdateView(UserPassesTestMixin, UpdateView):
+    model = CompanyProfile
+    form_class = CompanyProfileForm
+    template_name = 'accounts/profile_edit_form.html' # New template for editing
+    success_url = reverse_lazy('accounts:company_dashboard') # Redirect to dashboard after update
+
+    def test_func(self):
+        # Ensure the logged-in user is a company and is editing their own profile
+        profile = self.get_object()
+        return self.request.user.is_authenticated and self.request.user.user_type == 'company' and profile.user == self.request.user
+
+    def handle_no_permission(self):
+        messages.error(self.request, "Nu aveți permisiunea să editați acest profil.")
+        # Redirect to their own dashboard or profile view
+        if self.request.user.is_authenticated:
+            if self.request.user.user_type == 'company':
+                 return redirect('accounts:company_dashboard')
+            elif self.request.user.user_type == 'job_seeker':
+                 return redirect('accounts:jobseeker_dashboard')
+        return redirect('core:home') # Fallback redirect
+
+    def get_object(self, queryset=None):
+        # Get the profile object associated with the logged-in user
+        # This assumes a CompanyProfile always exists for a company user (created by signal)
+        return self.request.user.companyprofile
+
+    def form_valid(self, form):
+        messages.success(self.request, "Profilul companiei a fost actualizat cu succes.")
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = "Editează Profilul Companiei"
+        return context
+
+# Add JobSeekerProfileUpdateView later

@@ -29,7 +29,13 @@
                     </div>
                     <div>
                         <p class="text-sm text-gray-500">Locație</p>
-                        <p class="font-medium text-gray-800">{{ profile.location|default:"<span class='text-gray-400 italic'>Nespecificat</span>" }}</p>
+                        <p class="font-medium text-gray-800">
+                            {% if profile.city or profile.country %}
+                                {{ profile.city }}{% if profile.city and profile.country %},{% endif %} {{ profile.country.name|default:profile.country }}
+                            {% else %}
+                                <span class='text-gray-400 italic'>Nespecificat</span>
+                            {% endif %}
+                        </p>
                     </div>
                     {% if profile.logo %}
                     <div class="sm:col-span-2">
@@ -47,8 +53,7 @@
                         <p class="font-medium text-gray-800">{{ profile.description|default:"<span class='text-gray-400 italic'>Nespecificat</span>"|linebreaksbr }}</p>
                     </div>
                 </div>
-                 <a href="#" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">Modifică Profilul Companiei</a>
-                 {# Add link to edit profile view later #}
+                 <a href="{% url 'accounts:company_profile_edit' %}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">Modifică Profilul Companiei</a>
             {% else %}
                 <p class="text-gray-500 italic">Detaliile profilului companiei nu au fost completate.</p>
                 <a href="#" class="mt-4 inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">Completează Profilul Companiei</a>

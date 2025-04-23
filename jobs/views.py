@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView # Import UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
 from .models import Job, Category
@@ -86,5 +86,32 @@ class JobCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         context['page_title'] = "Postează un Anunț Nou" # Title for the template
         return context
 
+# --- Job Update ---
 
-# Add views for job editing, deletion, category-specific lists later
+class JobUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Job
+    form_class = JobForm
+    template_name = 'jobs/job_form.html' # Reuse the job form template
+    # Redirect to company dashboard after successful update
+    success_url = reverse_lazy('accounts:company_dashboard')
+
+    def test_func(self):
+        # Check if the logged-in user is the owner of the job
+        job = self.get_object()
+        return self.request.user == job.company
+
+    def handle_no_permission(self):
+        messages.error(self.request, "Nu aveți permisiunea să editați acest anunț.")
+        return redirect('accounts:company_dashboard') # Redirect back to dashboard
+
+    def form_valid(self, form):
+        messages.success(self.request, f"Anunțul '{form.instance.title}' a fost actualizat cu succes.")
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = f"Editează Anunțul: {self.object.title}" # Dynamic title
+        return context
+
+
+# Add views for job deletion, category-specific lists later

@@ -16,19 +16,25 @@
                 </div>
                 <div class="p-6">
                     <div class="flex items-center mb-4">
-                        {# Add Company Logo Later #}
-                        {# <img src="..." alt="{{ job.company.companyprofile.company_name }} Logo" class="h-16 w-16 rounded-full mr-4 object-cover"> #}
+                        {# Display company logo or default icon #}
+                        {% if job.company.companyprofile.logo %}
+                            <img src="{{ job.company.companyprofile.logo.url }}" alt="{{ job.company.companyprofile.company_name }}" class="h-16 w-16 rounded-full mr-4 object-cover">
+                        {% else %}
+                            <span class="h-16 w-16 rounded-full bg-gray-200 flex items-center justify-center mr-4">
+                                 <i class="fa-solid fa-circle-user text-4xl text-indigo-600"></i>
+                            </span>
+                        {% endif %}
                         <div>
-                            <h2 class="text-lg font-semibold text-gray-900">{{ job.company_name }}</h2>
-                            {% if job.company_website %}
-                                <a href="{{ job.company_website }}" target="_blank" class="text-sm text-indigo-600 hover:underline"><i class="fas fa-link mr-1"></i> Website companie</a>
+                            <h2 class="text-lg font-semibold text-gray-900">{{ job.company.companyprofile.company_name|default:job.company.username }}</h2> {# Correct company name access #}
+                            {% if job.company.companyprofile.website %} {# Access website via profile #}
+                                <a href="{{ job.company.companyprofile.website }}" target="_blank" class="text-sm text-indigo-600 hover:underline"><i class="fas fa-link mr-1"></i> Website companie</a>
                             {% endif %}
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4 text-sm text-gray-600">
-                        <div><i class="fas fa-map-marker-alt mr-1 text-gray-400"></i> {{ job.location }}</div>
-                        <div><i class="fas fa-briefcase mr-1 text-gray-400"></i> {{ job.job_type|capfirst }}</div>
+                        <div><i class="fas fa-map-marker-alt mr-1 text-gray-400"></i> {{ job.city }}{% if job.city and job.country %},{% endif %} {{ job.country.name|default:job.country }}</div> {# Correct location display #}
+                        <div><i class="fas fa-briefcase mr-1 text-gray-400"></i> {{ job.get_job_type_display }}</div> {# Correct job type display #}
                         <div><i class="fas fa-tags mr-1 text-gray-400"></i> {{ job.category.name|default:"N/A" }}</div>
                     </div>
 
@@ -57,7 +63,7 @@
 
                 </div>
                 <div class="bg-gray-50 px-6 py-3 border-t border-gray-200 text-sm text-gray-500">
-                    Publicat: {{ job.date_posted|date:"d M Y" }} ({{ job.date_posted|timesince }} în urmă)
+                    Publicat: {{ job.created_at|date:"d M Y" }} ({{ job.created_at|timesince }} în urmă) {# Use created_at #}
                 </div>
             </div>
         </div>
@@ -69,13 +75,19 @@
                     <h3 class="text-lg font-semibold text-gray-800">Despre companie</h3>
                 </div>
                 <div class="p-6">
-                    {# Add Company Logo Later #}
-                    {# <img src="..." alt="{{ job.company.companyprofile.company_name }} Logo" class="w-full h-auto rounded mb-4"> #}
-                    <h4 class="font-semibold text-gray-900 mb-1">{{ job.company_name }}</h4>
-                    {% if job.company_location %}
-                        <p class="text-sm text-gray-500 mb-3"><i class="fas fa-map-marker-alt mr-1"></i> {{ job.company_location }}</p>
+                    {# Display company logo or default icon in sidebar #}
+                     {% if job.company.companyprofile.logo %}
+                        <img src="{{ job.company.companyprofile.logo.url }}" alt="{{ job.company.companyprofile.company_name }} Logo" class="w-20 h-20 rounded-md mb-4 object-contain border">
+                    {% else %}
+                         <span class="h-20 w-20 rounded-md bg-gray-200 flex items-center justify-center mb-4 border">
+                             <i class="fa-solid fa-circle-user text-5xl text-indigo-600"></i>
+                        </span>
                     {% endif %}
-                    <p class="text-sm text-gray-600 mb-4">{{ job.company_description|truncatewords:30|linebreaksbr|default:"Informații despre companie nu sunt disponibile." }}</p>
+                    <h4 class="font-semibold text-gray-900 mb-1">{{ job.company.companyprofile.company_name|default:job.company.username }}</h4> {# Correct company name #}
+                    {% if job.company.companyprofile.city or job.company.companyprofile.country %} {# Check profile location fields #}
+                        <p class="text-sm text-gray-500 mb-3"><i class="fas fa-map-marker-alt mr-1"></i> {{ job.company.companyprofile.city }}{% if job.company.companyprofile.city and job.company.companyprofile.country %},{% endif %} {{ job.company.companyprofile.country.name|default:job.company.companyprofile.country }}</p>
+                    {% endif %}
+                    <p class="text-sm text-gray-600 mb-4">{{ job.company.companyprofile.description|truncatewords:30|linebreaksbr|default:"Informații despre companie nu sunt disponibile." }}</p> {# Access description via profile #}
                     {# Add link to company profile page later #}
                     <a href="#" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition duration-300">
                         Vezi profilul companiei

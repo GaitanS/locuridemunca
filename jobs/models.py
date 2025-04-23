@@ -1,6 +1,7 @@
 from django.db import models
-from django.conf import settings # To link to our custom User model
+from django.conf import settings
 from django.utils.text import slugify
+from django_countries.fields import CountryField # Import CountryField
 
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -32,7 +33,9 @@ class Job(models.Model):
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, related_name='jobs')
     title = models.CharField(max_length=255)
     description = models.TextField()
-    location = models.CharField(max_length=150) # E.g., "Bucharest, Romania"
+    # location = models.CharField(max_length=150) # Removed old location field
+    country = CountryField(blank_label='(selectează țara)', default='RO') # Added country field, default Romania
+    city = models.CharField("Oraș", max_length=100) # Added city field
     job_type = models.CharField(max_length=20, choices=JOB_TYPE_CHOICES, default='full_time')
     salary_min = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     salary_max = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)

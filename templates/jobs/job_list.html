@@ -54,17 +54,23 @@
                 <h3 class="text-lg font-semibold text-gray-900 hover:text-indigo-600">
                     <a href="{% url 'jobs:job_detail' job.pk %}">{{ job.title }}</a>
                 </h3>
-                {# Optional: Add company logo #}
-                {# {% if job.company.logo %} <img src="{{ job.company.logo.url }}" alt="{{ job.company.name }}" class="h-10 w-10 rounded-full object-cover"> {% endif %} #}
-            </div>
-            <p class="text-sm text-gray-600 mb-1">{{ job.company_name }}</p>
-            <p class="text-sm text-gray-500 mb-3">
-                <i class="fas fa-map-marker-alt mr-1"></i> {{ job.location }}
-            </p>
-            <p class="text-sm text-gray-700 mb-4 line-clamp-3">{{ job.short_description|default:"Nicio descriere disponibilă." }}</p>
-            <div class="flex justify-between items-center text-xs text-gray-500">
-                <span>{{ job.job_type|capfirst }}</span>
-                <span>Publicat: {{ job.date_posted|date:"d M Y" }}</span>
+                {# Display company logo or default icon #}
+                {% if job.company.companyprofile.logo %}
+                    <img src="{{ job.company.companyprofile.logo.url }}" alt="{{ job.company.companyprofile.company_name }}" class="h-10 w-10 rounded-full object-cover ml-auto">
+                {% else %}
+                    <span class="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center ml-auto">
+                         <i class="fa-solid fa-circle-user text-2xl text-indigo-600"></i>
+                    </span>
+                {% endif %}
+                </div>
+                <p class="text-sm text-gray-600 mb-1">{{ job.company.companyprofile.company_name|default:job.company.username }}</p> {# Correct company name #}
+                <p class="text-sm text-gray-500 mb-3">
+                    <i class="fas fa-map-marker-alt mr-1"></i> {{ job.city }}{% if job.city and job.country %},{% endif %} {{ job.country.name|default:job.country }} {# Correct location #}
+                </p>
+                <p class="text-sm text-gray-700 mb-4 line-clamp-3">{{ job.description|truncatewords:20|default:"Nicio descriere disponibilă." }}</p> {# Use description, truncate #}
+                <div class="flex justify-between items-center text-xs text-gray-500">
+                    <span>{{ job.get_job_type_display }}</span> {# Correct job type #}
+                    <span>Publicat: {{ job.created_at|date:"d M Y" }}</span> {# Use created_at #}
             </div>
         </div>
         {% empty %}

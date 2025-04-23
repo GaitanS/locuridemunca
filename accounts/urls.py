@@ -16,7 +16,8 @@ urlpatterns = [
     path('dashboard/company/', views.CompanyDashboardView.as_view(), name='company_dashboard'),
 
     # Profile
-    path('profile/', views.ProfileView.as_view(), name='profile'), # Add profile URL
+    path('profile/', views.ProfileView.as_view(), name='profile'),
+    path('profile/edit/', views.CompanyProfileUpdateView.as_view(), name='company_profile_edit'), # Company profile edit URL
 
     # Include default auth urls (login, logout, password_reset, etc.)
     # These expect templates in a 'registration' directory

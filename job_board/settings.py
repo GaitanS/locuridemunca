@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # 3rd Party Apps
+    'django_countries', # Added for CountryField
+
     # Local apps
     'accounts.apps.AccountsConfig',
     'jobs.apps.JobsConfig',
@@ -142,3 +145,6 @@ AUTH_USER_MODEL = 'accounts.User'
 # Email Configuration (Development)
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'webmaster@joburipentruromani.local' # Example address
+
+# django-countries settings
+COUNTRIES_FLAG_URL = '' # Disable flags in CountrySelectWidget globally

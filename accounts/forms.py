@@ -75,6 +75,40 @@ class JobSeekerSignUpForm(UserCreationForm):
             )
         return user
 
+# --- Profile Forms ---
+
+class CompanyProfileForm(forms.ModelForm):
+    # Add fields from User model if needed (e.g., email, first/last name)
+    # email = forms.EmailField(required=True)
+
+    class Meta:
+        model = CompanyProfile
+        # Include fields from CompanyProfile that should be editable
+        fields = [
+            'company_name', 'street_address', 'city', 'country',
+            'website', 'description', 'logo'
+        ]
+        widgets = {
+            'company_name': forms.TextInput(attrs={'placeholder': 'Numele companiei'}),
+            'street_address': forms.TextInput(attrs={'placeholder': 'Strada, numărul...'}),
+            'city': forms.TextInput(attrs={'placeholder': 'Oraș'}),
+            'country': forms.TextInput(attrs={'placeholder': 'România'}), # Consider CountrySelectWidget if needed
+            'website': forms.URLInput(attrs={'placeholder': 'https://exemplu.com'}),
+            'description': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Descrierea companiei...'}),
+            'logo': forms.ClearableFileInput(), # Use ClearableFileInput for image uploads
+        }
+        labels = {
+            'company_name': "Numele companiei",
+            'street_address': "Adresă sediu social",
+            'city': "Oraș",
+            'country': "Țară",
+            'website': "Website",
+            'description': "Descriere companie",
+            'logo': "Logo companie",
+        }
+
+    # If editing User fields too, you'd need a separate User form or combine logic carefully.
+
 class CompanySignUpForm(UserCreationForm):
     email = forms.EmailField(
         required=True,
