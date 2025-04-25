@@ -195,25 +195,28 @@
              {# Similar Jobs Section (Moved below main content) #}
             <div class="mt-10">
                 <h2 class="text-xl font-semibold text-gray-800 mb-4">Joburi similare</h2>
+                {% if similar_jobs %}
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {# Placeholder - Loop through related jobs later #}
-                    {% for i in "12" %} {# Example loop #}
+                    {% for similar_job in similar_jobs %}
                     <div class="bg-white rounded-lg shadow border border-gray-200 p-4 flex flex-col">
                          <div class="flex justify-between items-center mb-1">
-                            <span class="text-xs text-gray-500">1{{ i }} Apr. 2025</span>
+                            <span class="text-xs text-gray-500">{{ similar_job.created_at|date:"d M Y" }}</span>
                             {# Placeholder save button #}
                             <button class="text-gray-400 hover:text-indigo-600"><i class="far fa-bookmark"></i></button>
                          </div>
-                         <h3 class="text-md font-semibold text-gray-900 mb-1"><a href="#" class="hover:text-indigo-600">Titlu Job Similar {{ i }}</a></h3>
-                         <p class="text-sm text-gray-600 mb-3">Nume Companie - Locație</p>
+                         <h3 class="text-md font-semibold text-gray-900 mb-1"><a href="{% url 'jobs:job_detail' similar_job.slug %}" class="hover:text-indigo-600">{{ similar_job.title }}</a></h3>
+                         <p class="text-sm text-gray-600 mb-3">{{ similar_job.company.companyprofile.company_name|default:similar_job.company.username }} - {{ similar_job.city }}{% if similar_job.country %}, {{ similar_job.country }}{% endif %}</p>
                          <div class="mt-auto pt-3 border-t border-gray-100">
-                              <a href="#" class="w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition duration-300">
-                                Aplică rapid
+                              <a href="{% url 'jobs:job_detail' similar_job.slug %}" class="w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300">
+                                Vezi detalii
                             </a>
                          </div>
                     </div>
                     {% endfor %}
                 </div>
+                {% else %}
+                <p class="text-gray-600">Nu există joburi similare disponibile momentan.</p>
+                {% endif %}
             </div>
 
         </main>

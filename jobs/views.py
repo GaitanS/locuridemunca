@@ -59,6 +59,16 @@ class JobDetailView(DetailView):
         # Ensure we can only view published jobs, prefetch related data
         return Job.objects.filter(is_published=True).select_related('company', 'category', 'company__companyprofile')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        job = self.get_object()
+        # Find similar jobs (same category, excluding current job, limit to 4)
+        context['similar_jobs'] = Job.objects.filter(
+            category=job.category, 
+            is_published=True
+        ).exclude(pk=job.pk).select_related('company', 'company__companyprofile').order_by('-created_at')[:4] # Limit to 4 similar jobs
+        return context
+
 # --- Job Creation ---
 
 class JobCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
