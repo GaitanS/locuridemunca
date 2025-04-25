@@ -73,7 +73,7 @@
                         {% for app in applications|slice:":5" %} {# Show latest 5 applications #}
                             <li class="py-3">
                                 <div class="flex justify-between items-center">
-                                    <a href="{% url 'jobs:job_detail' app.job.pk %}" class="text-sm font-medium text-indigo-600 hover:underline truncate">{{ app.job.title }}</a>
+                                    <a href="{{ app.job.get_absolute_url }}" class="text-sm font-medium text-indigo-600 hover:underline truncate">{{ app.job.title }}</a> {# Use get_absolute_url #}
                                     <span class="text-xs text-gray-500 ml-2 whitespace-nowrap">{{ app.applied_at|timesince }} în urmă</span>
                                 </div>
                                 <p class="text-xs text-gray-500">{{ app.job.company.companyprofile.company_name|default:app.job.company.username }} - {{ app.job.city }}</p>
@@ -99,7 +99,7 @@
                         {% for job in saved_jobs_list|slice:":5" %} {# Show latest 5 saved jobs #}
                              <li class="py-3">
                                 <div class="flex justify-between items-center">
-                                    <a href="{% url 'jobs:job_detail' job.pk %}" class="text-sm font-medium text-indigo-600 hover:underline truncate">{{ job.title }}</a>
+                                    <a href="{{ job.get_absolute_url }}" class="text-sm font-medium text-indigo-600 hover:underline truncate">{{ job.title }}</a> {# Use get_absolute_url #}
                                     {# Unsave button #}
                                     <form action="{% url 'jobs:job_unsave' job.pk %}" method="post" class="inline ml-2">
                                         {% csrf_token %}

@@ -17,79 +17,85 @@
       </div>
     {% endif %}
 
-    {# Render each field manually for better control #}
+    {# Render fields manually #}
     <div>
         <label for="{{ form.title.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">{{ form.title.label }}</label>
         {{ form.title }}
-        {% if form.title.errors %}
-          <div class="mt-1 text-xs text-red-600">{% for error in form.title.errors %}<p>{{ error }}</p>{% endfor %}</div>
-        {% endif %}
+        {% if form.title.errors %}<div class="mt-1 text-xs text-red-600">{% for error in form.title.errors %}<p>{{ error }}</p>{% endfor %}</div>{% endif %}
     </div>
 
-    <div>
-        <label for="{{ form.category.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">{{ form.category.label }}</label>
-        {{ form.category }}
-        {% if form.category.errors %}
-          <div class="mt-1 text-xs text-red-600">{% for error in form.category.errors %}<p>{{ error }}</p>{% endfor %}</div>
-        {% endif %}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+            <label for="{{ form.category.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">{{ form.category.label }}</label>
+            {{ form.category }}
+            {% if form.category.errors %}<div class="mt-1 text-xs text-red-600">{% for error in form.category.errors %}<p>{{ error }}</p>{% endfor %}</div>{% endif %}
+        </div>
+        <div>
+            <label for="{{ form.job_type.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">{{ form.job_type.label }}</label>
+            {{ form.job_type }}
+            {% if form.job_type.errors %}<div class="mt-1 text-xs text-red-600">{% for error in form.job_type.errors %}<p>{{ error }}</p>{% endfor %}</div>{% endif %}
+        </div>
     </div>
 
-    {# Replaced location with country and city fields #}
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
             <label for="{{ form.country.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">{{ form.country.label }}</label>
             {{ form.country }}
-            {% if form.country.errors %}
-              <div class="mt-1 text-xs text-red-600">{% for error in form.country.errors %}<p>{{ error }}</p>{% endfor %}</div>
-            {% endif %}
+            {% if form.country.errors %}<div class="mt-1 text-xs text-red-600">{% for error in form.country.errors %}<p>{{ error }}</p>{% endfor %}</div>{% endif %}
         </div>
          <div>
             <label for="{{ form.city.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">{{ form.city.label }}</label>
             {{ form.city }}
-            {% if form.city.errors %}
-              <div class="mt-1 text-xs text-red-600">{% for error in form.city.errors %}<p>{{ error }}</p>{% endfor %}</div>
-            {% endif %}
+            {% if form.city.errors %}<div class="mt-1 text-xs text-red-600">{% for error in form.city.errors %}<p>{{ error }}</p>{% endfor %}</div>{% endif %}
         </div>
     </div>
 
-     <div>
-        <label for="{{ form.job_type.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">{{ form.job_type.label }}</label>
-        {{ form.job_type }}
-        {% if form.job_type.errors %}
-          <div class="mt-1 text-xs text-red-600">{% for error in form.job_type.errors %}<p>{{ error }}</p>{% endfor %}</div>
-        {% endif %}
+     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+         <div>
+            <label for="{{ form.experience_level.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">{{ form.experience_level.label }}</label>
+            {{ form.experience_level }}
+            {% if form.experience_level.errors %}<div class="mt-1 text-xs text-red-600">{% for error in form.experience_level.errors %}<p>{{ error }}</p>{% endfor %}</div>{% endif %}
+        </div>
+         <div>
+            <label for="{{ form.positions_available.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">{{ form.positions_available.label }}</label>
+            {{ form.positions_available }}
+            {% if form.positions_available.errors %}<div class="mt-1 text-xs text-red-600">{% for error in form.positions_available.errors %}<p>{{ error }}</p>{% endfor %}</div>{% endif %}
+        </div>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div>
             <label for="{{ form.salary_min.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">{{ form.salary_min.label }}</label>
             {{ form.salary_min }}
-            {% if form.salary_min.errors %}
-              <div class="mt-1 text-xs text-red-600">{% for error in form.salary_min.errors %}<p>{{ error }}</p>{% endfor %}</div>
-            {% endif %}
+            {% if form.salary_min.errors %}<div class="mt-1 text-xs text-red-600">{% for error in form.salary_min.errors %}<p>{{ error }}</p>{% endfor %}</div>{% endif %}
         </div>
          <div>
             <label for="{{ form.salary_max.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">{{ form.salary_max.label }}</label>
             {{ form.salary_max }}
-            {% if form.salary_max.errors %}
-              <div class="mt-1 text-xs text-red-600">{% for error in form.salary_max.errors %}<p>{{ error }}</p>{% endfor %}</div>
-            {% endif %}
+            {% if form.salary_max.errors %}<div class="mt-1 text-xs text-red-600">{% for error in form.salary_max.errors %}<p>{{ error }}</p>{% endfor %}</div>{% endif %}
         </div>
          <div>
             <label for="{{ form.salary_currency.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">{{ form.salary_currency.label }}</label>
             {{ form.salary_currency }}
-            {% if form.salary_currency.errors %}
-              <div class="mt-1 text-xs text-red-600">{% for error in form.salary_currency.errors %}<p>{{ error }}</p>{% endfor %}</div>
-            {% endif %}
+            {% if form.salary_currency.errors %}<div class="mt-1 text-xs text-red-600">{% for error in form.salary_currency.errors %}<p>{{ error }}</p>{% endfor %}</div>{% endif %}
         </div>
     </div>
 
+    {# New Description Fields #}
     <div>
-        <label for="{{ form.description.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">{{ form.description.label }}</label>
-        {{ form.description }}
-        {% if form.description.errors %}
-          <div class="mt-1 text-xs text-red-600">{% for error in form.description.errors %}<p>{{ error }}</p>{% endfor %}</div>
-        {% endif %}
+        <label for="{{ form.ideal_candidate.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">{{ form.ideal_candidate.label }}</label>
+        {{ form.ideal_candidate }}
+        {% if form.ideal_candidate.errors %}<div class="mt-1 text-xs text-red-600">{% for error in form.ideal_candidate.errors %}<p>{{ error }}</p>{% endfor %}</div>{% endif %}
+    </div>
+     <div>
+        <label for="{{ form.what_we_offer.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">{{ form.what_we_offer.label }}</label>
+        {{ form.what_we_offer }}
+        {% if form.what_we_offer.errors %}<div class="mt-1 text-xs text-red-600">{% for error in form.what_we_offer.errors %}<p>{{ error }}</p>{% endfor %}</div>{% endif %}
+    </div>
+     <div>
+        <label for="{{ form.responsibilities.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">{{ form.responsibilities.label }}</label>
+        {{ form.responsibilities }}
+        {% if form.responsibilities.errors %}<div class="mt-1 text-xs text-red-600">{% for error in form.responsibilities.errors %}<p>{{ error }}</p>{% endfor %}</div>{% endif %}
     </div>
 
 
@@ -97,7 +103,7 @@
     <div class="pt-4">
         <button type="submit"
                 class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded transition duration-300">
-          Postează Anunțul
+          {% if object %}Actualizează Anunțul{% else %}Postează Anunțul{% endif %} {# Change button text if editing #}
         </button>
     </div>
   </form>

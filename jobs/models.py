@@ -1,12 +1,12 @@
 from django.db import models
 from django.conf import settings
+from django.urls import reverse
 from django.utils.text import slugify
-from django_countries.fields import CountryField # Import CountryField
+from django_countries.fields import CountryField
 
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(max_length=120, unique=True, blank=True)
-    # Add description or icon fields if needed later
 
     class Meta:
         verbose_name_plural = "Categories"
@@ -26,43 +26,73 @@ class Job(models.Model):
         ('part_time', 'Part Time'),
         ('contract', 'Contract'),
         ('internship', 'Internship'),
-        ('remote', 'Remote'), # Consider if 'Remote' is a type or a location attribute
+        ('remote', 'Remote'),
+    )
+    EXPERIENCE_LEVEL_CHOICES = (
+        ('entry', 'Entry-Level (< 2 ani)'),
+        ('mid', 'Mid-Level (2-5 ani)'),
+        ('senior', 'Senior-Level (5+ ani)'),
+        ('manager', 'Manager / Director'),
+        ('intern', 'Intern / Stagiar'),
+        ('no_experience', 'Fără experiență'),
     )
 
     company = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='jobs_posted', limit_choices_to={'user_type': 'company'})
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, related_name='jobs')
     title = models.CharField(max_length=255)
-    description = models.TextField()
-    # location = models.CharField(max_length=150) # Removed old location field
-    country = CountryField(blank_label='(selectează țara)', default='RO') # Added country field, default Romania
-    city = models.CharField("Oraș", max_length=100) # Added city field
+    slug = models.SlugField(max_length=270, unique=True, blank=True, help_text="Leave blank to auto-generate from title.") # Added unique=True back
+
+    # Replaced description with specific fields
+    ideal_candidate = models.TextField("Candidatul Ideal", blank=True, null=True)
+    what_we_offer = models.TextField("Ce oferim?", blank=True, null=True)
+    responsibilities = models.TextField("Descrierea jobului / Responsabilități", blank=True, null=True) # Renamed from description
+
+    country = CountryField(blank_label='(selectează țara)', default='RO')
+    city = models.CharField("Oraș", max_length=100)
     job_type = models.CharField(max_length=20, choices=JOB_TYPE_CHOICES, default='full_time')
+    experience_level = models.CharField("Nivel Experiență", max_length=20, choices=EXPERIENCE_LEVEL_CHOICES, null=True, blank=True) # Added field
+    positions_available = models.PositiveIntegerField("Număr Poziții Deschise", default=1, null=True, blank=True) # Added field
+
     salary_min = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     salary_max = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    salary_currency = models.CharField(max_length=3, default='RON', blank=True) # E.g., RON, EUR
-    is_published = models.BooleanField(default=True) # Allow drafts or admin approval later
-    is_featured = models.BooleanField(default=False) # For premium/featured listings
+    salary_currency = models.CharField(max_length=3, default='RON', blank=True)
+
+    is_published = models.BooleanField(default=True)
+    is_featured = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    # Add application deadline, required skills, experience level etc. later
 
     class Meta:
         ordering = ['-created_at']
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+            # Basic check for uniqueness on initial save (more robust handling might be needed)
+            # This won't fix existing duplicates from the migration, only prevent new ones on save.
+            original_slug = self.slug
+            counter = 1
+            while Job.objects.filter(slug=self.slug).exclude(pk=self.pk).exists():
+                self.slug = f'{original_slug}-{counter}'
+                counter += 1
+        super().save(*args, **kwargs)
 
     def __str__(self):
         company_name = self.company.companyprofile.company_name if hasattr(self.company, 'companyprofile') else self.company.username
         return f"{self.title} at {company_name}"
 
+    def get_absolute_url(self):
+        # Use slug in the URL
+        return reverse('jobs:job_detail', kwargs={'slug': self.slug})
+
+
 class Application(models.Model):
-    """
-    Represents a job application submitted by a Job Seeker for a Job.
-    """
     STATUS_CHOICES = (
         ('submitted', 'Submitted'),
         ('viewed', 'Viewed'),
         ('shortlisted', 'Shortlisted'),
         ('rejected', 'Rejected'),
-        ('accepted', 'Accepted'), # Optional: If you track hiring status
+        ('accepted', 'Accepted'),
     )
 
     job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='applications')
@@ -70,11 +100,31 @@ class Application(models.Model):
     applied_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='submitted')
     cover_letter = models.TextField(blank=True, null=True, help_text="Optional cover letter.")
-    # You might add fields for CV snapshot at time of application if profiles change
 
     class Meta:
         ordering = ['-applied_at']
-        unique_together = ('job', 'applicant') # Ensure a user can only apply once per job
+        unique_together = ('job', 'applicant')
 
     def __str__(self):
         return f"Application by {self.applicant.username} for {self.job.title}"
+
+class JobReport(models.Model):
+    REPORT_STATUS_CHOICES = (
+        ('pending', 'Pending Review'),
+        ('reviewed', 'Reviewed'),
+        ('action_taken', 'Action Taken'),
+        ('dismissed', 'Dismissed'),
+    )
+
+    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='reports')
+    reporter = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='job_reports', help_text="User who reported the job (optional)")
+    reason = models.TextField(help_text="Reason for reporting the job.")
+    reported_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20, choices=REPORT_STATUS_CHOICES, default='pending')
+    admin_notes = models.TextField(blank=True, null=True, help_text="Notes from admin review.")
+
+    class Meta:
+        ordering = ['-reported_at']
+
+    def __str__(self):
+        return f"Report for '{self.job.title}' by {self.reporter.username if self.reporter else 'Anonymous'} on {self.reported_at.strftime('%Y-%m-%d')}"

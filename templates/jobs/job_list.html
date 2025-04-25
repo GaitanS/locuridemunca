@@ -52,7 +52,7 @@
         <div class="bg-white rounded-lg shadow p-6 border border-gray-200 hover:border-indigo-300 transition duration-300">
             <div class="flex justify-between items-start mb-2">
                 <h3 class="text-lg font-semibold text-gray-900 hover:text-indigo-600">
-                    <a href="{% url 'jobs:job_detail' job.pk %}">{{ job.title }}</a>
+                    <a href="{{ job.get_absolute_url }}">{{ job.title }}</a> {# Use get_absolute_url (slug) #}
                 </h3>
                 {# Save/Unsave Button - Show only for logged-in job seekers #}
                 <div class="flex-shrink-0 ml-4">

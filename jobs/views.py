@@ -1,11 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse # Import reverse
 from django.views import View
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, FormView # Import FormView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
-from .models import Job, Category, Application # Import Application model
-from .forms import JobForm
+from .models import Job, Category, Application, JobReport # Import Application and JobReport models
+from .forms import JobForm, JobReportForm # Import JobForm and JobReportForm
 from django.db.models import Q
 from django.db import IntegrityError # To handle duplicate applications
 
@@ -21,7 +21,7 @@ class JobListView(ListView):
         queryset = Job.objects.filter(is_published=True).select_related('company', 'category', 'company__companyprofile')
 
         query = self.request.GET.get('q')
-        location = self.request.GET.get('location')
+        location = self.request.GET.get('location') # This filter might need updating to use city/country
         category_slug = self.request.GET.get('category')
 
         if query:
@@ -32,8 +32,9 @@ class JobListView(ListView):
             )
 
         if location:
+            # TODO: Update location filter to search city and/or country
             queryset = queryset.filter(
-                Q(location__icontains=location)
+                 Q(city__icontains=location) # Simple city search for now
             )
 
         if category_slug:
@@ -49,8 +50,10 @@ class JobListView(ListView):
 
 class JobDetailView(DetailView):
     model = Job
-    template_name = 'jobs/job_detail.html' # Template for job details
+    template_name = 'jobs/job_detail.html'
     context_object_name = 'job'
+    slug_field = 'slug' # Specify the field to use for lookup
+    slug_url_kwarg = 'slug' # Specify the URL keyword argument
 
     def get_queryset(self):
         # Ensure we can only view published jobs, prefetch related data
@@ -61,31 +64,25 @@ class JobDetailView(DetailView):
 class JobCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Job
     form_class = JobForm
-    template_name = 'jobs/job_form.html' # We'll create this template next
-    # Redirect to company dashboard after successful creation
+    template_name = 'jobs/job_form.html'
     success_url = reverse_lazy('accounts:company_dashboard')
 
     def test_func(self):
-        # Only allow users with user_type 'company' to access this view
         return self.request.user.user_type == 'company'
 
     def handle_no_permission(self):
-        # Optional: Redirect non-company users or show an error
         messages.error(self.request, "Doar companiile pot posta anunțuri.")
-        # Redirect to home or job list perhaps?
         return redirect('core:home')
 
     def form_valid(self, form):
-        # Assign the logged-in company user to the job posting
         form.instance.company = self.request.user
-        # Default to published, can add draft logic later
         form.instance.is_published = True
         messages.success(self.request, f"Anunțul '{form.instance.title}' a fost creat cu succes.")
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['page_title'] = "Postează un Anunț Nou" # Title for the template
+        context['page_title'] = "Postează un Anunț Nou"
         return context
 
 # --- Job Update ---
@@ -93,18 +90,16 @@ class JobCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 class JobUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Job
     form_class = JobForm
-    template_name = 'jobs/job_form.html' # Reuse the job form template
-    # Redirect to company dashboard after successful update
+    template_name = 'jobs/job_form.html'
     success_url = reverse_lazy('accounts:company_dashboard')
 
     def test_func(self):
-        # Check if the logged-in user is the owner of the job
         job = self.get_object()
         return self.request.user == job.company
 
     def handle_no_permission(self):
         messages.error(self.request, "Nu aveți permisiunea să editați acest anunț.")
-        return redirect('accounts:company_dashboard') # Redirect back to dashboard
+        return redirect('accounts:company_dashboard')
 
     def form_valid(self, form):
         messages.success(self.request, f"Anunțul '{form.instance.title}' a fost actualizat cu succes.")
@@ -112,48 +107,39 @@ class JobUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['page_title'] = f"Editează Anunțul: {self.object.title}" # Dynamic title
+        context['page_title'] = f"Editează Anunțul: {self.object.title}"
         return context
 
 # --- Job Application ---
 
 class ApplyToJobView(LoginRequiredMixin, UserPassesTestMixin, View):
-    """
-    Handles the job application submission (POST request).
-    """
+    login_url = reverse_lazy('accounts:login')
+
     def test_func(self):
-        # Only allow logged-in job seekers to apply
         return self.request.user.is_authenticated and self.request.user.user_type == 'job_seeker'
 
     def handle_no_permission(self):
         messages.error(self.request, "Doar candidații autentificați pot aplica la joburi.")
-        # Redirect to login or job detail page
-        return redirect('accounts:login') # Or redirect back to job detail?
+        return redirect('accounts:login')
 
     def post(self, request, *args, **kwargs):
         job_id = self.kwargs.get('pk')
         job = get_object_or_404(Job, pk=job_id, is_published=True)
         applicant = request.user
 
-        # Optional: Check if applicant has a CV uploaded
         if not hasattr(applicant, 'jobseekerprofile') or not applicant.jobseekerprofile.cv:
              messages.warning(request, "Vă rugăm să încărcați un CV în profilul dumneavoastră înainte de a aplica.")
-             # Redirect to profile edit page (needs to be created)
-             # return redirect('accounts:jobseeker_profile_edit')
-             return redirect('jobs:job_detail', pk=job.pk) # Redirect back for now
+             return redirect('jobs:job_detail', pk=job.pk)
 
-        # Check if already applied
         if Application.objects.filter(job=job, applicant=applicant).exists():
             messages.info(request, "Ați aplicat deja la acest job.")
             return redirect('jobs:job_detail', pk=job.pk)
 
-        # Create the application
         try:
             Application.objects.create(job=job, applicant=applicant)
             messages.success(request, f"Aplicația dumneavoastră pentru '{job.title}' a fost trimisă cu succes!")
-            # Redirect to job seeker dashboard or job detail page
             return redirect('accounts:jobseeker_dashboard')
-        except IntegrityError: # Should be caught by the exists() check, but as a fallback
+        except IntegrityError:
              messages.error(request, "A apărut o eroare. Se pare că ați aplicat deja.")
              return redirect('jobs:job_detail', pk=job.pk)
         except Exception as e:
@@ -162,10 +148,8 @@ class ApplyToJobView(LoginRequiredMixin, UserPassesTestMixin, View):
 
 # --- Save/Unsave Job ---
 
-# Removed redundant decorator - LoginRequiredMixin handles login check
 class SaveJobView(LoginRequiredMixin, UserPassesTestMixin, View):
-    """ Handles saving a job for a job seeker """
-    login_url = reverse_lazy('accounts:login') # Specify login URL for LoginRequiredMixin
+    login_url = reverse_lazy('accounts:login')
 
     def test_func(self):
         return self.request.user.is_authenticated and self.request.user.user_type == 'job_seeker'
@@ -185,14 +169,11 @@ class SaveJobView(LoginRequiredMixin, UserPassesTestMixin, View):
         else:
             messages.info(request, f"Jobul '{job.title}' este deja salvat.")
 
-        # Redirect back to the previous page or job detail
         return redirect(request.META.get('HTTP_REFERER', reverse('jobs:job_detail', kwargs={'pk': job.pk})))
 
 
-# Removed redundant decorator - LoginRequiredMixin handles login check
 class UnsaveJobView(LoginRequiredMixin, UserPassesTestMixin, View):
-    """ Handles unsaving a job for a job seeker """
-    login_url = reverse_lazy('accounts:login') # Specify login URL for LoginRequiredMixin
+    login_url = reverse_lazy('accounts:login')
 
     def test_func(self):
         return self.request.user.is_authenticated and self.request.user.user_type == 'job_seeker'
@@ -212,19 +193,17 @@ class UnsaveJobView(LoginRequiredMixin, UserPassesTestMixin, View):
         else:
             messages.info(request, f"Jobul '{job.title}' nu era salvat.")
 
-        # Redirect back to the previous page or job detail
         return redirect(request.META.get('HTTP_REFERER', reverse('jobs:job_detail', kwargs={'pk': job.pk})))
 
 # --- View Applications for a Job ---
 
 class JobApplicationsListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     model = Application
-    template_name = 'jobs/job_applications.html' # New template
+    template_name = 'jobs/job_applications.html'
     context_object_name = 'applications'
-    paginate_by = 10 # Paginate applications if needed
+    paginate_by = 10
 
     def test_func(self):
-        # Ensure user is the company that owns the job
         job = get_object_or_404(Job, pk=self.kwargs['job_pk'])
         return self.request.user.is_authenticated and self.request.user == job.company
 
@@ -233,18 +212,48 @@ class JobApplicationsListView(LoginRequiredMixin, UserPassesTestMixin, ListView)
         return redirect('accounts:company_dashboard')
 
     def get_queryset(self):
-        # Filter applications for the specific job
         job = get_object_or_404(Job, pk=self.kwargs['job_pk'])
-        # Optimize by fetching related applicant and profile data
         return Application.objects.filter(job=job).select_related(
             'applicant', 'applicant__jobseekerprofile'
         ).order_by('-applied_at')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Add the job object to the context to display its title etc.
         context['job'] = get_object_or_404(Job, pk=self.kwargs['job_pk'])
         return context
 
+# --- Report Job ---
 
-# Add views for job deletion, category-specific lists later
+class ReportJobView(LoginRequiredMixin, FormView):
+    form_class = JobReportForm
+    template_name = 'jobs/job_report_form.html' # New template for reporting
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['job'] = get_object_or_404(Job, pk=self.kwargs['job_pk'])
+        context['page_title'] = f"Raportează Anunțul: {context['job'].title}"
+        return context
+
+    def form_valid(self, form):
+        job = get_object_or_404(Job, pk=self.kwargs['job_pk'])
+        reporter = self.request.user if self.request.user.is_authenticated else None
+        reason = form.cleaned_data['reason']
+
+        try:
+            JobReport.objects.create(
+                job=job,
+                reporter=reporter,
+                reason=reason
+            )
+            messages.success(self.request, "Vă mulțumim! Raportarea a fost trimisă și va fi analizată.")
+            # Redirect back to job detail page
+            return redirect('jobs:job_detail', pk=job.pk)
+        except Exception as e:
+            messages.error(self.request, f"A apărut o eroare la trimiterea raportării: {e}")
+            # Render the form again with an error
+            return super().form_invalid(form)
+
+    # No need for test_func or handle_no_permission if anonymous reports are allowed
+    # If login is required, LoginRequiredMixin handles it.
+
+# Add views for job deletion later

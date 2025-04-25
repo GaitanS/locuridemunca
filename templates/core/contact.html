@@ -38,27 +38,30 @@
                     <a href="#" class="text-blue-600 hover:text-blue-800"><i class="fab fa-twitter fa-lg"></i></a>
                 </div>
             </div>
-            <!-- Contact Form (Static) -->
+            <!-- Contact Form -->
             <div>
                  <h3 class="text-xl font-semibold text-gray-700 mb-4">Trimite-ne un mesaj</h3>
-                 <form action="#" method="post"> {# Placeholder action - needs backend view to handle submission #}
-                    {% csrf_token %} {# Add CSRF token if this becomes a Django form #}
-                    <div class="mb-4">
-                        <label for="name" class="block text-sm font-medium text-gray-700">Nume complet</label>
-                        <input type="text" id="name" name="name" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                    </div>
-                    <div class="mb-4">
-                        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                        <input type="email" id="email" name="email" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                    </div>
-                    <div class="mb-4">
-                        <label for="subject" class="block text-sm font-medium text-gray-700">Subiect</label>
-                        <input type="text" id="subject" name="subject" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                    </div>
-                    <div class="mb-4">
-                        <label for="message" class="block text-sm font-medium text-gray-700">Mesaj</label>
-                        <textarea id="message" name="message" rows="4" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"></textarea>
-                    </div>
+                 {# Use POST method and render Django form #}
+                 <form action="{% url 'core:contact' %}" method="post" class="space-y-4">
+                    {% csrf_token %}
+                    {% if form.non_field_errors %}
+                      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                        {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+                      </div>
+                    {% endif %}
+
+                    {% for field in form %}
+                      <div>
+                        <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700">{{ field.label }}</label>
+                        {{ field }} {# Render widget with classes defined in form #}
+                        {% if field.errors %}
+                          <div class="mt-1 text-xs text-red-600">
+                            {% for error in field.errors %}<p>{{ error }}</p>{% endfor %}
+                          </div>
+                        {% endif %}
+                      </div>
+                    {% endfor %}
+
                     <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300">
                         Trimite mesajul
                     </button>

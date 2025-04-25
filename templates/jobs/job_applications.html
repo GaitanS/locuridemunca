@@ -5,7 +5,8 @@
 {% block content %}
 <div class="container mx-auto px-4 py-8">
     <div class="mb-6 pb-4 border-b">
-        <h1 class="text-3xl font-bold text-gray-800">Aplicații pentru "{{ job.title }}"</h1>
+        {# Link job title back to detail page using slug #}
+        <h1 class="text-3xl font-bold text-gray-800">Aplicații pentru "<a href="{{ job.get_absolute_url }}" class="text-indigo-600 hover:underline">{{ job.title }}</a>"</h1>
         <a href="{% url 'accounts:company_dashboard' %}" class="text-sm text-indigo-600 hover:underline">&larr; Înapoi la Dashboard</a>
     </div>
 

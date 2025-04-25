@@ -1,6 +1,11 @@
-from django.shortcuts import render
-from django.views.generic import TemplateView
-from jobs.models import Category, Job # Import job models
+from django.shortcuts import render, redirect
+from django.urls import reverse_lazy, reverse # Added reverse
+from django.views.generic import TemplateView, FormView
+from django.contrib import messages
+from jobs.models import Category, Job
+from .forms import NewsletterSubscriptionForm, ContactForm # Import forms
+from .models import NewsletterSubscription, ContactMessage # Import models
+from django.views.decorators.http import require_POST # Import decorator
 
 # Create your views here.
 
@@ -18,12 +23,65 @@ class HomeView(TemplateView):
         # Add context for other sections later (featured, promoted etc.)
         return context
 
-class AboutView(TemplateView):
+class AboutView(TemplateView): # Reverted to TemplateView
     """
     View for the About Us page.
     """
     template_name = "core/about.html"
-    # Add get_context_data if specific context is needed for the about page later
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Add the newsletter form to the context for display
+        if 'newsletter_form' not in context:
+             context['newsletter_form'] = NewsletterSubscriptionForm()
+        # Add the contact form to the context for display
+        if 'contact_form' not in context:
+            context['contact_form'] = ContactForm()
+        return context
+
+# Separate view to handle newsletter subscription POST
+@require_POST # Ensure this view only accepts POST requests
+def newsletter_subscribe_view(request):
+    form = NewsletterSubscriptionForm(request.POST)
+    if form.is_valid():
+        email = form.cleaned_data['email']
+        subscription, created = NewsletterSubscription.objects.get_or_create(email=email)
+        if created:
+            messages.success(request, "Vă mulțumim pentru abonare!")
+        else:
+            messages.info(request, "Adresa de email este deja abonată.")
+    else:
+        # Add form errors to messages to display them on the redirected page
+        for field, errors in form.errors.items():
+            for error in errors:
+                 messages.error(request, f"{form.fields[field].label if form.fields[field].label else field}: {error}") # Use field label
+        # Or a generic error message
+        # messages.error(request, "Vă rugăm introduceți o adresă de email validă.")
+
+    # Redirect back to the 'about' page regardless of success/failure
+    # The messages framework will display the appropriate message
+    return redirect(reverse('core:about') + '#newsletter-form') # Redirect back to about page, potentially to an anchor
+
+# Separate view to handle contact form submission from About page
+@require_POST
+def contact_submit_view(request):
+    form = ContactForm(request.POST)
+    if form.is_valid():
+        form.save()
+        messages.success(request, "Mesajul dumneavoastră a fost trimis cu succes! Vă vom contacta în curând.")
+        # Redirect back to about page, clear form by redirecting
+        return redirect(reverse('core:about') + '#contact-form')
+    else:
+        # If form is invalid, re-render the About page with the form containing errors
+        messages.error(request, "A apărut o eroare la trimiterea mesajului. Vă rugăm verificați câmpurile.")
+        # We need to pass the invalid form back to the AboutView context
+        # This is a bit tricky with function views redirecting. A common pattern is to store errors in session
+        # or re-render the template directly, but let's try passing it via messages for now
+        # or better, re-render the AboutView with the invalid form
+        view = AboutView()
+        view.request = request # Set request for context processing
+        context = view.get_context_data(contact_form=form) # Pass invalid form
+        return render(request, AboutView.template_name, context)
 
 class TermsView(TemplateView):
     """
@@ -37,9 +95,22 @@ class PrivacyView(TemplateView):
     """
     template_name = "core/privacy.html"
 
-class ContactView(TemplateView):
+class ContactView(FormView): # This remains for a potential dedicated /contact page
     """
-    View for the Contact page.
+    View for the dedicated Contact page (if needed).
+    Handles Contact form submission for that page.
     """
     template_name = "core/contact.html"
-    # Add form handling logic here later if needed
+    form_class = ContactForm
+    success_url = reverse_lazy('core:contact') # Redirect back to contact page
+
+    def form_valid(self, form):
+        # Save the message to the database
+        form.save()
+        messages.success(self.request, "Mesajul dumneavoastră a fost trimis cu succes! Vă vom contacta în curând.")
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, "A apărut o eroare. Vă rugăm verificați câmpurile completate.")
+        # Need to manually call get_context_data for FormView on invalid
+        return self.render_to_response(self.get_context_data(form=form))

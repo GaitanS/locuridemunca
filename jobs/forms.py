@@ -1,7 +1,6 @@
 from django import forms
-from .models import Job, Category
-# No need to import CountryField form field explicitly here
-from django_countries.widgets import CountrySelectWidget # Import the widget if needed for Meta
+from .models import Job, Category, JobReport # Added JobReport
+from django_countries.widgets import CountrySelectWidget
 
 class JobForm(forms.ModelForm):
     category = forms.ModelChoiceField(
@@ -14,11 +13,22 @@ class JobForm(forms.ModelForm):
         widget=forms.TextInput(attrs={'placeholder': 'Ex: Inginer Software Senior', 'class': 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'}),
         label="Titlu Job"
     )
-    description = forms.CharField(
-        widget=forms.Textarea(attrs={'rows': 6, 'placeholder': 'Descrieți responsabilitățile, cerințele, beneficiile...', 'class': 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'}),
-        label="Descriere Job"
+    # New description fields
+    ideal_candidate = forms.CharField(
+        widget=forms.Textarea(attrs={'rows': 5, 'placeholder': 'Descrieți candidatul ideal, cerințe specifice...', 'class': 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'}),
+        label="Candidatul Ideal",
+        required=False
     )
-    # Removed explicit country definition - ModelForm handles it
+    what_we_offer = forms.CharField(
+        widget=forms.Textarea(attrs={'rows': 5, 'placeholder': 'Descrieți oferta, beneficii, program...', 'class': 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'}),
+        label="Ce oferim?",
+        required=False
+    )
+    responsibilities = forms.CharField(
+        widget=forms.Textarea(attrs={'rows': 8, 'placeholder': 'Descrieți responsabilitățile principale ale postului...', 'class': 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'}),
+        label="Descrierea jobului / Responsabilități",
+        required=True # Make main description required
+    )
     city = forms.CharField(
         widget=forms.TextInput(attrs={'placeholder': 'Ex: București', 'class': 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'}),
         label="Oraș"
@@ -27,6 +37,20 @@ class JobForm(forms.ModelForm):
         choices=Job.JOB_TYPE_CHOICES,
         widget=forms.Select(attrs={'class': 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'}),
         label="Tip Job"
+    )
+    # New fields
+    experience_level = forms.ChoiceField(
+        choices=Job.EXPERIENCE_LEVEL_CHOICES,
+        required=False,
+        widget=forms.Select(attrs={'class': 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'}),
+        label="Nivel Experiență (Opțional)"
+    )
+    positions_available = forms.IntegerField(
+        min_value=1,
+        initial=1,
+        required=False,
+        widget=forms.NumberInput(attrs={'placeholder': '1', 'class': 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'}),
+        label="Număr Poziții Deschise (Opțional)"
     )
     salary_min = forms.DecimalField(
         required=False,
@@ -47,15 +71,24 @@ class JobForm(forms.ModelForm):
 
     class Meta:
         model = Job
+        # Updated fields list
         fields = [
-            'title', 'category', 'description', 'country', 'city', 'job_type', # country is now handled by ModelForm
-            'salary_min', 'salary_max', 'salary_currency'
+            'title', 'category', 'country', 'city', 'job_type', 'experience_level',
+            'positions_available', 'salary_min', 'salary_max', 'salary_currency',
+            'ideal_candidate', 'what_we_offer', 'responsibilities'
         ]
         labels = {
-            'country': 'Țară', # Set label here
-            'city': 'Oraș', # Ensure city label is correct
+            'country': 'Țară',
+            'city': 'Oraș',
         }
         widgets = {
             'country': CountrySelectWidget(attrs={'class': 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'}),
         }
-        # Exclude 'company', 'is_published', 'is_featured' as they will be handled in the view or later
+
+class JobReportForm(forms.Form):
+    reason = forms.CharField(
+        widget=forms.Textarea(attrs={'rows': 4, 'placeholder': 'Vă rugăm descrieți motivul raportării...'}),
+        label="Motivul Raportării",
+        required=True,
+        error_messages={'required': "Vă rugăm specificați motivul raportării."}
+    )
