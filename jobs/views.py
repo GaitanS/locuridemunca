@@ -32,9 +32,9 @@ class JobListView(ListView):
             )
 
         if location:
-            # TODO: Update location filter to search city and/or country
+            # Update location filter to search city AND country
             queryset = queryset.filter(
-                 Q(city__icontains=location) # Simple city search for now
+                 Q(city__icontains=location) | Q(country__icontains=location)
             )
 
         if category_slug:

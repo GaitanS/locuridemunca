@@ -15,7 +15,8 @@ class HomeView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # Fetch categories (consider adding job counts later)
-        context['categories'] = Category.objects.all()[:6] # Limit to 6 popular categories for display
+        # Fetch 6 random categories
+        context['categories'] = Category.objects.order_by('?')[:6]
         # Fetch recent jobs (replace with recommended/featured logic later)
         context['recent_jobs'] = Job.objects.filter(is_published=True).select_related(
             'company', 'category', 'company__companyprofile'
