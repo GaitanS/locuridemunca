@@ -20,6 +20,11 @@
         </div>
     {% endif %}
 
+    {# Adăugare mesaj informativ #}
+    <div class="mb-8 p-4 bg-yellow-100 border border-yellow-400 text-yellow-700 rounded max-w-4xl mx-auto text-center">
+        <p><i class="fas fa-info-circle mr-2"></i>Momentan, planurile de abonament sunt în curs de dezvoltare și nu pot fi achiziționate. Vă mulțumim pentru înțelegere!</p>
+    </div>
+
     {# Using a grid that allows items to span columns for flexibility if needed later, but aiming for 3 columns on large screens #}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto items-stretch">
         {% for plan in plans %}
@@ -120,10 +125,10 @@
                           {# <p class="text-center text-gray-500 text-sm">Acesta este planul gratuit.</p> #}
                       {% endif %}
                   {% else %}
-                      {# Placeholder link for paid plans until checkout is implemented #}
-                      <a href="#" class="block w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded text-center transition duration-300">
+                      {# Buton dezactivat pentru planurile plătite #}
+                      <button disabled class="block w-full bg-indigo-600 text-white font-bold py-2 px-4 rounded text-center opacity-50 cursor-not-allowed">
                           Alege acest plan
-                      </a>
+                      </button>
                  {% endif %}
             </div>
         </div>

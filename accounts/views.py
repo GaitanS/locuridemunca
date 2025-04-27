@@ -50,7 +50,7 @@ class JobSeekerSignUpView(CreateView):
         email = EmailMessage(mail_subject, message, to=[to_email])
         email.send()
 
-        messages.success(self.request, 'Please check your email to complete the registration.')
+        messages.success(self.request, 'Vă rugăm să verificați emailul pentru a finaliza înregistrarea.')
         return redirect(self.success_url)
 
     def form_invalid(self, form):
@@ -92,7 +92,7 @@ class CompanySignUpView(CreateView):
         email = EmailMessage(mail_subject, message, to=[to_email])
         email.send()
 
-        messages.success(self.request, 'Please check your email to complete the registration.')
+        messages.success(self.request, 'Vă rugăm să verificați emailul pentru a finaliza înregistrarea.')
         return redirect(self.success_url)
 
 # View to show after signup email is sent
