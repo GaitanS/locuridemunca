@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
-from django.views.generic import CreateView, TemplateView, View
+from django.views.generic import CreateView, TemplateView, View, DetailView # Add DetailView
 from .forms import JobSeekerSignUpForm, CompanySignUpForm, CompanyProfileForm, JobSeekerProfileForm # Import JobSeekerProfileForm
 from .models import User, JobSeekerProfile, CompanyProfile # Import profile models
 from django.contrib.sites.shortcuts import get_current_site
@@ -15,6 +15,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin # Import UserPassesTestMixin
 from django.views.generic.edit import UpdateView # Import UpdateView
+from jobs.models import Job # Import Job model
 
 # Basic signup choice view (can be expanded later)
 class SignUpView(TemplateView):
@@ -191,6 +192,29 @@ class CompanyDashboardView(TemplateView):
         # except CompanySubscription.DoesNotExist:
         #     context['subscription'] = None
         # Add other context like applications received later
+        return context
+
+
+class CompanyDetailView(DetailView):
+    model = User # The URL likely uses the User's PK
+    template_name = 'company/company_detail.html'
+    context_object_name = 'company_user' # Use a distinct name to avoid conflict with 'company' context processor
+
+    def get_queryset(self):
+        # Ensure we only fetch users that are companies
+        return User.objects.filter(user_type='company')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Add the related CompanyProfile to the context
+        # The DetailView puts the main object (User) in 'company_user'
+        company_user = self.get_object()
+        try:
+            context['company_profile'] = company_user.companyprofile
+        except CompanyProfile.DoesNotExist:
+            context['company_profile'] = None # Handle case where profile might not exist yet
+        # Add jobs posted by this company
+        context['company_jobs'] = Job.objects.filter(company=company_user, is_published=True).order_by('-created_at')[:5] # Limit to 5 recent jobs
         return context
 
 

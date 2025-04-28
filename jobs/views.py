@@ -139,11 +139,11 @@ class ApplyToJobView(LoginRequiredMixin, UserPassesTestMixin, View):
 
         if not hasattr(applicant, 'jobseekerprofile') or not applicant.jobseekerprofile.cv:
              messages.warning(request, "Vă rugăm să încărcați un CV în profilul dumneavoastră înainte de a aplica.")
-             return redirect('jobs:job_detail', pk=job.pk)
+             return redirect('jobs:job_detail', slug=job.slug) # Use slug
 
         if Application.objects.filter(job=job, applicant=applicant).exists():
             messages.info(request, "Ați aplicat deja la acest job.")
-            return redirect('jobs:job_detail', pk=job.pk)
+            return redirect('jobs:job_detail', slug=job.slug) # Use slug
 
         try:
             Application.objects.create(job=job, applicant=applicant)
@@ -151,10 +151,10 @@ class ApplyToJobView(LoginRequiredMixin, UserPassesTestMixin, View):
             return redirect('accounts:jobseeker_dashboard')
         except IntegrityError:
              messages.error(request, "A apărut o eroare. Se pare că ați aplicat deja.")
-             return redirect('jobs:job_detail', pk=job.pk)
+             return redirect('jobs:job_detail', slug=job.slug) # Use slug
         except Exception as e:
             messages.error(request, f"A apărut o eroare la trimiterea aplicației: {e}")
-            return redirect('jobs:job_detail', pk=job.pk)
+            return redirect('jobs:job_detail', slug=job.slug) # Use slug
 
 # --- Save/Unsave Job ---
 
@@ -179,7 +179,8 @@ class SaveJobView(LoginRequiredMixin, UserPassesTestMixin, View):
         else:
             messages.info(request, f"Jobul '{job.title}' este deja salvat.")
 
-        return redirect(request.META.get('HTTP_REFERER', reverse('jobs:job_detail', kwargs={'pk': job.pk})))
+        # Use slug for reversing job_detail URL
+        return redirect(request.META.get('HTTP_REFERER', reverse('jobs:job_detail', kwargs={'slug': job.slug})))
 
 
 class UnsaveJobView(LoginRequiredMixin, UserPassesTestMixin, View):
@@ -203,7 +204,8 @@ class UnsaveJobView(LoginRequiredMixin, UserPassesTestMixin, View):
         else:
             messages.info(request, f"Jobul '{job.title}' nu era salvat.")
 
-        return redirect(request.META.get('HTTP_REFERER', reverse('jobs:job_detail', kwargs={'pk': job.pk})))
+        # Use slug for reversing job_detail URL
+        return redirect(request.META.get('HTTP_REFERER', reverse('jobs:job_detail', kwargs={'slug': job.slug})))
 
 # --- View Applications for a Job ---
 
@@ -256,8 +258,8 @@ class ReportJobView(LoginRequiredMixin, FormView):
                 reason=reason
             )
             messages.success(self.request, "Vă mulțumim! Raportarea a fost trimisă și va fi analizată.")
-            # Redirect back to job detail page
-            return redirect('jobs:job_detail', pk=job.pk)
+            # Redirect back to job detail page using slug
+            return redirect('jobs:job_detail', slug=job.slug)
         except Exception as e:
             messages.error(self.request, f"A apărut o eroare la trimiterea raportării: {e}")
             # Render the form again with an error

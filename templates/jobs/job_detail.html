@@ -21,14 +21,11 @@
                     </span>
                 {% endif %}
                 <h3 class="text-lg font-semibold text-gray-900 mb-1">{{ job.company.companyprofile.company_name|default:job.company.username }}</h3>
-                {# Link to company detail page (placeholder) #}
-                <a href="#" class="text-sm text-indigo-600 hover:underline">Vezi profilul companiei</a>
-                {# Placeholder for available jobs count #}
-                <p class="text-xs text-gray-500 mt-2">1 anunțuri disponibile</p>
-                {# Placeholder for create alert button #}
-                <button class="mt-4 w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-md text-sm transition duration-300">
-                    Creează alertă joburi noi
-                </button>
+                {# Link to company detail page - Updated #}
+                <a href="{% url 'accounts:company_detail' pk=job.company.pk %}" class="text-sm text-indigo-600 hover:underline">Vezi profilul companiei</a>
+                {# Placeholder for available jobs count - TODO: Implement dynamic count #}
+                {# <p class="text-xs text-gray-500 mt-2">X anunțuri disponibile</p> #}
+                {# Removed create alert button #}
             </div>
 
             {# Job Criteria Card #}

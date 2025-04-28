@@ -21,6 +21,9 @@ urlpatterns = [
     path('profile/company/edit/', views.CompanyProfileUpdateView.as_view(), name='company_profile_edit'), # Company profile edit URL
     path('profile/jobseeker/edit/', views.JobSeekerProfileUpdateView.as_view(), name='jobseeker_profile_edit'),
 
+    # Company Detail View
+    path('company/<int:pk>/', views.CompanyDetailView.as_view(), name='company_detail'),
+
     # Auth URLs - Override password_change to set success_url
     path(
         'password_change/',
