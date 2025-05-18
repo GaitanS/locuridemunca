@@ -37,6 +37,14 @@ class Job(models.Model):
         ('no_experience', 'Fără experiență'),
     )
 
+    CURRENCY_CHOICES = (
+        ('RON', 'RON (Leu Românesc)'),
+        ('EUR', 'EUR (Euro)'),
+        ('USD', 'USD (Dolar American)'),
+        ('GBP', 'GBP (Liră Sterlină)'),
+        # Adaugă alte valute după necesități
+    )
+
     company = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='jobs_posted', limit_choices_to={'user_type': 'company'})
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, related_name='jobs')
     title = models.CharField(max_length=255)
@@ -50,12 +58,12 @@ class Job(models.Model):
     country = CountryField(blank_label='(selectează țara)', default='RO')
     city = models.CharField("Oraș", max_length=100)
     job_type = models.CharField(max_length=20, choices=JOB_TYPE_CHOICES, default='full_time')
-    experience_level = models.CharField("Nivel Experiență", max_length=20, choices=EXPERIENCE_LEVEL_CHOICES, null=True, blank=True) # Added field
-    positions_available = models.PositiveIntegerField("Număr Poziții Deschise", default=1, null=True, blank=True) # Added field
+    experience_level = models.CharField("Nivel Experiență", max_length=20, choices=EXPERIENCE_LEVEL_CHOICES) # Removed null=True, blank=True
+    positions_available = models.PositiveIntegerField("Număr Poziții Deschise", default=1) # Removed null=True, blank=True
 
-    salary_min = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    salary_max = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    salary_currency = models.CharField(max_length=3, default='RON', blank=True)
+    salary_min = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True) # Păstrăm opțional pentru salariu min/max
+    salary_max = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True) # Păstrăm opțional pentru salariu min/max
+    salary_currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, default='RON') # Removed blank=True, added choices
 
     is_published = models.BooleanField(default=True)
     is_featured = models.BooleanField(default=False)

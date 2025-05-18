@@ -5,7 +5,7 @@ app_name = 'jobs'
 
 urlpatterns = [
     path('', views.JobListView.as_view(), name='job_list'),
-    path('post/', views.JobCreateView.as_view(), name='job_post'),
+    path('create/', views.JobCreateView.as_view(), name='job_post'),
     path('<slug:slug>/', views.JobDetailView.as_view(), name='job_detail'), # Use slug for detail view
     path('<int:pk>/edit/', views.JobUpdateView.as_view(), name='job_edit'), # Keep pk for actions for simplicity
     path('<int:pk>/apply/', views.ApplyToJobView.as_view(), name='job_apply'), # Keep pk for actions

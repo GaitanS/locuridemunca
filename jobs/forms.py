@@ -17,17 +17,20 @@ class JobForm(forms.ModelForm):
     ideal_candidate = forms.CharField(
         widget=forms.Textarea(attrs={'rows': 5, 'placeholder': 'Descrieți candidatul ideal, cerințe specifice...', 'class': 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'}),
         label="Candidatul Ideal",
-        required=False
+        required=True,
+        error_messages={'required': 'Vă rugăm să descrieți candidatul ideal.'}
     )
     what_we_offer = forms.CharField(
         widget=forms.Textarea(attrs={'rows': 5, 'placeholder': 'Descrieți oferta, beneficii, program...', 'class': 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'}),
         label="Ce oferim?",
-        required=False
+        required=True,
+        error_messages={'required': 'Vă rugăm să descrieți ce oferiți.'}
     )
     responsibilities = forms.CharField(
         widget=forms.Textarea(attrs={'rows': 8, 'placeholder': 'Descrieți responsabilitățile principale ale postului...', 'class': 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'}),
         label="Descrierea jobului / Responsabilități",
-        required=True # Make main description required
+        required=True, # Make main description required
+        error_messages={'required': 'Vă rugăm să completați descrierea jobului sau responsabilitățile.'}
     )
     city = forms.CharField(
         widget=forms.TextInput(attrs={'placeholder': 'Ex: București', 'class': 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'}),
@@ -41,16 +44,16 @@ class JobForm(forms.ModelForm):
     # New fields
     experience_level = forms.ChoiceField(
         choices=Job.EXPERIENCE_LEVEL_CHOICES,
-        required=False,
+        required=True,
         widget=forms.Select(attrs={'class': 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'}),
-        label="Nivel Experiență (Opțional)"
+        label="Nivel Experiență"
     )
     positions_available = forms.IntegerField(
         min_value=1,
         initial=1,
-        required=False,
+        required=True,
         widget=forms.NumberInput(attrs={'placeholder': '1', 'class': 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'}),
-        label="Număr Poziții Deschise (Opțional)"
+        label="Număr Poziții Deschise"
     )
     salary_min = forms.DecimalField(
         required=False,
@@ -62,11 +65,12 @@ class JobForm(forms.ModelForm):
         widget=forms.NumberInput(attrs={'placeholder': 'Ex: 8000', 'class': 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'}),
         label="Salariu Maxim (Opțional)"
     )
-    salary_currency = forms.CharField(
+    salary_currency = forms.ChoiceField(
+        choices=Job.CURRENCY_CHOICES,
         initial='RON',
-        required=False, # Make optional if default is RON
-        widget=forms.TextInput(attrs={'placeholder': 'RON', 'class': 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'}),
-        label="Valută Salariu (Opțional)"
+        required=True,
+        widget=forms.Select(attrs={'class': 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'}),
+        label="Valută Salariu"
     )
 
     class Meta:
