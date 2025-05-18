@@ -63,6 +63,9 @@ class JobSeekerProfile(models.Model):
     def __str__(self):
         return f"{self.user.username}'s Job Seeker Profile"
 
+from django.utils.text import slugify
+from django.urls import reverse
+
 class CompanyProfile(models.Model):
     """
     Profile specific to Companies.
@@ -79,9 +82,26 @@ class CompanyProfile(models.Model):
     logo = models.ImageField(upload_to='company_logos/', blank=True, null=True) # Requires Pillow installation
     # Corrected ForeignKey to point to SubscriptionPlan
     plan = models.ForeignKey('payments.SubscriptionPlan', on_delete=models.SET_NULL, null=True, blank=True, related_name='companies')
-    # Add other relevant fields like industry, company size etc. later
+    location = models.CharField("Locație sediu principal", max_length=255, blank=True, null=True)
+    industry = models.CharField("Industrie", max_length=100, blank=True, null=True)
+    slug = models.SlugField(max_length=255, unique=True, blank=True, help_text="Lăsați necompletat pentru generare automată bazată pe numele companiei.")
+    # Add other relevant fields like company size etc. later
 
     def __str__(self):
         return f"{self.company_name} ({self.user.username}) Company Profile"
+
+    def save(self, *args, **kwargs):
+        if not self.slug or (self.pk and CompanyProfile.objects.get(pk=self.pk).company_name != self.company_name):
+            self.slug = slugify(self.company_name)
+            # Ensure slug is unique
+            original_slug = self.slug
+            counter = 1
+            while CompanyProfile.objects.filter(slug=self.slug).exclude(pk=self.pk).exists():
+                self.slug = f'{original_slug}-{counter}'
+                counter += 1
+        super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('accounts:company_detail', kwargs={'slug': self.slug})
 
 # Signal to create profile automatically when a user is created (we'll add this later)

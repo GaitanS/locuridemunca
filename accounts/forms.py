@@ -85,7 +85,7 @@ class CompanyProfileForm(forms.ModelForm):
         model = CompanyProfile
         # Include fields from CompanyProfile that should be editable
         fields = [
-            'company_name', 'street_address', 'city', 'country',
+            'company_name', 'street_address', 'city', 'country', 'location', 'industry',
             'website', 'description', 'logo'
         ]
         widgets = {
@@ -96,6 +96,8 @@ class CompanyProfileForm(forms.ModelForm):
             'website': forms.URLInput(attrs={'placeholder': 'https://exemplu.com'}),
             'description': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Descrierea companiei...'}),
             'logo': forms.ClearableFileInput(), # Use ClearableFileInput for image uploads
+            'location': forms.TextInput(attrs={'placeholder': 'ex. București, Sector 1'}),
+            'industry': forms.TextInput(attrs={'placeholder': 'ex. IT, Software'}),
         }
         labels = {
             'company_name': "Numele companiei",
@@ -105,6 +107,8 @@ class CompanyProfileForm(forms.ModelForm):
             'website': "Website",
             'description': "Descriere companie",
             'logo': "Logo companie",
+            'location': "Locație sediu principal",
+            'industry': "Industrie",
         }
 
     # If editing User fields too, you'd need a separate User form or combine logic carefully.
@@ -172,6 +176,14 @@ class CompanySignUpForm(UserCreationForm):
         widget=forms.TextInput(attrs={'placeholder': 'Strada, numărul...'}),
         error_messages={'required': error_messages_ro['required']}
     )
+    location = forms.CharField(
+        required=False, max_length=255, label="Locație sediu principal",
+        widget=forms.TextInput(attrs={'placeholder': 'ex. Clădire birouri, etaj, etc.'}),
+    )
+    industry = forms.CharField(
+        required=False, max_length=100, label="Industrie",
+        widget=forms.TextInput(attrs={'placeholder': 'ex. IT, Construcții, Retail'}),
+    )
     city = forms.CharField(
         required=True, max_length=100, label="Oraș",
         widget=forms.TextInput(attrs={'placeholder': 'Oraș'}),
@@ -214,6 +226,8 @@ class CompanySignUpForm(UserCreationForm):
                     'street_address': self.cleaned_data.get('street_address'),
                     'city': self.cleaned_data.get('city'),
                     'country': self.cleaned_data.get('country'),
+                    'location': self.cleaned_data.get('location'),
+                    'industry': self.cleaned_data.get('industry'),
                 }
             )
         return user

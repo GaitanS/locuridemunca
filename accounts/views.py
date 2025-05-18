@@ -196,25 +196,23 @@ class CompanyDashboardView(TemplateView):
 
 
 class CompanyDetailView(DetailView):
-    model = User # The URL likely uses the User's PK
+    model = CompanyProfile # Changed to CompanyProfile
     template_name = 'company/company_detail.html'
-    context_object_name = 'company_user' # Use a distinct name to avoid conflict with 'company' context processor
-
-    def get_queryset(self):
-        # Ensure we only fetch users that are companies
-        return User.objects.filter(user_type='company')
+    context_object_name = 'company_profile' # Changed to company_profile for clarity
+    slug_field = 'slug' # Specify the slug field
+    slug_url_kwarg = 'slug' # Specify the URL keyword argument for the slug
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Add the related CompanyProfile to the context
-        # The DetailView puts the main object (User) in 'company_user'
-        company_user = self.get_object()
-        try:
-            context['company_profile'] = company_user.companyprofile
-        except CompanyProfile.DoesNotExist:
-            context['company_profile'] = None # Handle case where profile might not exist yet
-        # Add jobs posted by this company
-        context['company_jobs'] = Job.objects.filter(company=company_user, is_published=True).order_by('-created_at')[:5] # Limit to 5 recent jobs
+        # self.object is now the CompanyProfile instance based on slug
+        company_profile = self.object
+        context['company_user'] = company_profile.user # Keep company_user for template compatibility if needed
+
+        # Fetch jobs by this company's user
+        if company_profile and company_profile.user:
+            context['company_jobs'] = Job.objects.filter(company=company_profile.user, is_published=True).order_by('-created_at')[:5] # Limit to 5 recent jobs
+        else:
+            context['company_jobs'] = Job.objects.none()
         return context
 
 

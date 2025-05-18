@@ -22,7 +22,11 @@
                 {% endif %}
                 <h3 class="text-lg font-semibold text-gray-900 mb-1">{{ job.company.companyprofile.company_name|default:job.company.username }}</h3>
                 {# Link to company detail page - Updated #}
-                <a href="{% url 'accounts:company_detail' pk=job.company.pk %}" class="text-sm text-indigo-600 hover:underline">Vezi profilul companiei</a>
+                {% if job.company.companyprofile and job.company.companyprofile.slug %}
+                    <a href="{% url 'accounts:company_detail' slug=job.company.companyprofile.slug %}" class="text-sm text-indigo-600 hover:underline">Vezi profilul companiei</a>
+                {% else %}
+                    <span class="text-sm text-gray-500">Profilul companiei nu este disponibil</span>
+                {% endif %}
                 {# Placeholder for available jobs count - TODO: Implement dynamic count #}
                 {# <p class="text-xs text-gray-500 mt-2">X anunțuri disponibile</p> #}
                 {# Removed create alert button #}

@@ -32,31 +32,35 @@
 
     <!-- Company Listings Section -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {# Loop through companies later #}
-        {% for i in '123456'|make_list %}
-        <div class="bg-white rounded-lg shadow p-6 border border-gray-200 hover:shadow-lg transition duration-300">
-            <div class="flex items-center mb-4">
-                {# Placeholder for company logo #}
-                <div class="h-12 w-12 rounded-full bg-gray-200 flex items-center justify-center mr-4">
-                    <i class="fas fa-building text-gray-500"></i>
+        {% for profile in company_profiles %} {# Assuming context variable is company_profiles #}
+        <div class="bg-white rounded-lg shadow p-6 border border-gray-200 hover:shadow-lg transition duration-300 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center mb-4">
+                    {% if profile.logo %}
+                        <img src="{{ profile.logo.url }}" alt="{{ profile.company_name }} Logo" class="h-12 w-12 rounded-full object-contain border border-gray-200 mr-4">
+                    {% else %}
+                        <div class="h-12 w-12 rounded-full bg-gray-200 flex items-center justify-center mr-4">
+                            <i class="fas fa-building text-gray-500"></i>
+                        </div>
+                    {% endif %}
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 hover:text-indigo-600">
+                            <a href="{% url 'accounts:company_detail' slug=profile.slug %}">{{ profile.company_name }}</a>
+                        </h3>
+                        <p class="text-sm text-gray-500">{{ profile.industry|default:"Industrie nedisponibilă" }}</p>
+                    </div>
                 </div>
-                <div>
-                    <h3 class="text-lg font-semibold text-gray-900 hover:text-indigo-600">
-                        <a href="#">Nume Companie {{ i }}</a> {# Link to company_detail later #}
-                    </h3>
-                    <p class="text-sm text-gray-500">Industrie</p>
+                <p class="text-sm text-gray-600 mb-4 line-clamp-3">{{ profile.description|truncatewords:20|default:"Descriere nedisponibilă." }}</p>
+                <div class="text-sm text-gray-500">
+                    <i class="fas fa-map-marker-alt mr-1"></i> {{ profile.location|default:profile.city|default:"Locație nedisponibilă" }}
                 </div>
-            </div>
-            <p class="text-sm text-gray-600 mb-4 line-clamp-3">Scurtă descriere a companiei {{ i }}. Aici vor fi câteva detalii despre activitatea și valorile companiei...</p>
-            <div class="text-sm text-gray-500">
-                <i class="fas fa-map-marker-alt mr-1"></i> Locație Companie
             </div>
              <div class="mt-3 text-right">
-                 <a href="#" class="text-indigo-600 hover:underline text-sm font-medium">Vezi detalii <i class="fas fa-arrow-right text-xs ml-1"></i></a>
+                 <a href="{% url 'accounts:company_detail' slug=profile.slug %}" class="text-indigo-600 hover:underline text-sm font-medium">Vezi detalii <i class="fas fa-arrow-right text-xs ml-1"></i></a>
              </div>
         </div>
         {% empty %}
-        <p class="md:col-span-2 lg:col-span-3 text-center text-gray-500 py-10">Nu s-au găsit companii.</p>
+        <p class="md:col-span-2 lg:col-span-3 text-center text-gray-500 py-10">Nu s-au găsit companii care să corespundă criteriilor selectate.</p>
         {% endfor %}
     </div>
 
