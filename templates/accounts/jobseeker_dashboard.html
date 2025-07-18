@@ -34,31 +34,31 @@
                     </div>
                     <div>
                         <p class="text-sm text-gray-500">Oraș de reședință</p>
-                        <p class="font-medium text-gray-800">{{ profile.city_of_residence|default:"<span class='text-gray-400 italic'>Nespecificat</span>" }}</p>
+                        <p class="font-medium text-gray-800">{{ profile.city_of_residence|default:"<span class='text-emerald-600 italic'>Nespecificat</span>" }}</p>
                     </div>
                      <div>
                         <p class="text-sm text-gray-500">Data nașterii</p>
-                        <p class="font-medium text-gray-800">{{ profile.date_of_birth|date:"d M Y"|default:"<span class='text-gray-400 italic'>Nespecificat</span>" }}</p>
+                        <p class="font-medium text-gray-800">{{ profile.date_of_birth|date:"d M Y"|default:"<span class='text-emerald-600 italic'>Nespecificat</span>" }}</p>
                     </div>
                     <div>
                         <p class="text-sm text-gray-500">CV</p>
                         <p class="font-medium text-gray-800">
                             {% if profile.cv %}
-                                <a href="{{ profile.cv.url }}" target="_blank" class="text-indigo-600 hover:underline">Vezi CV</a>
+                                <a href="{{ profile.cv.url }}" target="_blank" class="text-emerald-600 hover:underline">Vezi CV</a>
                                 {# Add upload/change link later #}
                             {% else %}
-                                <span class="text-gray-400 italic">Neîncărcat</span>
+                                <span class="text-emerald-600 italic">Neîncărcat</span>
                                 {# Add upload link later #}
                             {% endif %}
                         </p>
                     </div>
                 </div>
-                <a href="{% url 'accounts:jobseeker_profile_edit' %}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+                <a href="{% url 'accounts:jobseeker_profile_edit' %}" class="inline-flex items-center px-4 py-2 bg-emerald-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-emerald-700 active:bg-emerald-900 focus:outline-none focus:border-emerald-900 focus:ring ring-emerald-300 disabled:opacity-25 transition ease-in-out duration-150">
                     Editează Profilul
                 </a> {# Link to jobseeker_profile_edit URL #}
             {% else %}
                  <p class="text-gray-500 italic">Profilul nu a fost completat.</p>
-                 <a href="#" class="mt-4 inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+                 <a href="#" class="mt-4 inline-flex items-center px-4 py-2 bg-emerald-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-emerald-700 active:bg-emerald-900 focus:outline-none focus:border-emerald-900 focus:ring ring-emerald-300 disabled:opacity-25 transition ease-in-out duration-150">
                     Completează Profilul
                  </a> {# Placeholder link for profile edit/create #}
             {% endif %}
@@ -73,7 +73,7 @@
                         {% for app in applications|slice:":5" %} {# Show latest 5 applications #}
                             <li class="py-3">
                                 <div class="flex justify-between items-center">
-                                    <a href="{{ app.job.get_absolute_url }}" class="text-sm font-medium text-indigo-600 hover:underline truncate">{{ app.job.title }}</a> {# Use get_absolute_url #}
+                                    <a href="{{ app.job.get_absolute_url }}" class="text-sm font-medium text-emerald-600 hover:underline truncate">{{ app.job.title }}</a> {# Use get_absolute_url #}
                                     <span class="text-xs text-gray-500 ml-2 whitespace-nowrap">{{ app.applied_at|timesince }} în urmă</span>
                                 </div>
                                 <p class="text-xs text-gray-500">{{ app.job.company.companyprofile.company_name|default:app.job.company.username }} - {{ app.job.city }}</p>
@@ -82,7 +82,7 @@
                         {% endfor %}
                     </ul>
                     {% if applications_count > 5 %}
-                         <a href="#" class="text-indigo-600 hover:underline mt-3 text-sm inline-block">Vezi toate aplicațiile</a> {# Placeholder for full list view #}
+                         <a href="#" class="text-emerald-600 hover:underline mt-3 text-sm inline-block">Vezi toate aplicațiile</a> {# Placeholder for full list view #}
                     {% endif %}
                 {% else %}
                     <p class="text-gray-500 italic">Nu ați aplicat la niciun job încă.</p>
@@ -99,7 +99,7 @@
                         {% for job in saved_jobs_list|slice:":5" %} {# Show latest 5 saved jobs #}
                              <li class="py-3">
                                 <div class="flex justify-between items-center">
-                                    <a href="{{ job.get_absolute_url }}" class="text-sm font-medium text-indigo-600 hover:underline truncate">{{ job.title }}</a> {# Use get_absolute_url #}
+                                    <a href="{{ job.get_absolute_url }}" class="text-sm font-medium text-emerald-600 hover:underline truncate">{{ job.title }}</a> {# Use get_absolute_url #}
                                     {# Unsave button #}
                                     <form action="{% url 'jobs:job_unsave' job.pk %}" method="post" class="inline ml-2">
                                         {% csrf_token %}
@@ -113,7 +113,7 @@
                         {% endfor %}
                     </ul>
                      {% if saved_jobs_count > 5 %}
-                         <a href="#" class="text-indigo-600 hover:underline mt-3 text-sm inline-block">Vezi toate joburile salvate</a> {# Placeholder for full list view #}
+                         <a href="#" class="text-emerald-600 hover:underline mt-3 text-sm inline-block">Vezi toate joburile salvate</a> {# Placeholder for full list view #}
                     {% endif %}
                 {% else %}
                     <p class="text-gray-500 italic">Nu aveți niciun job salvat.</p>

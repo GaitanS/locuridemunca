@@ -62,37 +62,37 @@
                         </div>
                         <div>
                             <p class="text-sm text-gray-500">Oraș de reședință</p>
-                            <p class="font-medium text-gray-800">{{ profile.city_of_residence|default:"<span class='text-gray-400 italic'>Nespecificat</span>"|safe }}</p>
+                            <p class="font-medium text-gray-800">{{ profile.city_of_residence|default:"<span class='text-emerald-600 italic'>Nespecificat</span>"|safe }}</p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-500">Data nașterii</p>
-                            <p class="font-medium text-gray-800">{{ profile.date_of_birth|date:"d M Y"|default:"<span class='text-gray-400 italic'>Nespecificat</span>"|safe }}</p>
+                            <p class="font-medium text-gray-800">{{ profile.date_of_birth|date:"d M Y"|default:"<span class='text-emerald-600 italic'>Nespecificat</span>"|safe }}</p>
                         </div>
                          <div>
                             <p class="text-sm text-gray-500">Telefon</p>
-                            <p class="font-medium text-gray-800">{{ profile.phone_number|default:"<span class='text-gray-400 italic'>Nespecificat</span>"|safe }}</p>
+                            <p class="font-medium text-gray-800">{{ profile.phone_number|default:"<span class='text-emerald-600 italic'>Nespecificat</span>"|safe }}</p>
                         </div>
                         <div>
                             <p class="text-sm text-gray-500">CV</p>
                             <p class="font-medium text-gray-800">
                                 {% if profile.cv %}
-                                    <a href="{{ profile.cv.url }}" target="_blank" class="text-indigo-600 hover:underline">Vezi CV</a>
+                                    <a href="{{ profile.cv.url }}" target="_blank" class="text-emerald-600 hover:underline">Vezi CV</a>
                                 {% else %}
-                                    <span class="text-gray-400 italic">Neîncărcat</span>
+                                    <span class="text-emerald-600 italic">Neîncărcat</span>
                                 {% endif %}
                             </p>
                         </div>
                         <div class="sm:col-span-2">
                             <p class="text-sm text-gray-500">Despre mine / Bio</p>
-                            <p class="font-medium text-gray-800">{{ profile.bio|default:"<span class='text-gray-400 italic'>Nespecificat</span>"|linebreaksbr|safe }}</p>
+                            <p class="font-medium text-gray-800">{{ profile.bio|default:"<span class='text-emerald-600 italic'>Nespecificat</span>"|linebreaksbr|safe }}</p>
                         </div>
                     </div>
-                    <a href="{% url 'accounts:jobseeker_profile_edit' %}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+                    <a href="{% url 'accounts:jobseeker_profile_edit' %}" class="inline-flex items-center px-4 py-2 bg-emerald-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-emerald-700 active:bg-emerald-900 focus:outline-none focus:border-emerald-900 focus:ring ring-emerald-300 disabled:opacity-25 transition ease-in-out duration-150">
                         Modifică Profilul Candidatului
                     </a>
                 {% else %}
                     <p class="text-gray-500 italic">Detaliile profilului nu au fost completate.</p>
-                    <a href="#" class="mt-4 inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
+                    <a href="#" class="mt-4 inline-flex items-center px-4 py-2 bg-emerald-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-emerald-700 active:bg-emerald-900 focus:outline-none focus:border-emerald-900 focus:ring ring-emerald-300 disabled:opacity-25 transition ease-in-out duration-150">
                         Completează Profilul
                     </a> {# Placeholder link #}
                 {% endif %}
@@ -109,9 +109,9 @@
                             <p class="text-sm text-gray-500">Website</p>
                             <p class="font-medium text-gray-800">
                                 {% if profile.website %}
-                                    <a href="{{ profile.website }}" target="_blank" class="text-indigo-600 hover:underline">{{ profile.website }}</a>
+                                    <a href="{{ profile.website }}" target="_blank" class="text-emerald-600 hover:underline">{{ profile.website }}</a>
                                 {% else %}
-                                    <span class="text-gray-400 italic">Nespecificat</span>
+                                    <span class="text-emerald-600 italic">Nespecificat</span>
                                 {% endif %}
                             </p>
                         </div>
@@ -121,7 +121,7 @@
                                 {% if profile.city or profile.country %}
                                     {{ profile.city }}{% if profile.city and profile.country %},{% endif %} {{ profile.country.name|default:profile.country }}
                                 {% else %}
-                                    <span class='text-gray-400 italic'>Nespecificat</span>
+                                    <span class='text-emerald-600 italic'>Nespecificat</span>
                                 {% endif %}
                             </p>
                         </div>
@@ -133,12 +133,12 @@
                         {% else %}
                          <div>
                             <p class="text-sm text-gray-500">Logo</p>
-                            <p class="font-medium text-gray-400 italic">Neîncărcat</p>
+                            <p class="font-medium text-emerald-600 italic">Neîncărcat</p>
                         </div>
                         {% endif %}
                         <div class="sm:col-span-2">
                             <p class="text-sm text-gray-500">Descriere</p>
-                            <p class="font-medium text-gray-800">{{ profile.description|default:"<span class='text-gray-400 italic'>Nespecificat</span>"|linebreaksbr|safe }}</p>
+                            <p class="font-medium text-gray-800">{{ profile.description|default:"<span class='text-emerald-600 italic'>Nespecificat</span>"|linebreaksbr|safe }}</p>
                         </div>
                     </div>
                      <a href="{% url 'accounts:company_profile_edit' %}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
@@ -177,7 +177,7 @@
                      {% if user.user_type == 'company' %}
                      <div>
                         <p class="text-sm text-gray-500">Plan Curent</p>
-                        <p class="font-medium text-gray-800">{{ profile.plan.name|default:"<span class='text-gray-400 italic'>Niciun plan activ</span>"|safe }}</p>
+                        <p class="font-medium text-gray-800">{{ profile.plan.name|default:"<span class='text-emerald-600 italic'>Niciun plan activ</span>"|safe }}</p>
                     </div>
                     {% endif %}
                 </div>
@@ -188,9 +188,9 @@
                  <h2 class="text-xl font-semibold text-gray-700 mb-4 border-b pb-2">Acțiuni Rapide</h2>
                  {% if user.user_type == 'company' %}
                      <a href="{% url 'jobs:job_post' %}" class="w-full text-center inline-flex items-center justify-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 active:bg-green-900 focus:outline-none focus:border-green-900 focus:ring ring-green-300 disabled:opacity-25 transition ease-in-out duration-150 mb-3">Postează un Job Nou</a>
-                     <a href="{% url 'payments:plan_list' %}" class="w-full text-center inline-flex items-center justify-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">Vezi Planurile de Abonament</a>
+                     <a href="{% url 'payments:plan_list' %}" class="w-full text-center inline-flex items-center justify-center px-4 py-2 bg-emerald-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-emerald-700 active:bg-emerald-900 focus:outline-none focus:border-emerald-900 focus:ring ring-emerald-300 disabled:opacity-25 transition ease-in-out duration-150">Vezi Planurile de Abonament</a>
                  {% elif user.user_type == 'job_seeker' %}
-                      <a href="{% url 'jobs:job_list' %}" class="w-full text-center inline-flex items-center justify-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150 mb-3">Caută Joburi</a>
+                      <a href="{% url 'jobs:job_list' %}" class="w-full text-center inline-flex items-center justify-center px-4 py-2 bg-emerald-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-emerald-700 active:bg-emerald-900 focus:outline-none focus:border-emerald-900 focus:ring ring-emerald-300 disabled:opacity-25 transition ease-in-out duration-150 mb-3">Caută Joburi</a>
                       {# Add link to applications or saved jobs later if needed #}
                  {% endif %}
             </div>

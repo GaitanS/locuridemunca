@@ -6,8 +6,8 @@
 <div class="container mx-auto px-4 py-8">
     <div class="mb-6 pb-4 border-b">
         {# Link job title back to detail page using slug #}
-        <h1 class="text-3xl font-bold text-gray-800">Aplicații pentru "<a href="{{ job.get_absolute_url }}" class="text-indigo-600 hover:underline">{{ job.title }}</a>"</h1>
-        <a href="{% url 'accounts:company_dashboard' %}" class="text-sm text-indigo-600 hover:underline">&larr; Înapoi la Dashboard</a>
+        <h1 class="text-3xl font-bold text-gray-800">Aplicații pentru "<a href="{{ job.get_absolute_url }}" class="text-emerald-600 hover:underline">{{ job.title }}</a>"</h1>
+        <a href="{% url 'accounts:company_dashboard' %}" class="text-sm text-emerald-600 hover:underline">&larr; Înapoi la Dashboard</a>
     </div>
 
     {# Display Messages #}
@@ -59,9 +59,9 @@
                             </td>
                              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {% if app.applicant.jobseekerprofile.cv %}
-                                    <a href="{{ app.applicant.jobseekerprofile.cv.url }}" target="_blank" class="text-indigo-600 hover:underline">Descarcă CV</a>
+                                    <a href="{{ app.applicant.jobseekerprofile.cv.url }}" target="_blank" class="text-emerald-600 hover:underline">Descarcă CV</a>
                                 {% else %}
-                                    <span class="text-gray-400 italic">N/A</span>
+                                    <span class="text-emerald-600 italic">N/A</span>
                                 {% endif %}
                             </td>
                         </tr>
@@ -108,7 +108,7 @@
 
                         {% for num in page_obj.paginator.page_range %}
                             {% if page_obj.number == num %}
-                                <span aria-current="page" class="relative inline-flex items-center px-4 py-2 border border-indigo-500 bg-indigo-50 text-sm font-medium text-indigo-600 z-10"> {{ num }} </span>
+                                <span aria-current="page" class="relative inline-flex items-center px-4 py-2 border border-emerald-500 bg-emerald-50 text-sm font-medium text-emerald-600 z-10"> {{ num }} </span>
                             {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
                                 <a href="?page={{ num }}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"> {{ num }} </a>
                             {% elif num == page_obj.number|add:'-3' or num == page_obj.number|add:'3' %}

@@ -5,7 +5,7 @@
 {% block content %}
 <div class="max-w-xl mx-auto mt-10 mb-10 bg-white p-8 rounded-lg shadow-md border border-gray-200">
   <h1 class="text-2xl font-bold text-center text-gray-800 mb-2">{{ page_title|default:"Raportează Anunț" }}</h1>
-  <p class="text-center text-gray-500 mb-6">Anunț: <a href="{{ job.get_absolute_url }}" class="text-indigo-600 hover:underline">{{ job.title }}</a></p> {# Use get_absolute_url #}
+  <p class="text-center text-gray-500 mb-6">Anunț: <a href="{{ job.get_absolute_url }}" class="text-emerald-600 hover:underline">{{ job.title }}</a></p> {# Use get_absolute_url #}
 
   <form method="post" class="space-y-6">
     {% csrf_token %}

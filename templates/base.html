@@ -19,93 +19,117 @@
         main {
             flex-grow: 1;
         }
+
+        /* Mobile Menu Animations */
+        #mobile-menu {
+            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+        #mobile-menu.open {
+            max-height: 500px; /* Adjust as needed */
+            opacity: 1;
+        }
+
+        #mobile-menu-button .fa-bars, #mobile-menu-button .fa-times {
+            transition: transform 0.3s ease-in-out;
+        }
+        #mobile-menu-button.open .fa-bars {
+            transform: rotate(90deg);
+        }
+        #mobile-menu-button.open .fa-times {
+            transform: rotate(0);
+        }
     </style>
     {% block extra_head %}{% endblock %}
 </head>
-<body class="bg-gray-100 text-gray-800">
+<body class="bg-gray-50 text-gray-800 relative">
 
     <!-- Navbar -->
-    <nav class="bg-white shadow-md sticky top-0 z-50">
+    <nav class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <a class="text-2xl font-bold text-indigo-600 flex items-center" href="{% url 'core:home' %}">
-                <i class="fas fa-briefcase mr-2"></i>
+            <a class="text-2xl font-bold text-gray-800 flex items-center" href="{% url 'core:home' %}">
+                <i class="fas fa-briefcase mr-2 text-emerald-500"></i>
                 JoburiExpress
             </a>
             <!-- Mobile Menu Button -->
-            <button id="mobile-menu-button" class="md:hidden block text-gray-600 hover:text-indigo-600 focus:outline-none">
+            <button id="mobile-menu-button" class="md:hidden block text-gray-500 hover:text-gray-800 focus:outline-none">
                 <i class="fas fa-bars"></i>
+                <i class="fas fa-times hidden"></i>
             </button>
             <!-- Navigation Links -->
             <div class="hidden md:flex items-center space-x-6">
-                <a class="text-gray-600 hover:text-indigo-600 {% if request.resolver_match.app_name == 'jobs' %} font-semibold text-indigo-600 {% endif %}" href="{% url 'jobs:job_list' %}">Locuri de muncă</a>
-                {# Link to company plans page #}
-                <a class="text-gray-600 hover:text-indigo-600 {% if request.resolver_match.view_name == 'payments:plan_list' %} font-semibold text-indigo-600 {% endif %}" href="{% url 'payments:plan_list' %}">Pentru companii</a>
-                <a class="text-gray-600 hover:text-indigo-600 {% if request.resolver_match.view_name == 'core:about' %} font-semibold text-indigo-600 {% endif %}" href="{% url 'core:about' %}">Despre noi</a>
+                <a class="text-gray-600 hover:text-gray-900 transition-colors duration-300 {% if request.resolver_match.app_name == 'jobs' %} font-semibold text-gray-900 border-b-2 border-emerald-500 {% endif %}" href="{% url 'jobs:job_list' %}">Joburi</a>
+                <a class="text-gray-600 hover:text-gray-900 transition-colors duration-300 {% if request.resolver_match.view_name == 'payments:plan_list' %} font-semibold text-gray-900 border-b-2 border-emerald-500 {% endif %}" href="{% url 'payments:plan_list' %}">Abonamente</a>
+                <a class="text-gray-600 hover:text-gray-900 transition-colors duration-300 {% if request.resolver_match.view_name == 'core:about' %} font-semibold text-gray-900 border-b-2 border-emerald-500 {% endif %}" href="{% url 'core:about' %}">Despre noi</a>
+                <a class="text-gray-600 hover:text-gray-900 transition-colors duration-300 {% if request.resolver_match.view_name == 'core:contact' %} font-semibold text-gray-900 border-b-2 border-emerald-500 {% endif %}" href="{% url 'core:contact' %}">Contact</a>
 
                 {% if user.is_authenticated %}
                     <div class="relative">
-                        <button id="user-menu-button" class="flex items-center text-gray-600 hover:text-indigo-600 focus:outline-none">
+                        <button id="user-menu-button" class="flex items-center text-gray-600 hover:text-gray-900 focus:outline-none transition-colors duration-300">
                             <i class="fas fa-user-circle mr-1"></i> {{ user.username }}
                             <i class="fas fa-chevron-down ml-1 text-xs"></i>
                         </button>
-                        <div id="user-menu" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden z-10">
-                            {% if user.user_type == 'job_seeker' %} {# Check user_type #}
-                                <a href="{% url 'accounts:jobseeker_dashboard' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-100">Dashboard Candidat</a>
-                            {% elif user.user_type == 'company' %} {# Check user_type #}
-                                <a href="{% url 'accounts:company_dashboard' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-100">Dashboard Companie</a>
+                        <div id="user-menu" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden z-10 border border-gray-200">
+                            {% if user.user_type == 'job_seeker' %}
+                                <a href="{% url 'accounts:jobseeker_dashboard' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboard Candidat</a>
+                            {% elif user.user_type == 'company' %}
+                                <a href="{% url 'accounts:company_dashboard' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboard Companie</a>
                             {% endif %}
-                            <a href="{% url 'accounts:profile' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-100">Profil</a>
+                            <a href="{% url 'accounts:profile' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profil</a>
                             <form method="post" action="{% url 'accounts:logout' %}" class="block w-full">
                                 {% csrf_token %}
-                                <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-indigo-100">Deconectare</button>
+                                <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Deconectare</button>
                             </form>
                         </div>
                     </div>
                 {% else %}
-                    <a href="{% url 'accounts:login' %}" class="text-gray-600 hover:text-indigo-600">Autentificare</a>
-                    <a href="{% url 'accounts:signup' %}" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition duration-300">Înregistrare</a>
+                    <a href="{% url 'accounts:login' %}" class="text-gray-600 hover:text-gray-900 transition-colors duration-300">Autentificare</a>
+                    <a href="{% url 'accounts:signup' %}" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out">Înregistrare</a>
                 {% endif %}
             </div>
         </div>
         <!-- Mobile Menu -->
-        <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200">
-            <a class="block px-4 py-2 text-gray-600 hover:bg-indigo-50" href="{% url 'jobs:job_list' %}">Locuri de muncă</a>
-            <a class="block px-4 py-2 text-gray-600 hover:bg-indigo-50" href="{% url 'payments:plan_list' %}">Pentru companii</a>
-            <a class="block px-4 py-2 text-gray-600 hover:bg-indigo-50" href="{% url 'core:about' %}">Despre noi</a>
-            <hr class="my-1">
+        <div id="mobile-menu" class="md:hidden bg-white border-t border-gray-200">
+            <a class="block px-4 py-2 text-gray-700 hover:bg-gray-100" href="{% url 'jobs:job_list' %}">Joburi</a>
+            <a class="block px-4 py-2 text-gray-700 hover:bg-gray-100" href="{% url 'payments:plan_list' %}">Abonamente</a>
+            <a class="block px-4 py-2 text-gray-700 hover:bg-gray-100" href="{% url 'core:about' %}">Despre noi</a>
+            <a class="block px-4 py-2 text-gray-700 hover:bg-gray-100" href="{% url 'core:contact' %}">Contact</a>
+            <hr class="my-1 border-gray-200">
             {% if user.is_authenticated %}
-                 {% if user.user_type == 'job_seeker' %} {# Check user_type #}
-                    <a href="{% url 'accounts:jobseeker_dashboard' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-100">Dashboard Candidat</a>
-                {% elif user.user_type == 'company' %} {# Check user_type #}
-                    <a href="{% url 'accounts:company_dashboard' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-100">Dashboard Companie</a>
+                 {% if user.user_type == 'job_seeker' %}
+                    <a href="{% url 'accounts:jobseeker_dashboard' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboard Candidat</a>
+                {% elif user.user_type == 'company' %}
+                    <a href="{% url 'accounts:company_dashboard' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboard Companie</a>
                 {% endif %}
-                <a href="{% url 'accounts:profile' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-100">Profil</a>
+                <a href="{% url 'accounts:profile' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profil</a>
                 <form method="post" action="{% url 'accounts:logout' %}" class="block w-full">
                     {% csrf_token %}
-                    <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-indigo-100">Deconectare</button>
+                    <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Deconectare</button>
                 </form>
             {% else %}
-                <a href="{% url 'accounts:login' %}" class="block px-4 py-2 text-gray-600 hover:bg-indigo-50">Autentificare</a>
-                <a href="{% url 'accounts:signup' %}" class="block px-4 py-2 bg-indigo-600 text-white text-center font-bold rounded m-2">Înregistrare</a>
+                <a href="{% url 'accounts:login' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Autentificare</a>
+                <a href="{% url 'accounts:signup' %}" class="block px-4 py-2 bg-emerald-500 text-white text-center font-bold rounded-md m-2 hover:bg-emerald-600 transition-colors duration-300">Înregistrare</a>
             {% endif %}
         </div>
     </nav>
 
     <!-- Main Content Area -->
-    <main class="container mx-auto px-4 py-8">
+    <main class="relative overflow-hidden">
         {% block content %}
         <!-- Default content goes here if not overridden -->
         {% endblock %}
     </main>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 text-gray-300 mt-auto">
+    <footer class="bg-white text-gray-600 mt-auto border-t border-gray-200">
         <div class="container mx-auto px-4 py-6 text-center">
             <p>&copy; {% now "Y" %} JoburiExpress. Toate drepturile rezervate.</p>
             <div class="mt-2 space-x-4">
-                <a href="{% url 'core:terms' %}" class="hover:text-white">Termeni și condiții</a>
-                <a href="{% url 'core:privacy' %}" class="hover:text-white">Politică de confidențialitate</a>
-                <a href="{% url 'core:contact' %}" class="hover:text-white">Contact</a>
+                <a href="{% url 'core:terms' %}" class="hover:text-emerald-500 transition-colors duration-300">Termeni și Condiții</a>
+                <a href="{% url 'core:privacy' %}" class="hover:text-emerald-500 transition-colors duration-300">Politică de Confidențialitate</a>
+                <a href="{% url 'core:contact' %}" class="hover:text-emerald-500 transition-colors duration-300">Contact</a>
             </div>
         </div>
     </footer>
@@ -120,7 +144,10 @@
 
         if (mobileMenuButton && mobileMenu) {
             mobileMenuButton.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
+                mobileMenu.classList.toggle('open');
+                mobileMenuButton.classList.toggle('open');
+                mobileMenuButton.querySelector('.fa-bars').classList.toggle('hidden');
+                mobileMenuButton.querySelector('.fa-times').classList.toggle('hidden');
             });
         }
 

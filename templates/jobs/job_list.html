@@ -27,25 +27,25 @@
                 <label for="keywords" class="block text-sm font-medium text-gray-700 mb-1">Ce job cauți?</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <i class="fas fa-search text-gray-400"></i>
+                        <i class="fas fa-search text-emerald-600"></i>
                     </div>
-                    <input type="text" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500" id="keywords" name="q" placeholder="Ex: șofer, constructor, IT" value="{{ request.GET.q }}">
+                    <input type="text" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" id="keywords" name="q" placeholder="Ex: șofer, constructor, IT" value="{{ request.GET.q }}">
                 </div>
             </div>
             <div class="md:col-span-1">
                 <label for="location" class="block text-sm font-medium text-gray-700 mb-1">Unde?</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <i class="fas fa-map-marker-alt text-gray-400"></i>
+                        <i class="fas fa-map-marker-alt text-emerald-600"></i>
                     </div>
-                    <input type="text" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500" id="location" name="location" placeholder="Țară, Oraș" value="{{ request.GET.location }}">
+                    <input type="text" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500" id="location" name="location" placeholder="Țară, Oraș" value="{{ request.GET.location }}">
                 </div>
             </div>
             {# Uncommented Category Filter #}
             <div class="lg:col-span-1"> {# Category takes 1 col on lg #}
                 <label for="category" class="block text-sm font-medium text-gray-700 mb-1">Categorie</label>
                 {# Use category.slug for filtering as per the view logic #}
-                <select id="category" name="category" class="w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <select id="category" name="category" class="w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
                     <option value="">Toate</option>
                     {% for category in categories %}
                     <option value="{{ category.slug }}" {% if request.GET.category == category.slug %}selected{% endif %}>{{ category.name }}</option>
@@ -53,7 +53,7 @@
                 </select>
             </div>
             <div class="md:col-span-2 lg:col-span-1"> {# Button spans 2 on md, 1 on lg #}
-                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-md transition duration-300">Filtrează</button>
+                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded-md transition duration-300">Filtrează</button>
             </div>
         </form>
     </div>
@@ -61,9 +61,9 @@
     <!-- Job Listings Section -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for job in page_obj %}
-        <div class="bg-white rounded-lg shadow p-6 border border-gray-200 hover:border-indigo-300 transition duration-300">
+        <div class="bg-white rounded-lg shadow p-6 border border-gray-200 hover:border-emerald-300 transition duration-300">
             <div class="flex justify-between items-start mb-2">
-                <h3 class="text-lg font-semibold text-gray-900 hover:text-indigo-600">
+                <h3 class="text-lg font-semibold text-gray-900 hover:text-emerald-600">
                     <a href="{{ job.get_absolute_url }}">{{ job.title }}</a> {# Use get_absolute_url (slug) #}
                 </h3>
                 {# Save/Unsave Button - Show only for logged-in job seekers #}
@@ -73,15 +73,15 @@
                             {# Already Saved - Show Unsave Button #}
                             <form action="{% url 'jobs:job_unsave' job.pk %}" method="post" class="inline">
                                 {% csrf_token %}
-                                <button type="submit" class="text-indigo-600 hover:text-indigo-800" title="Anulează salvarea">
-                                    <i class="fas fa-bookmark text-lg"></i> {# Solid bookmark #}
+                                <button type="submit" class="text-emerald-600 hover:text-emerald-800" title="Anulează salvarea">
+                                    <i class="fas fa-bookmark text-lg text-emerald-600"></i> {# Solid bookmark #}
                                 </button>
                             </form>
                         {% else %}
                             {# Not Saved - Show Save Button #}
                              <form action="{% url 'jobs:job_save' job.pk %}" method="post" class="inline">
                                 {% csrf_token %}
-                                <button type="submit" class="text-gray-400 hover:text-indigo-600" title="Salvează jobul">
+                                <button type="submit" class="text-emerald-600 hover:text-emerald-700" title="Salvează jobul">
                                     <i class="far fa-bookmark text-lg"></i> {# Outline bookmark #}
                                 </button>
                             </form>
@@ -93,7 +93,7 @@
                     <img src="{{ job.company.companyprofile.logo.url }}" alt="{{ job.company.companyprofile.company_name }}" class="h-10 w-10 rounded-full object-cover ml-auto">
                 {% else %}
                     <span class="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center ml-auto">
-                         <i class="fa-solid fa-circle-user text-2xl text-indigo-600"></i>
+                         <i class="fa-solid fa-circle-user text-2xl text-emerald-600"></i>
                     </span>
                 {% endif %}
                 </div>
@@ -129,7 +129,7 @@
 
             {% for num in page_obj.paginator.page_range %}
                 {% if page_obj.number == num %}
-                    <span aria-current="page" class="relative inline-flex items-center px-4 py-2 border border-indigo-500 bg-indigo-50 text-sm font-medium text-indigo-600 z-10">
+                    <span aria-current="page" class="relative inline-flex items-center px-4 py-2 border border-emerald-500 bg-emerald-50 text-sm font-medium text-emerald-600 z-10">
                         {{ num }}
                     </span>
                 {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}

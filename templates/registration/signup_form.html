@@ -252,7 +252,7 @@
     <div class="flex items-start">
         {{ form.terms_agreement }}
         <label for="{{ form.terms_agreement.id_for_label }}" class="ml-2 block text-sm text-gray-700">
-            {{ form.terms_agreement.label }} <a href="{% url 'core:terms' %}" target="_blank" class="text-indigo-600 hover:underline font-medium">termenii și condițiile</a>.
+            {{ form.terms_agreement.label }} <a href="{% url 'core:terms' %}" target="_blank" class="text-emerald-600 hover:underline font-medium"> termenii și condițiile</a>.
             {# Removed 'ejobs' reference and added link #}
         </label>
     </div>
@@ -264,7 +264,7 @@
 
     {# Submit Button #}
     <button type="submit"
-            class="w-full font-bold py-3 px-4 rounded transition duration-300 mt-6 bg-blue-600 hover:bg-blue-700 text-white"> {# Unified button color #}
+            class="w-full font-bold py-3 px-4 rounded transition duration-300 mt-6 bg-emerald-600 hover:bg-emerald-700 text-white"> {# Unified button color #}
       {% if user_type == 'company' %}
         Înregistrează-te {# Changed button text #}
       {% else %}
@@ -299,12 +299,12 @@
   document.addEventListener('DOMContentLoaded', function() {
     const formInputs = document.querySelectorAll('form input:not([type="checkbox"]):not([type="hidden"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="reset"]), form select, form textarea');
     formInputs.forEach(input => {
-      input.classList.add('mt-1', 'block', 'w-full', 'px-3', 'py-2', 'border', 'border-gray-300', 'rounded-md', 'shadow-sm', 'focus:outline-none', 'focus:ring-indigo-500', 'focus:border-indigo-500', 'sm:text-sm');
+      input.classList.add('mt-1', 'block', 'w-full', 'px-3', 'py-2', 'border', 'border-gray-300', 'rounded-md', 'shadow-sm', 'focus:outline-none', 'focus:ring-emerald-500', 'focus:border-indigo-500', 'sm:text-sm');
     });
     // Style checkboxes and their labels
     const checkboxes = document.querySelectorAll('form input[type="checkbox"]');
      checkboxes.forEach(checkbox => {
-        checkbox.classList.add('h-4', 'w-4', 'text-indigo-600', 'focus:ring-indigo-500', 'border-gray-300', 'rounded');
+        checkbox.classList.add('h-4', 'w-4', 'text-emerald-600', 'focus:ring-emerald-500', 'border-gray-300', 'rounded');
         // Find the label associated with this checkbox
         let label = document.querySelector(`label[for="${checkbox.id}"]`);
         if (label) {
