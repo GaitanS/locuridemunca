@@ -1,12 +1,12 @@
 {% autoescape off %}
 Hi {{ user.username }},
 
-Please click on the link below to confirm your registration for JoburiPentruRomani:
+Please click on the link below to confirm your registration for JoburiExpress:
 
 {{ protocol }}://{{ domain }}{% url 'accounts:activate' uidb64=uid token=token %}
 
 If clicking the link above doesn't work, please copy and paste the URL into a new browser window instead.
 
 Sincerely,
-The JoburiPentruRomani Team
+The JoburiExpress Team
 {% endautoescape %}

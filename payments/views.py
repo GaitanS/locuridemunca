@@ -56,7 +56,7 @@ def plan_list(request):
                         'currency': plan.currency.lower(),
                         'product_data': {
                             'name': plan.name,
-                            'description': f"Abonament {plan.name} pentru JoburiPentruRomani",
+                            'description': f"Abonament {plan.name} pentru JoburiExpress",
                         },
                         'unit_amount': int(plan.price * 100), # Stripe expects amount in cents
                     },

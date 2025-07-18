@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}JoburiPentruRomani{% endblock %}</title>
+    <title>{% block title %}JoburiExpress{% endblock %}</title>
     <!-- Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Optional: Add custom CSS or fonts here -->
@@ -29,7 +29,7 @@
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <a class="text-2xl font-bold text-indigo-600 flex items-center" href="{% url 'core:home' %}">
                 <i class="fas fa-briefcase mr-2"></i>
-                JoburiPentruRomani
+                JoburiExpress
             </a>
             <!-- Mobile Menu Button -->
             <button id="mobile-menu-button" class="md:hidden block text-gray-600 hover:text-indigo-600 focus:outline-none">
@@ -101,7 +101,7 @@
     <!-- Footer -->
     <footer class="bg-gray-800 text-gray-300 mt-auto">
         <div class="container mx-auto px-4 py-6 text-center">
-            <p>&copy; {% now "Y" %} JoburiPentruRomani. Toate drepturile rezervate.</p>
+            <p>&copy; {% now "Y" %} JoburiExpress. Toate drepturile rezervate.</p>
             <div class="mt-2 space-x-4">
                 <a href="{% url 'core:terms' %}" class="hover:text-white">Termeni și condiții</a>
                 <a href="{% url 'core:privacy' %}" class="hover:text-white">Politică de confidențialitate</a>

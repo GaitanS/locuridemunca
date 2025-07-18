@@ -39,7 +39,7 @@ class JobSeekerSignUpView(CreateView):
 
         # Send activation email
         current_site = get_current_site(self.request)
-        mail_subject = 'Activate your JoburiPentruRomani account.'
+        mail_subject = 'Activate your JoburiExpress account.'
         message = render_to_string('registration/account_activation_email.html', {
             'user': user,
             'domain': current_site.domain,

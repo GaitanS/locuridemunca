@@ -1,8 +1,8 @@
-# JoburiPentruRomani - Job Board Platform
+# JoburiExpress - Job Board Platform
 
 ## Description
 
-JoburiPentruRomani is a web application built with Django, designed to connect employers with potential candidates, focusing particularly on technical, operational, and specialized roles within Romania. It provides features for job posting, searching, filtering, user registration (job seekers and companies), and subscription plans for companies.
+JoburiExpress is a web application built with Django, designed to connect employers with potential candidates, focusing particularly on technical, operational, and specialized roles within Romania. It provides features for job posting, searching, filtering, user registration (job seekers and companies), and subscription plans for companies.
 
 ## Key Features
 
