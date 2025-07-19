@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block title %}Înregistrare - JoburiExpress{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const userTypeRadios = document.querySelectorAll('input[name="user_type"]');
+        const jobSeekerFields = document.getElementById('job-seeker-fields');
+        const companyFields = document.getElementById('company-fields');
+
+        function toggleFields() {
+            if (document.querySelector('input[name="user_type"]:checked').value === 'job_seeker') {
+                jobSeekerFields.style.display = 'block';
+                companyFields.style.display = 'none';
+            } else {
+                jobSeekerFields.style.display = 'none';
+                companyFields.style.display = 'block';
+            }
+        }
+
+        userTypeRadios.forEach(radio => radio.addEventListener('change', toggleFields));
+
+        // Initial check
+        toggleFields();
+    });
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto mt-10 mb-10 bg-white p-8 rounded-lg shadow-md border border-gray-200">
+  <h2 class="text-2xl font-bold text-center text-gray-800 mb-2">
+    Creează un cont nou
+  </h2>
+  <p class="text-center text-gray-500 mb-8">
+      Alătură-te comunității noastre!
+  </p>
+
+<form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+    {% csrf_token %}
+
+    <div class="mb-4">
+        <span class="block text-gray-700 text-sm font-bold mb-2">{{ form.user_type.label }}</span>
+        {% for radio in form.user_type %}
+            <label class="inline-flex items-center mr-6">
+                {{ radio.tag }}
+                <span class="ml-2">{{ radio.choice_label }}</span>
+            </label>
+        {% endfor %}
+        {% for error in form.user_type.errors %}
+            <p class="text-red-500 text-xs italic">{{ error }}</p>
+        {% endfor %}
+    </div>
+
+    <div id="job-seeker-fields">
+        <div class="mb-4">
+            <label for="{{ form.first_name.id_for_label }}" class="block text-gray-700 text-sm font-bold mb-2">{{ form.first_name.label }}</label>
+            {{ form.first_name }}
+            {% for error in form.first_name.errors %}<p class="text-red-500 text-xs italic">{{ error }}</p>{% endfor %}
+        </div>
+        <div class="mb-4">
+            <label for="{{ form.last_name.id_for_label }}" class="block text-gray-700 text-sm font-bold mb-2">{{ form.last_name.label }}</label>
+            {{ form.last_name }}
+            {% for error in form.last_name.errors %}<p class="text-red-500 text-xs italic">{{ error }}</p>{% endfor %}
+        </div>
+        <div class="mb-4">
+            <label for="{{ form.date_of_birth.id_for_label }}" class="block text-gray-700 text-sm font-bold mb-2">{{ form.date_of_birth.label }}</label>
+            {{ form.date_of_birth }}
+            {% for error in form.date_of_birth.errors %}<p class="text-red-500 text-xs italic">{{ error }}</p>{% endfor %}
+        </div>
+        <div class="mb-4">
+            <label for="{{ form.city_of_residence.id_for_label }}" class="block text-gray-700 text-sm font-bold mb-2">{{ form.city_of_residence.label }}</label>
+            {{ form.city_of_residence }}
+            {% for error in form.city_of_residence.errors %}<p class="text-red-500 text-xs italic">{{ error }}</p>{% endfor %}
+        </div>
+    </div>
+
+    <div id="company-fields" style="display: none;">
+        <div class="mb-4">
+            <label for="{{ form.company_name.id_for_label }}" class="block text-gray-700 text-sm font-bold mb-2">{{ form.company_name.label }}</label>
+            {{ form.company_name }}
+            {% for error in form.company_name.errors %}<p class="text-red-500 text-xs italic">{{ error }}</p>{% endfor %}
+        </div>
+    </div>
+
+    <div class="mb-4">
+        <label for="{{ form.email.id_for_label }}" class="block text-gray-700 text-sm font-bold mb-2">{{ form.email.label }}</label>
+        {{ form.email }}
+        {% for error in form.email.errors %}<p class="text-red-500 text-xs italic">{{ error }}</p>{% endfor %}
+    </div>
+    <div class="mb-4">
+        <label for="{{ form.password.id_for_label }}" class="block text-gray-700 text-sm font-bold mb-2">{{ form.password.label }}</label>
+        {{ form.password }}
+        {% for error in form.password.errors %}<p class="text-red-500 text-xs italic">{{ error }}</p>{% endfor %}
+    </div>
+    <div class="mb-4">
+        <label for="{{ form.password2.id_for_label }}" class="block text-gray-700 text-sm font-bold mb-2">{{ form.password2.label }}</label>
+        {{ form.password2 }}
+        {% for error in form.password2.errors %}<p class="text-red-500 text-xs italic">{{ error }}</p>{% endfor %}
+    </div>
+
+    <div class="mb-4">
+        <label for="{{ form.terms_agreement.id_for_label }}" class="inline-flex items-center">
+            {{ form.terms_agreement }}
+            <span class="ml-2 text-sm text-gray-700">{{ form.terms_agreement.label }}</span>
+        </label>
+        {% for error in form.terms_agreement.errors %}
+            <p class="text-red-500 text-xs italic">{{ error }}</p>
+        {% endfor %}
+    </div>
+
+    {% if redirect_field_value %}
+    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+    {% endif %}
+    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded transition duration-300 mt-6">Înregistrare</button>
+</form>
+
+</div>
+{% endblock %}
