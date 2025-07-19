@@ -37,6 +37,20 @@ class JobSeekerSignUpForm(UserCreationForm):
         label="Oraș de reședință",
         error_messages={'required': error_messages_ro['required']}
     )
+    phone_number = forms.CharField(
+        max_length=20, required=False,
+        widget=forms.TextInput(attrs={'placeholder': 'ex. 0712345678'}),
+        label="Număr de telefon"
+    )
+    cv = forms.FileField(
+        required=False,
+        label="CV"
+    )
+    bio = forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={'rows': 3, 'placeholder': 'O scurtă descriere despre tine...'}),
+        label="Despre mine / Bio"
+    )
     terms_agreement = forms.BooleanField(
         required=True,
         label="Sunt de acord cu",
@@ -71,6 +85,9 @@ class JobSeekerSignUpForm(UserCreationForm):
                 defaults={
                     'date_of_birth': self.cleaned_data.get('date_of_birth'),
                     'city_of_residence': self.cleaned_data.get('city_of_residence'),
+                    'phone_number': self.cleaned_data.get('phone_number'),
+                    'cv': self.cleaned_data.get('cv'),
+                    'bio': self.cleaned_data.get('bio'),
                 }
             )
         return user

@@ -33,7 +33,7 @@ class User(AbstractUser):
     # Set is_active to False by default for email verification
     is_active = models.BooleanField(
         'active',
-        default=False, # Changed default to False
+        default=True, # Changed default to True
         help_text= (
             'Designates whether this user should be treated as active. '
             'Unselect this instead of deleting accounts.'
