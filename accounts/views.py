@@ -113,10 +113,10 @@ class ActivateAccountView(View):
             user.is_active = True
             user.save()
             # login(request, user) # Optionally log in user directly
-            messages.success(request, 'Your account has been confirmed successfully! You can now log in.')
+            messages.success(request, 'Contul tău a fost confirmat cu succes! Acum te poți autentifica.')
             return redirect('accounts:login') # Redirect to login page
         else:
-            messages.error(request, 'The confirmation link was invalid, possibly because it has already been used or expired.')
+            messages.error(request, 'Link-ul de confirmare este invalid, posibil pentru că a fost deja folosit sau a expirat.')
             return redirect('accounts:login') # Redirect to login or a specific error page
 
 # --- Dashboards ---
