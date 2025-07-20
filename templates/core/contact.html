@@ -3,71 +3,326 @@
 {% block title %}Contact - JoburiExpress{% endblock %}
 
 {% block content %}
-<div class="container mx-auto px-4 py-12">
-    <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md border border-gray-200">
-        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Contactează-ne</h1>
-        <p class="text-center text-gray-600 mb-8">Aveți întrebări sau aveți nevoie de ajutor? Folosiți informațiile de mai jos sau trimiteți-ne un mesaj.</p>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <!-- Contact Info -->
-            <div>
-                <h3 class="text-xl font-semibold text-gray-700 mb-4">Informații de contact</h3>
-                <ul class="space-y-3 text-sm text-gray-600">
-                    <li class="flex items-start">
-                        <i class="fas fa-map-marker-alt w-5 mr-3 mt-1 text-emerald-600"></i>
-                        <span>Str. Exemplului nr. 123<br>București, România</span>
-                    </li>
-                    <li class="flex items-center">
-                        <i class="fas fa-phone-alt w-5 mr-3 text-emerald-600"></i>
-                        <span>+40 712 345 678</span>
-                    </li>
-                    <li class="flex items-center">
-                        <i class="fas fa-envelope w-5 mr-3 text-emerald-600"></i>
-                        <a href="mailto:contact@joburiexpress.ro" class="hover:text-blue-700">contact@joburiexpress.ro</a>
-                    </li>
-                    <li class="flex items-center">
-                        <i class="fas fa-clock w-5 mr-3 text-emerald-600"></i>
-                        <span>Luni-Vineri: 9:00 - 18:00</span>
-                    </li>
-                </ul>
-                <h4 class="text-md font-semibold text-gray-700 mt-6 mb-3">Urmărește-ne</h4>
-                <div class="flex space-x-4">
-                    <a href="#" class="text-emerald-600 hover:text-emerald-800"><i class="fab fa-facebook-f fa-lg"></i></a>
-                    <a href="#" class="text-emerald-600 hover:text-emerald-800"><i class="fab fa-linkedin-in fa-lg"></i></a>
-                    <a href="#" class="text-emerald-600 hover:text-emerald-800"><i class="fab fa-instagram fa-lg"></i></a>
-                    <a href="#" class="text-emerald-600 hover:text-emerald-800"><i class="fab fa-twitter fa-lg"></i></a>
-                </div>
-            </div>
-            <!-- Contact Form -->
-            <div>
-                 <h3 class="text-xl font-semibold text-gray-700 mb-4">Trimite-ne un mesaj</h3>
-                 {# Use POST method and render Django form #}
-                 <form action="{% url 'core:contact' %}" method="post" class="space-y-4">
-                    {% csrf_token %}
-                    {% if form.non_field_errors %}
-                      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-                        {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
-                      </div>
-                    {% endif %}
-
-                    {% for field in form %}
-                      <div>
-                        <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700">{{ field.label }}</label>
-                        {{ field }} {# Render widget with classes defined in form #}
-                        {% if field.errors %}
-                          <div class="mt-1 text-xs text-red-600">
-                            {% for error in field.errors %}<p>{{ error }}</p>{% endfor %}
-                          </div>
-                        {% endif %}
-                      </div>
-                    {% endfor %}
-
-                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded transition duration-300">
-                        Trimite mesajul
-                    </button>
-                 </form>
-            </div>
+<!-- Hero Section -->
+<div class="relative bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-800 text-white overflow-hidden">
+    <div class="absolute inset-0 bg-black opacity-20"></div>
+    <div class="absolute inset-0">
+        <svg class="absolute bottom-0 left-0 w-full h-16 text-white" fill="currentColor" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25"></path>
+            <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5"></path>
+            <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z"></path>
+        </svg>
+    </div>
+    <div class="relative container mx-auto px-4 py-16">
+        <div class="text-center max-w-3xl mx-auto">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4 animate-fade-in-up">
+                <i class="fas fa-comments mr-4"></i>Contactează-ne
+            </h1>
+            <p class="text-xl text-emerald-100 animate-fade-in-up animation-delay-200">
+                Aveți întrebări sau aveți nevoie de ajutor? Folosiți informațiile de mai jos sau trimiteți-ne un mesaj.
+            </p>
         </div>
     </div>
 </div>
+
+<!-- Main Content -->
+<div class="bg-gray-50 py-16">
+    <div class="container mx-auto px-4">
+        
+        <!-- Contact Methods -->
+        <section class="mb-16">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">Modalități de Contact</h2>
+                <p class="text-xl text-gray-600">Alege modalitatea care ți se potrivește cel mai bine</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {% for contact_info in contact_infos %}
+                    <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-2 group text-center">
+                        <div class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition duration-300 {{ contact_info.color_class|default:'bg-gradient-to-br from-emerald-400 to-emerald-600' }}">
+                            <i class="{{ contact_info.icon_class|default:'fas fa-envelope' }} text-2xl text-white"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-800 mb-2">{{ contact_info.title }}</h3>
+                        <p class="text-gray-600 mb-3">{{ contact_info.description }}</p>
+                        <div class="text-emerald-600 font-semibold">
+                            {{ contact_info.content|linebreaks }}
+                        </div>
+                    </div>
+                {% empty %}
+                    <!-- Default contact methods if none in database -->
+                    <!-- Phone -->
+                    <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-2 group text-center">
+                        <div class="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition duration-300">
+                            <i class="fas fa-phone text-2xl text-white"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-800 mb-2">Telefon</h3>
+                        <p class="text-gray-600 mb-3">Sună-ne direct</p>
+                        <a href="tel:+40712345678" class="text-emerald-600 font-semibold hover:text-emerald-700">+40 712 345 678</a>
+                    </div>
+                    
+                    <!-- Email -->
+                    <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-2 group text-center">
+                        <div class="w-16 h-16 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition duration-300">
+                            <i class="fas fa-envelope text-2xl text-white"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-800 mb-2">Email</h3>
+                        <p class="text-gray-600 mb-3">Scrie-ne un email</p>
+                        <a href="mailto:contact@joburiexpress.ro" class="text-emerald-600 font-semibold hover:text-emerald-700">contact@joburiexpress.ro</a>
+                    </div>
+                    
+                    <!-- Location -->
+                    <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-2 group text-center">
+                        <div class="w-16 h-16 bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition duration-300">
+                            <i class="fas fa-map-marker-alt text-2xl text-white"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-800 mb-2">Locație</h3>
+                        <p class="text-gray-600 mb-3">Vizitează-ne</p>
+                        <p class="text-emerald-600 font-semibold">Str. Exemplului nr. 123<br>București, România</p>
+                    </div>
+                    
+                    <!-- Schedule -->
+                    <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-2 group text-center">
+                        <div class="w-16 h-16 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition duration-300">
+                            <i class="fas fa-clock text-2xl text-white"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-800 mb-2">Program</h3>
+                        <p class="text-gray-600 mb-3">Suntem disponibili</p>
+                        <p class="text-emerald-600 font-semibold">Luni - Vineri<br>9:00 - 18:00</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Contact Form & Info -->
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            <!-- Contact Form -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-3xl p-8 shadow-xl">
+                    <div class="text-center mb-8">
+                        <h2 class="text-3xl font-bold text-gray-800 mb-4">Trimite-ne un Mesaj</h2>
+                        <p class="text-gray-600">Completează formularul de mai jos și îți vom răspunde în cel mai scurt timp</p>
+                    </div>
+                    
+                    <form action="{% url 'core:contact' %}" method="post" class="space-y-6">
+                        {% csrf_token %}
+                        
+                        {% if form.non_field_errors %}
+                            <div class="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-xl" role="alert">
+                                {% for error in form.non_field_errors %}
+                                    <p class="flex items-center">
+                                        <i class="fas fa-exclamation-triangle mr-2"></i>{{ error }}
+                                    </p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {% for field in form %}
+                                {% if field.name == 'name' or field.name == 'email' %}
+                                    <div class="form-group">
+                                        <label for="{{ field.id_for_label }}" class="block text-sm font-semibold text-gray-700 mb-2">
+                                            {{ field.label }}
+                                            {% if field.field.required %}<span class="text-red-500">*</span>{% endif %}
+                                        </label>
+                                        <div class="relative">
+                                            {{ field }}
+                                            {% if field.name == 'name' %}
+                                                <i class="fas fa-user absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                            {% elif field.name == 'email' %}
+                                                <i class="fas fa-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                            {% endif %}
+                                        </div>
+                                        {% if field.errors %}
+                                            <div class="mt-2 text-sm text-red-600">
+                                                {% for error in field.errors %}
+                                                    <p class="flex items-center">
+                                                        <i class="fas fa-exclamation-circle mr-1"></i>{{ error }}
+                                                    </p>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+
+                        {% for field in form %}
+                            {% if field.name == 'subject' %}
+                                <div class="form-group">
+                                    <label for="{{ field.id_for_label }}" class="block text-sm font-semibold text-gray-700 mb-2">
+                                        {{ field.label }}
+                                        {% if field.field.required %}<span class="text-red-500">*</span>{% endif %}
+                                    </label>
+                                    <div class="relative">
+                                        {{ field }}
+                                        <i class="fas fa-tag absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                    </div>
+                                    {% if field.errors %}
+                                        <div class="mt-2 text-sm text-red-600">
+                                            {% for error in field.errors %}
+                                                <p class="flex items-center">
+                                                    <i class="fas fa-exclamation-circle mr-1"></i>{{ error }}
+                                                </p>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% for field in form %}
+                            {% if field.name == 'message' %}
+                                <div class="form-group">
+                                    <label for="{{ field.id_for_label }}" class="block text-sm font-semibold text-gray-700 mb-2">
+                                        {{ field.label }}
+                                        {% if field.field.required %}<span class="text-red-500">*</span>{% endif %}
+                                    </label>
+                                    <div class="relative">
+                                        {{ field }}
+                                        <i class="fas fa-comment absolute left-3 top-4 text-gray-400"></i>
+                                    </div>
+                                    {% if field.errors %}
+                                        <div class="mt-2 text-sm text-red-600">
+                                            {% for error in field.errors %}
+                                                <p class="flex items-center">
+                                                    <i class="fas fa-exclamation-circle mr-1"></i>{{ error }}
+                                                </p>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+
+                        <button type="submit" class="w-full bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-bold py-4 px-8 rounded-xl transition duration-300 transform hover:scale-105 shadow-lg">
+                            <i class="fas fa-paper-plane mr-2"></i>Trimite Mesajul
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Contact Info & Social -->
+             <div class="space-y-8">
+                 <!-- Social Media -->
+                 <div class="bg-white rounded-3xl p-8 shadow-lg">
+                     <h3 class="text-xl font-bold text-gray-800 mb-6 text-center">Urmărește-ne</h3>
+                     <div class="flex justify-center">
+                         <a href="#" class="flex items-center justify-center p-4 bg-blue-50 rounded-xl hover:bg-blue-100 transition duration-300 group">
+                             <i class="fab fa-facebook-f text-2xl text-blue-600 group-hover:scale-110 transition duration-300"></i>
+                         </a>
+                     </div>
+                 </div>
+
+                 <!-- FAQ Link -->
+                 <div class="bg-white rounded-3xl p-8 shadow-lg text-center">
+                     <i class="fas fa-question-circle text-4xl text-emerald-600 mb-4"></i>
+                     <h3 class="text-xl font-bold text-gray-800 mb-2">Întrebări Frecvente</h3>
+                     <p class="text-gray-600 mb-4">Poate găsești răspunsul în secțiunea FAQ</p>
+                     <a href="{% url 'core:faq' %}" class="inline-flex items-center px-6 py-3 bg-emerald-600 text-white font-semibold rounded-xl hover:bg-emerald-700 transition duration-300">
+                         Vezi FAQ
+                         <i class="fas fa-arrow-right ml-2"></i>
+                     </a>
+                 </div>
+             </div>
+        </section>
+    </div>
+</div>
+
+<!-- Custom Styles -->
+<style>
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in-up {
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.animation-delay-200 {
+    animation-delay: 0.2s;
+    opacity: 0;
+}
+
+/* Form Styling */
+.form-group input,
+.form-group textarea,
+.form-group select {
+    @apply w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition duration-200 bg-gray-50 focus:bg-white;
+}
+
+.form-group textarea {
+    @apply pl-10 pt-4 min-h-32 resize-none;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    @apply shadow-lg;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        @apply pl-4;
+    }
+    
+    .form-group i {
+        display: none;
+    }
+}
+</style>
+
+<!-- Custom JavaScript for Romanian validation messages -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Romanian validation messages
+    const romanianMessages = {
+        valueMissing: 'Acest câmp este obligatoriu.',
+        typeMismatch: 'Vă rugăm să introduceți o adresă de email validă.',
+        tooShort: 'Textul este prea scurt.',
+        tooLong: 'Textul este prea lung.',
+        patternMismatch: 'Formatul introdus nu este valid.'
+    };
+
+    // Function to set custom validation message
+    function setCustomValidationMessage(input) {
+        input.addEventListener('invalid', function(e) {
+            const validity = e.target.validity;
+            let message = '';
+
+            if (validity.valueMissing) {
+                message = romanianMessages.valueMissing;
+            } else if (validity.typeMismatch) {
+                message = romanianMessages.typeMismatch;
+            } else if (validity.tooShort) {
+                message = romanianMessages.tooShort;
+            } else if (validity.tooLong) {
+                message = romanianMessages.tooLong;
+            } else if (validity.patternMismatch) {
+                message = romanianMessages.patternMismatch;
+            }
+
+            e.target.setCustomValidity(message);
+        });
+
+        input.addEventListener('input', function(e) {
+            e.target.setCustomValidity('');
+        });
+    }
+
+    // Apply to all form inputs
+    const formInputs = document.querySelectorAll('input[required], textarea[required], select[required]');
+    formInputs.forEach(setCustomValidationMessage);
+});
+</script>
+
 {% endblock %}

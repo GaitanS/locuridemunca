@@ -4,7 +4,7 @@ from django.views.generic import TemplateView, FormView
 from django.contrib import messages
 from jobs.models import Category, Job
 from .forms import NewsletterSubscriptionForm, ContactForm # Import forms
-from .models import NewsletterSubscription, ContactMessage # Import models
+from .models import NewsletterSubscription, ContactMessage, ContactInfo, FAQ # Import models
 from django.views.decorators.http import require_POST # Import decorator
 
 # Create your views here.
@@ -105,6 +105,12 @@ class ContactView(FormView): # This remains for a potential dedicated /contact p
     form_class = ContactForm
     success_url = reverse_lazy('core:contact') # Redirect back to contact page
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Add contact info from database
+        context['contact_info'] = ContactInfo.objects.filter(is_active=True).order_by('order')
+        return context
+
     def form_valid(self, form):
         # Save the message to the database
         form.save()
@@ -115,3 +121,15 @@ class ContactView(FormView): # This remains for a potential dedicated /contact p
         messages.error(self.request, "A apărut o eroare. Vă rugăm verificați câmpurile completate.")
         # Need to manually call get_context_data for FormView on invalid
         return self.render_to_response(self.get_context_data(form=form))
+
+class FAQView(TemplateView):
+    """
+    View for the FAQ page.
+    """
+    template_name = "core/faq.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Add FAQ items from database
+        context['faqs'] = FAQ.objects.filter(is_active=True).order_by('order')
+        return context

@@ -224,6 +224,18 @@ class CompanySignUpForm(UserCreationForm):
         widget=forms.TextInput(attrs={'placeholder': 'România'}),
         error_messages={'required': error_messages_ro['required']}
     )
+    website = forms.URLField(
+        required=False, label="Website",
+        widget=forms.URLInput(attrs={'placeholder': 'https://exemplu.com'}),
+    )
+    description = forms.CharField(
+        required=False, label="Descriere companie",
+        widget=forms.Textarea(attrs={'rows': 4, 'placeholder': 'Descrierea companiei...'}),
+    )
+    logo = forms.ImageField(
+        required=False, label="Logo companie",
+        widget=forms.ClearableFileInput(),
+    )
     terms_agreement = forms.BooleanField(
         required=True,
         label="Sunt de acord cu",
@@ -260,6 +272,9 @@ class CompanySignUpForm(UserCreationForm):
                 profile.country = self.cleaned_data.get('country')
                 profile.location = self.cleaned_data.get('location')
                 profile.industry = self.cleaned_data.get('industry')
+                profile.website = self.cleaned_data.get('website')
+                profile.description = self.cleaned_data.get('description')
+                profile.logo = self.cleaned_data.get('logo')
                 profile.save()
             except CompanyProfile.DoesNotExist:
                 # Dacă profilul nu există, îl creez
@@ -270,6 +285,9 @@ class CompanySignUpForm(UserCreationForm):
                     city=self.cleaned_data.get('city'),
                     country=self.cleaned_data.get('country'),
                     location=self.cleaned_data.get('location'),
-                    industry=self.cleaned_data.get('industry')
+                    industry=self.cleaned_data.get('industry'),
+                    website=self.cleaned_data.get('website'),
+                    description=self.cleaned_data.get('description'),
+                    logo=self.cleaned_data.get('logo')
                 )
         return user

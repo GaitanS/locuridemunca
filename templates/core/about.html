@@ -4,166 +4,253 @@
 {% block title %}Despre Noi - JoburiExpress{% endblock %}
 
 {% block content %}
-
-
-
-<div class="bg-white">
-    <div class="container mx-auto px-4 py-12">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
-
-            <!-- Main Content Area -->
-            <div class="lg:col-span-2">
-                <!-- About Section -->
-                <section class="mb-12">
-                    <h1 class="text-3xl font-bold text-gray-800 mb-4">Despre JoburiExpress</h1>
-                    <p class="text-gray-600 mb-4 leading-relaxed">
-                        Platforma JoburiExpress a fost creată cu scopul de a conecta angajatorii cu potențiali candidați din clasa muncitoare - operatori, constructori, șoferi, asistenți medicali și multe alte profesii tehnice și de specialitate.
-                    </p>
-                    <p class="text-gray-600 mb-4 leading-relaxed">
-                        Ne-am dat seama că majoritatea platformelor de recrutare online se concentrează pe joburi pentru profesioniști din domenii precum IT, financiar sau management, iar cerințele pentru candidați care lucrează în domenii tehnice sau operaționale sunt adesea neglijate.
-                    </p>
-                    <p class="text-gray-600 leading-relaxed">
-                        JoburiExpress vine să umple acest gol, oferind o platformă dedicată locurilor de muncă pentru clasa muncitoare, cu funcționalități adaptate nevoilor specifice ale acestor domenii de activitate.
-                    </p>
-                </section>
-
-                <section class="my-12">
-                    <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=2069&auto=format&fit=crop" alt="Happy professional" class="rounded-lg shadow-2xl relative transition-transform duration-500 ease-in-out hover:scale-105 mx-auto max-w-lg w-full">
-                </section>
-
-                <!-- Mission Section -->
-                <section class="mb-12">
-                    <h2 class="text-2xl font-semibold text-gray-800 mb-6">Misiunea noastră</h2>
-                    <p class="text-gray-600 mb-6 leading-relaxed">
-                        Misiunea JoburiExpress este să faciliteze accesul la locuri de muncă de calitate pentru lucrătorii din domeniile tehnice, operaționale și de specialitate din România.
-                    </p>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-                        <div class="bg-gray-50 p-6 rounded-lg shadow">
-                            <i class="fas fa-handshake text-4xl text-emerald-600 mb-3"></i>
-                            <h3 class="font-semibold text-lg mb-2">Conectăm oamenii</h3>
-                            <p class="text-sm text-gray-600">Facilităm întâlnirea dintre candidați calificați și angajatorii care au nevoie de ei.</p>
-                        </div>
-                        <div class="bg-gray-50 p-6 rounded-lg shadow">
-                            <i class="fas fa-award text-4xl text-emerald-600 mb-3"></i>
-                            <h3 class="font-semibold text-lg mb-2">Promovăm calitatea</h3>
-                            <p class="text-sm text-gray-600">Susținem joburile cu condiții de muncă bune și salarii corecte.</p>
-                        </div>
-                        <div class="bg-gray-50 p-6 rounded-lg shadow">
-                            <i class="fas fa-rocket text-4xl text-emerald-600 mb-3"></i>
-                            <h3 class="font-semibold text-lg mb-2">Sprijinim dezvoltarea</h3>
-                            <p class="text-sm text-gray-600">Oferim resurse și informații pentru dezvoltarea carierei.</p>
-                        </div>
-                    </div>
-                </section>
-
-            </div>
-
-            <!-- Sidebar Area -->
-            <aside class="lg:col-span-1 space-y-6">
-
-
-                <!-- Newsletter Signup -->
-                <div class="bg-white rounded-lg shadow border border-gray-200 p-6">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Abonează-te la newsletter</h3>
-                    <p class="text-sm text-gray-600 mb-4">Fii la curent cu cele mai noi joburi și sfaturi pentru carieră.</p>
-                    <form action="{% url 'core:newsletter_subscribe' %}" method="post">
-                        {% csrf_token %}
-                        <div class="mb-3">
-                            {{ newsletter_form.email }} {# Render the email field #}
-                            {% if newsletter_form.email.errors %}
-                                <div class="mt-1 text-xs text-red-600">
-                                    {% for error in newsletter_form.email.errors %}
-                                        <p>{{ error }}</p>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-                        </div>
-                        <button type="submit" class="w-full bg-emerald-600 text-white py-2 px-4 rounded-md hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition duration-150 ease-in-out">
-                            Abonează-te
-                        </button>
-                    </form>
-                </div>
-
-
-            </aside>
+<!-- Hero Section -->
+<div class="relative bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-800 text-white overflow-hidden">
+    <div class="absolute inset-0 bg-black opacity-20"></div>
+    <div class="absolute inset-0">
+        <svg class="absolute bottom-0 left-0 w-full h-24 text-white" fill="currentColor" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25"></path>
+            <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5"></path>
+            <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z"></path>
+        </svg>
+    </div>
+    <div class="relative container mx-auto px-4 py-20">
+        <div class="text-center max-w-4xl mx-auto">
+            <h1 class="text-5xl md:text-6xl font-bold mb-6 animate-fade-in-up">
+                Despre <span class="text-emerald-300">JoburiExpress</span>
+            </h1>
+            <p class="text-xl md:text-2xl text-emerald-100 mb-8 animate-fade-in-up animation-delay-200">
+                Conectăm talentele cu oportunitățile în domeniul muncii calificate
+            </p>
         </div>
+    </div>
+</div>
 
-        <!-- Contact Section -->
-        <section class="mt-16 pt-12 border-t border-gray-200">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Contactează-ne</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- Contact Info -->
-                <div class="space-y-4">
-                    <h3 class="text-xl font-semibold text-gray-700">Informații de contact</h3>
-                    <div class="flex items-start space-x-3">
-                        <i class="fas fa-map-marker-alt text-emerald-600 mt-1"></i>
-                        <p class="text-gray-600">Str. Exemplului nr. 123<br>București, România</p>
+<!-- Main Content -->
+<div class="bg-gray-50">
+    <div class="container mx-auto px-4 py-16">
+        
+        <!-- Story Section -->
+        <section class="mb-20">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="order-2 lg:order-1">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-6">Povestea Noastră</h2>
+                    <div class="space-y-4 text-gray-600 leading-relaxed">
+                        <p class="text-lg">
+                            Platforma JoburiExpress a fost creată cu scopul de a conecta angajatorii cu potențiali candidați din clasa muncitoare - operatori, constructori, șoferi, asistenți medicali și multe alte profesii tehnice și de specialitate.
+                        </p>
+                        <p>
+                            Ne-am dat seama că majoritatea platformelor de recrutare online se concentrează pe joburi pentru profesioniști din domenii precum IT, financiar sau management, iar cerințele pentru candidați care lucrează în domenii tehnice sau operaționale sunt adesea neglijate.
+                        </p>
+                        <p>
+                            JoburiExpress vine să umple acest gol, oferind o platformă dedicată locurilor de muncă pentru clasa muncitoare, cu funcționalități adaptate nevoilor specifice ale acestor domenii de activitate.
+                        </p>
                     </div>
-                    <div class="flex items-center space-x-3">
-                        <i class="fas fa-phone-alt text-emerald-600"></i>
-                        <p class="text-gray-600">+40 712 345 678</p>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <i class="fas fa-envelope text-emerald-600"></i>
-                        <a href="mailto:contact@joburiexpress.ro" class="text-gray-600 hover:text-blue-700">contact@joburiexpress.ro</a>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <i class="fas fa-clock text-emerald-600"></i>
-                        <p class="text-gray-600">Luni - Vineri: 9:00 - 18:00</p>
-                    </div>
-                    <div class="mt-4">
-                        <h4 class="font-semibold text-gray-700 mb-2">Urmărește-ne</h4>
-                        <div class="flex space-x-4">
-                            <a href="#" class="text-gray-500 hover:text-emerald-600"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#" class="text-gray-500 hover:text-blue-400"><i class="fab fa-twitter"></i></a>
-                            <a href="#" class="text-gray-500 hover:text-blue-700"><i class="fab fa-linkedin-in"></i></a>
-                            <a href="#" class="text-gray-500 hover:text-pink-600"><i class="fab fa-instagram"></i></a>
-                        </div>
+                    <div class="mt-8">
+                        <a href="{% url 'joburi:lista_joburi' %}" class="inline-flex items-center px-6 py-3 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 transition duration-300 transform hover:scale-105">
+                            Explorează Joburile
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
                     </div>
                 </div>
+                <div class="order-1 lg:order-2">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=2069&auto=format&fit=crop" 
+                             alt="Echipa JoburiExpress" 
+                             class="rounded-2xl shadow-2xl w-full h-96 object-cover transform hover:scale-105 transition duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-emerald-600/20 to-transparent rounded-2xl"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-                <!-- Contact Form -->
-                <div>
-                    <h3 class="text-xl font-semibold text-gray-700 mb-4">Trimite-ne un mesaj</h3>
-                    {# Use the contact_form from context #}
-                    <form action="{% url 'core:contact_submit' %}" method="post" class="space-y-4">
-                        {% csrf_token %}
-                        {# Render non-field errors first #}
-                        {% if contact_form.non_field_errors %}
-                            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-                                {% for error in contact_form.non_field_errors %}
+        <!-- Mission & Values Section -->
+        <section class="mb-20">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">Misiunea & Valorile Noastre</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Facilităm accesul la locuri de muncă de calitate pentru lucrătorii din domeniile tehnice, operaționale și de specialitate din România.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-2 group">
+                    <div class="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-emerald-600 transition duration-300">
+                        <i class="fas fa-handshake text-2xl text-emerald-600 group-hover:text-white transition duration-300"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Conectăm Oamenii</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Facilităm întâlnirea dintre candidați calificați și angajatorii care au nevoie de ei, creând punți între talent și oportunități.
+                    </p>
+                </div>
+                
+                <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-2 group">
+                    <div class="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-emerald-600 transition duration-300">
+                        <i class="fas fa-award text-2xl text-emerald-600 group-hover:text-white transition duration-300"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Promovăm Calitatea</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Susținem joburile cu condiții de muncă bune și salarii corecte, asigurându-ne că fiecare oportunitate respectă standardele înalte.
+                    </p>
+                </div>
+                
+                <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-2 group">
+                    <div class="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-emerald-600 transition duration-300">
+                        <i class="fas fa-rocket text-2xl text-emerald-600 group-hover:text-white transition duration-300"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Sprijinim Dezvoltarea</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Oferim resurse și informații pentru dezvoltarea carierei, ajutând profesioniștii să-și atingă potențialul maxim.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="mb-20">
+            <div class="bg-white rounded-3xl p-12 shadow-xl">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-bold text-gray-800 mb-4">De Ce JoburiExpress?</h2>
+                    <p class="text-xl text-gray-600">Platforma construită special pentru nevoile tale profesionale</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="text-center group">
+                        <div class="w-20 h-20 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition duration-300">
+                            <i class="fas fa-search text-2xl text-white"></i>
+                        </div>
+                        <h4 class="font-bold text-gray-800 mb-2">Căutare Avansată</h4>
+                        <p class="text-sm text-gray-600">Filtrează joburile după locație, salariu și experiență</p>
+                    </div>
+                    
+                    <div class="text-center group">
+                        <div class="w-20 h-20 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition duration-300">
+                            <i class="fas fa-bell text-2xl text-white"></i>
+                        </div>
+                        <h4 class="font-bold text-gray-800 mb-2">Alerte Personalizate</h4>
+                        <p class="text-sm text-gray-600">Primește notificări pentru joburile care te interesează</p>
+                    </div>
+                    
+                    <div class="text-center group">
+                        <div class="w-20 h-20 bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition duration-300">
+                            <i class="fas fa-file-alt text-2xl text-white"></i>
+                        </div>
+                        <h4 class="font-bold text-gray-800 mb-2">CV Builder</h4>
+                        <p class="text-sm text-gray-600">Creează un CV profesional în câteva minute</p>
+                    </div>
+                    
+                    <div class="text-center group">
+                        <div class="w-20 h-20 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition duration-300">
+                            <i class="fas fa-shield-alt text-2xl text-white"></i>
+                        </div>
+                        <h4 class="font-bold text-gray-800 mb-2">Siguranță Garantată</h4>
+                        <p class="text-sm text-gray-600">Datele tale sunt protejate și securizate</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Newsletter & Contact Section -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <!-- Newsletter -->
+            <div class="bg-gradient-to-br from-emerald-600 to-emerald-700 rounded-3xl p-8 text-white">
+                <div class="text-center mb-6">
+                    <i class="fas fa-envelope text-4xl mb-4 opacity-80"></i>
+                    <h3 class="text-2xl font-bold mb-2">Rămâi la Curent</h3>
+                    <p class="text-emerald-100">Abonează-te la newsletter pentru cele mai noi joburi și sfaturi de carieră</p>
+                </div>
+                
+                <form action="{% url 'core:newsletter_subscribe' %}" method="post" class="space-y-4">
+                    {% csrf_token %}
+                    <div>
+                        {{ newsletter_form.email }}
+                        {% if newsletter_form.email.errors %}
+                            <div class="mt-2 text-sm text-red-200">
+                                {% for error in newsletter_form.email.errors %}
                                     <p>{{ error }}</p>
                                 {% endfor %}
                             </div>
                         {% endif %}
+                    </div>
+                    <button type="submit" class="w-full bg-white text-emerald-600 font-bold py-3 px-6 rounded-xl hover:bg-gray-100 transition duration-300 transform hover:scale-105">
+                        Abonează-te Acum
+                    </button>
+                </form>
+            </div>
 
-                        {# Render each field with its label and errors #}
-                        {% for field in contact_form %}
-                            <div>
-                                {{ field.label_tag }} {# Use label_tag for accessibility #}
-                                {{ field }} {# Render the input/textarea #}
-                                {% if field.help_text %}
-                                    <p class="mt-1 text-xs text-gray-500">{{ field.help_text }}</p>
-                                {% endif %}
-                                {% if field.errors %}
-                                    <div class="mt-1 text-xs text-red-600">
-                                        {% for error in field.errors %}
-                                            <p>{{ error }}</p>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                        {% endfor %}
-
-                        <div>
-                            <button type="submit" class="w-full bg-emerald-600 text-white py-2 px-4 rounded-md hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition duration-150 ease-in-out">
-                                Trimite mesajul
-                            </button>
-                        </div>
-                    </form>
+            <!-- Quick Contact -->
+            <div class="bg-white rounded-3xl p-8 shadow-lg">
+                <div class="text-center mb-6">
+                    <i class="fas fa-comments text-4xl text-emerald-600 mb-4"></i>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">Contactează-ne</h3>
+                    <p class="text-gray-600">Ai întrebări? Suntem aici să te ajutăm!</p>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-xl">
+                        <i class="fas fa-phone text-emerald-600"></i>
+                        <span class="text-gray-700">+40 712 345 678</span>
+                    </div>
+                    <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-xl">
+                        <i class="fas fa-envelope text-emerald-600"></i>
+                        <span class="text-gray-700">contact@joburiexpress.ro</span>
+                    </div>
+                    <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-xl">
+                        <i class="fas fa-clock text-emerald-600"></i>
+                        <span class="text-gray-700">Luni - Vineri: 9:00 - 18:00</span>
+                    </div>
+                </div>
+                
+                <div class="mt-6 text-center">
+                    <a href="{% url 'core:contact' %}" class="inline-flex items-center px-6 py-3 bg-emerald-600 text-white font-semibold rounded-xl hover:bg-emerald-700 transition duration-300">
+                        Trimite Mesaj
+                        <i class="fas fa-paper-plane ml-2"></i>
+                    </a>
                 </div>
             </div>
         </section>
     </div>
 </div>
+
+<!-- Custom Styles -->
+<style>
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in-up {
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.animation-delay-200 {
+    animation-delay: 0.2s;
+    opacity: 0;
+}
+
+.animation-delay-400 {
+    animation-delay: 0.4s;
+    opacity: 0;
+}
+
+/* Style form inputs */
+input[type="email"] {
+    @apply w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition duration-200;
+}
+
+.bg-gradient-to-br.from-emerald-600 input[type="email"] {
+    @apply bg-white/20 border-white/30 text-white placeholder-emerald-200;
+}
+
+.bg-gradient-to-br.from-emerald-600 input[type="email"]:focus {
+    @apply bg-white/30 border-white/50;
+}
+</style>
+
 {% endblock %}

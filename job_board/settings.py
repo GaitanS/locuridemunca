@@ -55,6 +55,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',  # Add locale middleware
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -118,9 +119,22 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'ro' # Set language to Romanian
 
+# Available languages
+LANGUAGES = [
+    ('ro', 'Română'),
+    ('en', 'English'),
+]
+
+# Locale paths for translations
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale'),
+]
+
 TIME_ZONE = 'Europe/Bucharest' # Set timezone to Romania
 
 USE_I18N = True
+
+USE_L10N = True
 
 USE_TZ = True
 

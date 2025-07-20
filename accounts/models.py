@@ -3,12 +3,12 @@ from django.db import models
 
 class User(AbstractUser):
     """
-    Custom User model inheriting from AbstractUser.
-    Adds user_type to differentiate between Job Seekers and Companies.
+    Model User personalizat care moștenește din AbstractUser.
+    Adaugă user_type pentru a diferenția între Candidați și Companii.
     """
     USER_TYPE_CHOICES = (
-        ('job_seeker', 'Job Seeker'),
-        ('company', 'Company'),
+        ('job_seeker', 'Candidat'),
+        ('company', 'Companie'),
     )
     email = models.EmailField(unique=True)
     user_type = models.CharField(max_length=20, choices=USER_TYPE_CHOICES, default='job_seeker')
@@ -48,7 +48,7 @@ class User(AbstractUser):
 
 class JobSeekerProfile(models.Model):
     """
-    Profile specific to Job Seekers.
+    Profil specific pentru Candidați.
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name='jobseekerprofile')
     # Note: first_name and last_name are on the User model itself
@@ -62,7 +62,7 @@ class JobSeekerProfile(models.Model):
     # Add other relevant fields like experience, education, skills etc. later
 
     def __str__(self):
-        return f"{self.user.username}'s Job Seeker Profile"
+        return f"Profil Candidat - {self.user.username}"
 
 from django.utils.text import slugify
 from django.urls import reverse

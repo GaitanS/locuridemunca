@@ -218,6 +218,64 @@
                 {% endif %}
             </div>
         </div>
+         {# Additional Company Information #}
+         <div class="flex items-center text-gray-600 pt-4">
+             <i class="fas fa-building mr-2"></i>
+             <span class="font-medium">Informații suplimentare companie</span>
+         </div>
+         {# Website #}
+         <div>
+            <label for="{{ form.website.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">{{ form.website.label }}</label>
+            {{ form.website }}
+             {% if form.website.errors %}
+              <div class="mt-1 text-xs text-red-600">
+                {% for error in form.website.errors %}<p>{{ error }}</p>{% endfor %}
+              </div>
+            {% endif %}
+        </div>
+         {# Logo #}
+         <div>
+            <label for="{{ form.logo.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">{{ form.logo.label }}</label>
+            {{ form.logo }}
+             {% if form.logo.errors %}
+              <div class="mt-1 text-xs text-red-600">
+                {% for error in form.logo.errors %}<p>{{ error }}</p>{% endfor %}
+              </div>
+            {% endif %}
+        </div>
+         {# Description #}
+         <div>
+            <label for="{{ form.description.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">{{ form.description.label }}</label>
+            {{ form.description }}
+             {% if form.description.errors %}
+              <div class="mt-1 text-xs text-red-600">
+                {% for error in form.description.errors %}<p>{{ error }}</p>{% endfor %}
+              </div>
+            {% endif %}
+        </div>
+         {# Location and Industry #}
+         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+             {# Location #}
+            <div>
+                <label for="{{ form.location.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">{{ form.location.label }}</label>
+                {{ form.location }}
+                 {% if form.location.errors %}
+                  <div class="mt-1 text-xs text-red-600">
+                    {% for error in form.location.errors %}<p>{{ error }}</p>{% endfor %}
+                  </div>
+                {% endif %}
+            </div>
+             {# Industry #}
+            <div>
+                <label for="{{ form.industry.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">{{ form.industry.label }}</label>
+                {{ form.industry }}
+                 {% if form.industry.errors %}
+                  <div class="mt-1 text-xs text-red-600">
+                    {% for error in form.industry.errors %}<p>{{ error }}</p>{% endfor %}
+                  </div>
+                {% endif %}
+            </div>
+        </div>
          {# Auth Section Title #}
          <div class="flex items-center text-gray-600 pt-4">
              <i class="fas fa-sign-in-alt mr-2"></i>
