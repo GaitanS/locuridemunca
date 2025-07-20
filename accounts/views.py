@@ -33,7 +33,7 @@ class JobSeekerSignUpView(CreateView):
 
     def form_valid(self, form):
         # print("--- JobSeekerSignUpView: form_valid called ---") # Removed Debug print
-        user = form.save(commit=False)
+        user = form.save() # Let the form handle all the profile data saving
         user.is_active = False # User is inactive until email confirmation
         user.save()
 
@@ -80,13 +80,7 @@ class CompanySignUpView(CreateView):
         return super().get_context_data(**kwargs)
 
     def form_valid(self, form):
-        user = form.save(commit=False)
-        user.is_active = False # User is inactive until email confirmation
-        user.save() # Save user first
-        # Update profile *after* user is saved
-        company_profile = user.companyprofile
-        company_profile.company_name = form.cleaned_data.get('company_name')
-        company_profile.save()
+        user = form.save() # This will handle all the profile data saving
 
         # Send activation email
         from django.conf import settings

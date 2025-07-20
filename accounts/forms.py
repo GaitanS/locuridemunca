@@ -78,18 +78,31 @@ class JobSeekerSignUpForm(UserCreationForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         user.user_type = 'job_seeker'
+        # Salvez datele din formular în modelul User
+        user.first_name = self.cleaned_data.get('first_name')
+        user.last_name = self.cleaned_data.get('last_name')
+        user.email = self.cleaned_data.get('email')
         if commit:
             user.save()
-            JobSeekerProfile.objects.update_or_create(
-                user=user,
-                defaults={
-                    'date_of_birth': self.cleaned_data.get('date_of_birth'),
-                    'city_of_residence': self.cleaned_data.get('city_of_residence'),
-                    'phone_number': self.cleaned_data.get('phone_number'),
-                    'cv': self.cleaned_data.get('cv'),
-                    'bio': self.cleaned_data.get('bio'),
-                }
-            )
+            # Actualizez profilul existent (creat de semnal)
+            try:
+                profile = user.jobseekerprofile
+                profile.date_of_birth = self.cleaned_data.get('date_of_birth')
+                profile.city_of_residence = self.cleaned_data.get('city_of_residence')
+                profile.phone_number = self.cleaned_data.get('phone_number')
+                profile.cv = self.cleaned_data.get('cv')
+                profile.bio = self.cleaned_data.get('bio')
+                profile.save()
+            except JobSeekerProfile.DoesNotExist:
+                # Dacă profilul nu există, îl creez
+                JobSeekerProfile.objects.create(
+                    user=user,
+                    date_of_birth=self.cleaned_data.get('date_of_birth'),
+                    city_of_residence=self.cleaned_data.get('city_of_residence'),
+                    phone_number=self.cleaned_data.get('phone_number'),
+                    cv=self.cleaned_data.get('cv'),
+                    bio=self.cleaned_data.get('bio')
+                )
         return user
 
 # --- Profile Forms ---
@@ -234,17 +247,29 @@ class CompanySignUpForm(UserCreationForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         user.user_type = 'company'
+        # Salvez email-ul din formular în modelul User
+        user.email = self.cleaned_data.get('email')
         if commit:
             user.save()
-            CompanyProfile.objects.update_or_create(
-                user=user,
-                defaults={
-                    'company_name': self.cleaned_data.get('company_name'),
-                    'street_address': self.cleaned_data.get('street_address'),
-                    'city': self.cleaned_data.get('city'),
-                    'country': self.cleaned_data.get('country'),
-                    'location': self.cleaned_data.get('location'),
-                    'industry': self.cleaned_data.get('industry'),
-                }
-            )
+            # Actualizez profilul existent (creat de semnal)
+            try:
+                profile = user.companyprofile
+                profile.company_name = self.cleaned_data.get('company_name')
+                profile.street_address = self.cleaned_data.get('street_address')
+                profile.city = self.cleaned_data.get('city')
+                profile.country = self.cleaned_data.get('country')
+                profile.location = self.cleaned_data.get('location')
+                profile.industry = self.cleaned_data.get('industry')
+                profile.save()
+            except CompanyProfile.DoesNotExist:
+                # Dacă profilul nu există, îl creez
+                CompanyProfile.objects.create(
+                    user=user,
+                    company_name=self.cleaned_data.get('company_name'),
+                    street_address=self.cleaned_data.get('street_address'),
+                    city=self.cleaned_data.get('city'),
+                    country=self.cleaned_data.get('country'),
+                    location=self.cleaned_data.get('location'),
+                    industry=self.cleaned_data.get('industry')
+                )
         return user
