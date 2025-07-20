@@ -10,6 +10,7 @@ class User(AbstractUser):
         ('job_seeker', 'Job Seeker'),
         ('company', 'Company'),
     )
+    email = models.EmailField(unique=True)
     user_type = models.CharField(max_length=20, choices=USER_TYPE_CHOICES, default='job_seeker')
 
     # Add related_name to avoid clashes with default User model's groups and user_permissions
@@ -71,7 +72,7 @@ class CompanyProfile(models.Model):
     Profile specific to Companies.
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name='companyprofile')
-    company_name = models.CharField("Numele companiei", max_length=255)
+    company_name = models.CharField("Numele companiei", max_length=255, unique=True)
     # Address fields
     street_address = models.CharField("Adresă sediu social (stradă, număr...)", max_length=255, blank=True, null=True)
     city = models.CharField("Oraș", max_length=100, blank=True, null=True)
