@@ -1,10 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse # Added reverse
-from django.views.generic import TemplateView, FormView
+from django.views.generic import TemplateView, FormView, ListView, DetailView
 from django.contrib import messages
 from jobs.models import Category, Job
 from .forms import NewsletterSubscriptionForm, ContactForm # Import forms
-from .models import NewsletterSubscription, ContactMessage, ContactInfo, FAQ # Import models
+from .models import NewsletterSubscription, ContactMessage, ContactInfo, FAQ, Article # Import models
 from django.views.decorators.http import require_POST # Import decorator
 
 # Create your views here.
@@ -21,6 +21,10 @@ class HomeView(TemplateView):
         context['recent_jobs'] = Job.objects.filter(is_published=True).select_related(
             'company', 'category', 'company__companyprofile'
         ).order_by('-created_at')[:4] # Limit to 4 recent jobs
+        # Fetch featured articles for homepage
+        context['featured_articles'] = Article.objects.filter(
+            is_published=True, is_featured=True
+        ).select_related('author').order_by('-published_at')[:3] # Limit to 3 featured articles
         # Add context for other sections later (featured, promoted etc.)
         return context
 
@@ -133,3 +137,28 @@ class FAQView(TemplateView):
         # Add FAQ items from database
         context['faqs'] = FAQ.objects.filter(is_active=True).order_by('order')
         return context
+
+class ArticleListView(ListView):
+    """
+    View for listing all published articles.
+    """
+    model = Article
+    template_name = "core/article_list.html"
+    context_object_name = 'articles'
+    paginate_by = 12
+    
+    def get_queryset(self):
+        return Article.objects.filter(is_published=True).select_related('author').order_by('-published_at')
+
+class ArticleDetailView(DetailView):
+    """
+    View for displaying a single article.
+    """
+    model = Article
+    template_name = "core/article_detail.html"
+    context_object_name = 'article'
+    slug_field = 'slug'
+    slug_url_kwarg = 'slug'
+    
+    def get_queryset(self):
+        return Article.objects.filter(is_published=True).select_related('author')

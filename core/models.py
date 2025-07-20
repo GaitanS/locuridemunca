@@ -1,5 +1,8 @@
 from django.db import models
 from django.utils import timezone # Import timezone
+from django.urls import reverse
+from django.utils.text import slugify
+from django.conf import settings
 
 # Create your models here.
 
@@ -71,5 +74,36 @@ class FAQ(models.Model):
         ordering = ['order', 'created_at']
         verbose_name = "FAQ"
         verbose_name_plural = "FAQ"
+
+class Article(models.Model):
+    title = models.CharField(max_length=200, verbose_name="Titlu")
+    slug = models.SlugField(max_length=220, unique=True, blank=True)
+    excerpt = models.TextField(max_length=300, verbose_name="Rezumat", help_text="Scurt rezumat al articolului (max 300 caractere)")
+    content = models.TextField(verbose_name="Conținut")
+    featured_image = models.ImageField(upload_to='articles/', blank=True, null=True, verbose_name="Imagine principală")
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='articles', verbose_name="Autor")
+    is_published = models.BooleanField(default=False, verbose_name="Publicat")
+    is_featured = models.BooleanField(default=False, verbose_name="Articol evidențiat", help_text="Articolele evidențiate apar pe prima pagină")
+    created_at = models.DateTimeField(default=timezone.now, verbose_name="Creat la")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Actualizat la")
+    published_at = models.DateTimeField(blank=True, null=True, verbose_name="Publicat la")
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        if self.is_published and not self.published_at:
+            self.published_at = timezone.now()
+        super().save(*args, **kwargs)
+    
+    def get_absolute_url(self):
+        return reverse('core:article_detail', kwargs={'slug': self.slug})
+    
+    def __str__(self):
+        return self.title
+    
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = "Articol"
+        verbose_name_plural = "Articole"
 
 # Add other core models here if needed

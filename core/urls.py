@@ -16,4 +16,7 @@ urlpatterns = [
     path('newsletter/subscribe/', views.newsletter_subscribe_view, name='newsletter_subscribe'),
     # URL for contact form submission specifically from the About page
     path('contact/submit/', views.contact_submit_view, name='contact_submit'),
+    # Article URLs
+    path('articole/', views.ArticleListView.as_view(), name='article_list'),
+    path('articole/<slug:slug>/', views.ArticleDetailView.as_view(), name='article_detail'),
 ]

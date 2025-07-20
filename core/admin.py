@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ContactMessage, NewsletterSubscription, ContactInfo, FAQ # Import all models
+from .models import ContactMessage, NewsletterSubscription, ContactInfo, FAQ, Article # Import all models
 
 # Register your models here.
 
@@ -54,3 +54,30 @@ class FAQAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
+
+@admin.register(Article)
+class ArticleAdmin(admin.ModelAdmin):
+    list_display = ('title', 'author', 'is_published', 'is_featured', 'created_at', 'published_at')
+    list_filter = ('is_published', 'is_featured', 'created_at', 'author')
+    list_editable = ('is_published', 'is_featured')
+    search_fields = ('title', 'excerpt', 'content')
+    prepopulated_fields = {'slug': ('title',)}
+    readonly_fields = ('created_at', 'updated_at', 'published_at')
+    
+    fieldsets = (
+        ('Conținut', {
+            'fields': ('title', 'slug', 'excerpt', 'content', 'featured_image')
+        }),
+        ('Setări publicare', {
+            'fields': ('author', 'is_published', 'is_featured')
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at', 'published_at'),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    def save_model(self, request, obj, form, change):
+        if not change:  # Dacă este un articol nou
+            obj.author = request.user
+        super().save_model(request, obj, form, change)
