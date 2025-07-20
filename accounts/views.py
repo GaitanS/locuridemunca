@@ -25,7 +25,7 @@ class JobSeekerSignUpView(CreateView):
     model = User
     form_class = JobSeekerSignUpForm
     template_name = 'registration/signup_form.html' # Generic form template
-    success_url = reverse_lazy('accounts:signup_done') # Redirect to a 'check email' page
+    success_url = reverse_lazy('conturi:inregistrare_finalizata') # Redirect to a 'check email' page
 
     def get_context_data(self, **kwargs):
         kwargs['user_type'] = 'job_seeker'
@@ -73,7 +73,7 @@ class CompanySignUpView(CreateView):
     model = User
     form_class = CompanySignUpForm
     template_name = 'registration/signup_form.html' # Generic form template
-    success_url = reverse_lazy('accounts:signup_done') # Redirect to a 'check email' page
+    success_url = reverse_lazy('conturi:inregistrare_finalizata') # Redirect to a 'check email' page
 
     def get_context_data(self, **kwargs):
         kwargs['user_type'] = 'company'
@@ -126,10 +126,10 @@ class ActivateAccountView(View):
             user.save()
             # login(request, user) # Optionally log in user directly
             messages.success(request, 'Contul tău a fost confirmat cu succes! Acum te poți autentifica.')
-            return redirect('accounts:login') # Redirect to login page
+            return redirect('conturi:autentificare') # Redirect to login page
         else:
             messages.error(request, 'Link-ul de confirmare este invalid, posibil pentru că a fost deja folosit sau a expirat.')
-            return redirect('accounts:login') # Redirect to login or a specific error page
+            return redirect('conturi:autentificare') # Redirect to login or a specific error page
 
 # --- Dashboards ---
 
@@ -140,9 +140,9 @@ class DashboardView(TemplateView):
     """
     def get(self, request, *args, **kwargs):
         if request.user.user_type == 'job_seeker':
-            return redirect('accounts:jobseeker_dashboard')
+            return redirect('conturi:panou_candidat')
         elif request.user.user_type == 'company':
-            return redirect('accounts:company_dashboard')
+            return redirect('conturi:panou_companie')
         else:
             # Handle unexpected user type or redirect to a generic page
             return redirect('core:home') # Or raise an error
@@ -262,7 +262,7 @@ class CompanyProfileUpdateView(UserPassesTestMixin, UpdateView):
     model = CompanyProfile
     form_class = CompanyProfileForm
     template_name = 'accounts/profile_edit_form.html' # New template for editing
-    success_url = reverse_lazy('accounts:company_dashboard') # Redirect to dashboard after update
+    success_url = reverse_lazy('conturi:panou_companie') # Redirect to dashboard after update
 
     def test_func(self):
         # Ensure the logged-in user is a company and is editing their own profile
@@ -274,9 +274,9 @@ class CompanyProfileUpdateView(UserPassesTestMixin, UpdateView):
         # Redirect to their own dashboard or profile view
         if self.request.user.is_authenticated:
             if self.request.user.user_type == 'company':
-                 return redirect('accounts:company_dashboard')
+                 return redirect('conturi:panou_companie')
             elif self.request.user.user_type == 'job_seeker':
-                 return redirect('accounts:jobseeker_dashboard')
+                 return redirect('conturi:panou_candidat')
         return redirect('core:home') # Fallback redirect
 
     def get_object(self, queryset=None):
@@ -299,7 +299,7 @@ class JobSeekerProfileUpdateView(UserPassesTestMixin, UpdateView):
     model = JobSeekerProfile
     form_class = JobSeekerProfileForm
     template_name = 'accounts/profile_edit_form.html' # Reuse the same template for now
-    success_url = reverse_lazy('accounts:jobseeker_dashboard') # Redirect to job seeker dashboard
+    success_url = reverse_lazy('conturi:panou_candidat') # Redirect to job seeker dashboard
 
     def test_func(self):
         # Ensure the logged-in user is a job seeker and is editing their own profile
@@ -311,9 +311,9 @@ class JobSeekerProfileUpdateView(UserPassesTestMixin, UpdateView):
         # Redirect to their own dashboard or profile view
         if self.request.user.is_authenticated:
             if self.request.user.user_type == 'job_seeker':
-                 return redirect('accounts:jobseeker_dashboard')
+                 return redirect('conturi:panou_candidat')
             elif self.request.user.user_type == 'company':
-                 return redirect('accounts:company_dashboard')
+                 return redirect('conturi:panou_companie')
         return redirect('core:home') # Fallback redirect
 
     def get_object(self, queryset=None):

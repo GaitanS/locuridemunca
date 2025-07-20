@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 
-{% block title %}Dashboard Candidat - {{ user.username }} - JoburiExpress{% endblock %}
+{% block title %}Panou de Control Candidat - {{ user.username }} - JoburiExpress{% endblock %}
 
 {% block content %}
 <div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold text-gray-800 mb-8">Dashboard Candidat</h1>
+    <h1 class="text-3xl font-bold text-gray-800 mb-8">Panou de Control Candidat</h1>
 
 
 
@@ -44,7 +44,7 @@
                         </p>
                     </div>
                 </div>
-                <a href="{% url 'accounts:jobseeker_profile_edit' %}" class="inline-flex items-center px-4 py-2 bg-emerald-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-emerald-700 active:bg-emerald-900 focus:outline-none focus:border-emerald-900 focus:ring ring-emerald-300 disabled:opacity-25 transition ease-in-out duration-150">
+                <a href="{% url 'conturi:editare_profil_candidat' %}" class="inline-flex items-center px-4 py-2 bg-emerald-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-emerald-700 active:bg-emerald-900 focus:outline-none focus:border-emerald-900 focus:ring ring-emerald-300 disabled:opacity-25 transition ease-in-out duration-150">
                     Editează Profilul
                 </a> {# Link to jobseeker_profile_edit URL #}
             {% else %}
@@ -78,7 +78,7 @@
                 {% else %}
                     <p class="text-gray-500 italic">Nu ați aplicat la niciun job încă.</p>
                 {% endif %}
-                 <a href="{% url 'jobs:job_list' %}" class="mt-4 inline-flex items-center px-4 py-2 bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-300 focus:outline-none focus:border-gray-400 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
+                 <a href="{% url 'joburi:lista_joburi' %}" class="mt-4 inline-flex items-center px-4 py-2 bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-300 focus:outline-none focus:border-gray-400 focus:ring ring-gray-300 disabled:opacity-25 transition ease-in-out duration-150">
                     Caută Joburi
                  </a>
             </div>
@@ -92,7 +92,7 @@
                                 <div class="flex justify-between items-center">
                                     <a href="{{ job.get_absolute_url }}" class="text-sm font-medium text-emerald-600 hover:underline truncate">{{ job.title }}</a> {# Use get_absolute_url #}
                                     {# Unsave button #}
-                                    <form action="{% url 'jobs:job_unsave' job.pk %}" method="post" class="inline ml-2">
+                                    <form action="{% url 'joburi:anulare_salvare_job' job.pk %}" method="post" class="inline ml-2">
                                         {% csrf_token %}
                                         <button type="submit" class="text-red-500 hover:text-red-700" title="Anulează salvarea">
                                             <i class="fas fa-trash-alt text-xs"></i>

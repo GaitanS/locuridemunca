@@ -7,7 +7,7 @@
     <div class="mb-6 pb-4 border-b">
         {# Link job title back to detail page using slug #}
         <h1 class="text-3xl font-bold text-gray-800">Aplicații pentru "<a href="{{ job.get_absolute_url }}" class="text-emerald-600 hover:underline">{{ job.title }}</a>"</h1>
-        <a href="{% url 'accounts:company_dashboard' %}" class="text-sm text-emerald-600 hover:underline">&larr; Înapoi la Dashboard</a>
+        <a href="{% url 'conturi:panou_companie' %}" class="text-sm text-emerald-600 hover:underline">&larr; Înapoi la Panou de Control</a>
     </div>
 
     {# Display Messages #}

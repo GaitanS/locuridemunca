@@ -91,7 +91,7 @@ class Job(models.Model):
 
     def get_absolute_url(self):
         # Use slug in the URL
-        return reverse('jobs:job_detail', kwargs={'slug': self.slug})
+        return reverse('joburi:detalii_job', kwargs={'slug': self.slug})
 
 
 class Application(models.Model):

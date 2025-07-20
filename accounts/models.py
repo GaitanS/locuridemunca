@@ -103,6 +103,6 @@ class CompanyProfile(models.Model):
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse('accounts:company_detail', kwargs={'slug': self.slug})
+        return reverse('conturi:detalii_companie', kwargs={'slug': self.slug})
 
 # Signal to create profile automatically when a user is created (we'll add this later)

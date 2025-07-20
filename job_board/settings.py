@@ -168,4 +168,4 @@ COUNTRIES_FLAG_URL = '' # Disable flags in CountrySelectWidget globally
 # Authentication Settings
 LOGIN_REDIRECT_URL = '/' # Redirect to homepage after login
 LOGOUT_REDIRECT_URL = '/' # Redirect to homepage after logout
-LOGIN_URL = 'accounts:login' # URL name for the login page
+LOGIN_URL = 'conturi:autentificare' # URL name for the login page

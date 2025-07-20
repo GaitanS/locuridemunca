@@ -23,7 +23,7 @@
                 <h3 class="text-lg font-semibold text-gray-900 mb-1">{{ job.company.companyprofile.company_name|default:job.company.username }}</h3>
                 {# Link to company detail page - Updated #}
                 {% if job.company.companyprofile and job.company.companyprofile.slug %}
-                    <a href="{% url 'accounts:company_detail' slug=job.company.companyprofile.slug %}" class="text-sm text-emerald-600 hover:underline">Vezi profilul companiei</a>
+                    <a href="{% url 'conturi:detalii_companie' slug=job.company.companyprofile.slug %}" class="text-sm text-emerald-600 hover:underline">Vezi profilul companiei</a>
                 {% else %}
                     <span class="text-sm text-gray-500">Profilul companiei nu este disponibil</span>
                 {% endif %}
@@ -79,14 +79,14 @@
                      <li class="flex items-center">
                          {% if user.is_authenticated and user.user_type == 'job_seeker' %}
                             {% if job in user.jobseekerprofile.saved_jobs.all %}
-                                <form action="{% url 'jobs:job_unsave' job.pk %}" method="post" class="inline w-full">
+                                <form action="{% url 'joburi:anulare_salvare_job' job.pk %}" method="post" class="inline w-full">
                                     {% csrf_token %}
                                     <button type="submit" class="flex items-center text-gray-600 hover:text-emerald-600 w-full">
                                         <i class="fas fa-bookmark w-5 mr-2"></i> Anulează Salvarea
                                     </button>
                                 </form>
                             {% else %}
-                                 <form action="{% url 'jobs:job_save' job.pk %}" method="post" class="inline w-full">
+                                 <form action="{% url 'joburi:salvare_job' job.pk %}" method="post" class="inline w-full">
                                     {% csrf_token %}
                                     <button type="submit" class="flex items-center text-gray-600 hover:text-emerald-600 w-full">
                                         <i class="far fa-bookmark w-5 mr-2"></i> Salvează
@@ -113,7 +113,7 @@
                              <a href="mailto:?subject=Job: {{ job.title|urlencode }}&body=Check out this job: {{ request.build_absolute_uri|urlencode }}" class="text-emerald-600 hover:underline">Email</a>
                         </div>
                      </li>
-                     <li><a href="{% url 'jobs:job_report' job.pk %}" class="flex items-center text-red-600 hover:text-red-800"><i class="fas fa-flag w-5 mr-2"></i> Raportează conținut ilegal</a></li>
+                     <li><a href="{% url 'joburi:raportare_job' job.pk %}" class="flex items-center text-red-600 hover:text-red-800"><i class="fas fa-flag w-5 mr-2"></i> Raportează conținut ilegal</a></li>
                  </ul>
              </div>
         </aside>
@@ -134,7 +134,7 @@
                     </div>
                      {# Application Button - Show only for logged-in job seekers #}
                     {% if user.is_authenticated and user.user_type == 'job_seeker' %}
-                        <form action="{% url 'jobs:job_apply' job.pk %}" method="post">
+                        <form action="{% url 'joburi:aplicare_job' job.pk %}" method="post">
                             {% csrf_token %}
                             {# Ensured button color matches site theme #}
                             <button type="submit" class="inline-flex items-center px-6 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition duration-300">
@@ -205,10 +205,10 @@
                             {# Placeholder save button #}
                             <button class="text-gray-400 hover:text-emerald-600"><i class="far fa-bookmark"></i></button>
                          </div>
-                         <h3 class="text-md font-semibold text-gray-900 mb-1"><a href="{% url 'jobs:job_detail' similar_job.slug %}" class="hover:text-emerald-600">{{ similar_job.title }}</a></h3>
+                         <h3 class="text-md font-semibold text-gray-900 mb-1"><a href="{% url 'joburi:detalii_job' similar_job.slug %}" class="hover:text-emerald-600">{{ similar_job.title }}</a></h3>
                          <p class="text-sm text-gray-600 mb-3">{{ similar_job.company.companyprofile.company_name|default:similar_job.company.username }} - {{ similar_job.city }}{% if similar_job.country %}, {{ similar_job.country }}{% endif %}</p>
                          <div class="mt-auto pt-3 border-t border-gray-100">
-                              <a href="{% url 'jobs:job_detail' similar_job.slug %}" class="w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition duration-300">
+                              <a href="{% url 'joburi:detalii_job' similar_job.slug %}" class="w-full inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition duration-300">
                                 Vezi detalii
                             </a>
                          </div>
@@ -225,7 +225,7 @@
     </div>
 
     <div class="mt-12 border-t pt-6">
-        <a href="{% url 'jobs:job_list' %}" class="text-emerald-600 hover:underline"><i class="fas fa-arrow-left mr-1"></i> Înapoi la lista de joburi</a>
+        <a href="{% url 'joburi:lista_joburi' %}" class="text-emerald-600 hover:underline"><i class="fas fa-arrow-left mr-1"></i> Înapoi la lista de joburi</a>
     </div>
 </div>
 {% endblock %}

@@ -1,13 +1,13 @@
 from django.urls import path
 from . import views
 
-app_name = 'payments'
+app_name = 'plati'
 
 urlpatterns = [
-    path('plans/', views.plan_list, name='plan_list'),
+    path('planuri/', views.plan_list, name='planuri'),
     # Stripe Checkout URLs (Commented out temporarily)
-    # path('create-checkout-session/<int:plan_id>/', views.create_checkout_session, name='create_checkout_session'),
-    # path('success/', views.payment_success, name='payment_success'),
-    # path('cancel/', views.payment_cancel, name='payment_cancel'),
+    # path('creeaza-sesiune-plata/<int:plan_id>/', views.create_checkout_session, name='create_checkout_session'),
+    # path('succes/', views.payment_success, name='plata_reusita'),
+    # path('anulat/', views.payment_cancel, name='plata_anulata'),
     # path('webhook/stripe/', views.stripe_webhook, name='stripe_webhook'), # Optional: Add webhook URL
 ]

@@ -27,7 +27,7 @@
     {% endif %}
   {% endif %}
 
-  <form method="post" action="{% url 'accounts:login' %}">
+  <form method="post" action="{% url 'conturi:autentificare' %}">
     {% csrf_token %}
 
     <div class="mb-4">
@@ -49,10 +49,10 @@
   </form>
 
   <div class="mt-4 text-center">
-    <a href="{% url 'accounts:password_reset' %}" class="text-sm text-emerald-600 hover:underline">Ai uitat parola?</a>
+    <a href="{% url 'conturi:resetare_parola' %}" class="text-sm text-emerald-600 hover:underline">Ai uitat parola?</a>
   </div>
   <div class="mt-2 text-center">
-    <a href="{% url 'accounts:signup' %}" class="text-sm text-emerald-600 hover:underline">Nu ai cont? Înregistrează-te</a>
+    <a href="{% url 'conturi:inregistrare' %}" class="text-sm text-emerald-600 hover:underline">Nu ai cont? Înregistrează-te</a>
   </div>
 </div>
 {% endblock %}

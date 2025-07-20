@@ -28,23 +28,23 @@ def plan_list(request):
    # Ensure the user is a company representative
     if not hasattr(request.user, 'companyprofile') or not request.user.is_company:
         messages.error(request, "Doar companiile pot achiziționa abonamente.")
-        return redirect('payments:plan_list')
+        return redirect('plati:planuri')
 
     try:
         plan = get_object_or_404(SubscriptionPlan, pk=plan_id)
     except SubscriptionPlan.DoesNotExist:
         messages.error(request, "Planul selectat nu a fost găsit.")
-        return redirect('payments:plan_list')
+        return redirect('plati:planuri')
 
     # Check if the plan is free
     if plan.price == 0:
         messages.info(request, "Acesta este un plan gratuit și nu necesită plată.")
         # Optionally, activate the free plan directly here if needed
-        return redirect('payments:plan_list')
+        return redirect('plati:planuri')
 
     # Build success and cancel URLs
-    success_url = request.build_absolute_uri(reverse('payments:payment_success'))
-    cancel_url = request.build_absolute_uri(reverse('payments:payment_cancel'))
+    success_url = request.build_absolute_uri(reverse('plati:plata_reusita'))
+    cancel_url = request.build_absolute_uri(reverse('plati:plata_anulata'))
 
     try:
         # Create Stripe Checkout Session
@@ -78,10 +78,10 @@ def plan_list(request):
 
     except stripe.error.StripeError as e:
         messages.error(request, f"A apărut o eroare la procesarea plății: {e}")
-        return redirect('payments:plan_list')
+        return redirect('plati:planuri')
     except Exception as e:
         messages.error(request, f"A apărut o eroare neașteptată: {e}")
-        # return redirect('payments:plan_list')
+        # return redirect('plati:planuri')
 
 
 # @login_required
@@ -89,7 +89,7 @@ def plan_list(request):
     # session_id = request.GET.get('session_id')
     if not session_id:
         messages.warning(request, "Sesiunea de plată nu a fost găsită.")
-        return redirect('payments:plan_list')
+        return redirect('plati:planuri')
 
     try:
         session = stripe.checkout.Session.retrieve(session_id)
@@ -101,7 +101,7 @@ def plan_list(request):
 
         if not all([plan_id, user_id, company_id]):
              messages.error(request, "Informații incomplete în sesiunea de plată.")
-             return redirect('payments:plan_list')
+             return redirect('plati:planuri')
 
         # --- Add logic here to activate the subscription for the company --- 
         # Example (needs refinement based on your CompanySubscription model):
@@ -119,11 +119,11 @@ def plan_list(request):
 
     except stripe.error.StripeError as e:
         messages.error(request, f"Eroare la verificarea sesiunii de plată: {e}")
-        return redirect('payments:plan_list')
+        return redirect('plati:planuri')
     except Exception as e:
         # Log the error e
         messages.error(request, "A apărut o eroare la procesarea confirmării plății.")
-        # return redirect('payments:plan_list')
+        # return redirect('plati:planuri')
 
 
 # @login_required

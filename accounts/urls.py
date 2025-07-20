@@ -2,40 +2,46 @@ from django.urls import path, include, reverse_lazy # Import reverse_lazy
 from django.contrib.auth import views as auth_views # Import auth views
 from . import views
 
-app_name = 'accounts'
+app_name = 'conturi'
 
 urlpatterns = [
-    path('signup/', views.SignUpView.as_view(), name='signup'),
-    path('signup/jobseeker/', views.JobSeekerSignUpView.as_view(), name='jobseeker_signup'),
-    path('signup/company/', views.CompanySignUpView.as_view(), name='company_signup'),
-    path('signup/done/', views.SignUpDoneView.as_view(), name='signup_done'),
-    path('activate/<uidb64>/<token>/', views.ActivateAccountView.as_view(), name='activate'),
+    path('inregistrare/', views.SignUpView.as_view(), name='inregistrare'),
+    path('inregistrare/candidat/', views.JobSeekerSignUpView.as_view(), name='inregistrare_candidat'),
+    path('inregistrare/companie/', views.CompanySignUpView.as_view(), name='inregistrare_companie'),
+    path('inregistrare/finalizat/', views.SignUpDoneView.as_view(), name='inregistrare_finalizata'),
+    path('activeaza/<uidb64>/<token>/', views.ActivateAccountView.as_view(), name='activare'),
 
     # Dashboards
-    path('dashboard/', views.DashboardView.as_view(), name='dashboard'), # Generic dashboard redirector
-    path('dashboard/jobseeker/', views.JobSeekerDashboardView.as_view(), name='jobseeker_dashboard'),
-    path('dashboard/company/', views.CompanyDashboardView.as_view(), name='company_dashboard'),
+    path('panou-control/', views.DashboardView.as_view(), name='panou_control'), # Generic dashboard redirector
+    path('panou-control/candidat/', views.JobSeekerDashboardView.as_view(), name='panou_candidat'),
+    path('panou-control/companie/', views.CompanyDashboardView.as_view(), name='panou_companie'),
 
     # Profile
-    path('profile/', views.ProfileView.as_view(), name='profile'), # Generic profile view (maybe remove later if dashboards are sufficient)
-    path('profile/company/edit/', views.CompanyProfileUpdateView.as_view(), name='company_profile_edit'), # Company profile edit URL
-    path('profile/jobseeker/edit/', views.JobSeekerProfileUpdateView.as_view(), name='jobseeker_profile_edit'),
+    path('profil/', views.ProfileView.as_view(), name='profil'), # Generic profile view (maybe remove later if dashboards are sufficient)
+    path('profil/companie/editeaza/', views.CompanyProfileUpdateView.as_view(), name='editare_profil_companie'), # Company profile edit URL
+    path('profil/candidat/editeaza/', views.JobSeekerProfileUpdateView.as_view(), name='editare_profil_candidat'),
 
     # Company Detail View (using slug)
-    path('company/<slug:slug>/', views.CompanyDetailView.as_view(), name='company_detail'),
+    path('companie/<slug:slug>/', views.CompanyDetailView.as_view(), name='detalii_companie'),
 
-    # Auth URLs - Override password_change to set success_url
+    # Authentication URLs with Romanian names
+    path('autentificare/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='autentificare'),
+    path('deconectare/', auth_views.LogoutView.as_view(), name='deconectare'),
+    
+    # Password reset URLs with Romanian names
+    path('resetare-parola/', auth_views.PasswordResetView.as_view(template_name='registration/password_reset_form.html'), name='resetare_parola'),
+    path('resetare-parola/trimis/', auth_views.PasswordResetDoneView.as_view(template_name='registration/password_reset_done.html'), name='resetare_parola_trimis'),
+    path('resetare-parola/confirma/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='registration/password_reset_confirm.html'), name='resetare_parola_confirma'),
+    path('resetare-parola/finalizat/', auth_views.PasswordResetCompleteView.as_view(template_name='registration/password_reset_complete.html'), name='resetare_parola_finalizat'),
+    
+    # Password change URLs with Romanian names
     path(
-        'password_change/',
+        'schimba-parola/',
         auth_views.PasswordChangeView.as_view(
-            template_name='registration/password_change_form.html', # Use our custom template
-            success_url=reverse_lazy('accounts:password_change_done') # Explicitly set namespaced success URL
+            template_name='registration/password_change_form.html',
+            success_url=reverse_lazy('conturi:schimbare_parola_finalizata')
         ),
-        name='password_change'
+        name='schimbare_parola'
     ),
-    path( # Keep the rest of the default auth URLs
-        '',
-        include('django.contrib.auth.urls')
-    ),
-    # Note: password_change_done URL name is included via the line above
+    path('schimba-parola/finalizat/', auth_views.PasswordChangeDoneView.as_view(template_name='registration/password_change_done.html'), name='schimbare_parola_finalizata'),
 ]

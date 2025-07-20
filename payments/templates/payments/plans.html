@@ -7,7 +7,7 @@
 <div class="container mx-auto px-4 py-12">
     <div class="text-center mb-12">
         <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Planuri de Abonament</h1>
-        <p class="text-lg text-gray-600 max-w-2xl mx-auto">Alegeți planul potrivit pentru nevoile companiei dumneavoastră. Toate planurile includ acces la instrumentele de recrutare și dashboard-ul angajatorului.</p>
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto">Alegeți planul potrivit pentru nevoile companiei dumneavoastră. Toate planurile includ acces la instrumentele de recrutare și panoul de control al angajatorului.</p>
     </div>
 
     {% if messages %}
@@ -70,10 +70,10 @@
                 <li class="flex items-center">
                     {% if plan.has_company_dashboard %}
                         <i class="fas fa-check text-green-500 w-5 mr-2"></i>
-                        Dashboard angajator
+                        Panou de control angajator
                     {% else %}
                          <i class="fas fa-times text-red-500 w-5 mr-2"></i>
-                         <span class="text-gray-500">Fără dashboard angajator</span>
+                         <span class="text-gray-500">Fără panou de control angajator</span>
                     {% endif %}
                 </li>
                  {# CV Access #}
@@ -114,7 +114,7 @@
                  {% if plan.price == 0 %}
                      {# Show free plan signup only if user is not logged in OR if they are logged in but are a job seeker #}
                      {% if not user.is_authenticated or user.user_type == 'job_seeker' %}
-                         <a href="{% url 'accounts:company_signup' %}" class="block w-full bg-white hover:bg-gray-100 text-emerald-600 border border-emerald-600 font-bold py-2 px-4 rounded text-center transition duration-300">
+                         <a href="{% url 'conturi:inregistrare_companie' %}" class="block w-full bg-white hover:bg-gray-100 text-emerald-600 border border-emerald-600 font-bold py-2 px-4 rounded text-center transition duration-300">
                              Înregistrează-te acum
                          </a>
                      {% elif user.is_authenticated and user.user_type == 'company' %}

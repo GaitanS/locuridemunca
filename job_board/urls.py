@@ -21,9 +21,9 @@ from django.conf.urls.static import static # Import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('accounts/', include('accounts.urls')), # Include accounts app URLs
-    path('jobs/', include('jobs.urls')),         # Include jobs app URLs
-    path('payments/', include('payments.urls')), # Include payments app URLs
+    path('conturi/', include('accounts.urls')), # Include accounts app URLs
+    path('locuri-de-munca/', include('jobs.urls')),         # Include jobs app URLs
+    path('plati/', include('payments.urls')), # Include payments app URLs
     path('', include('core.urls')),              # Include core app URLs (homepage, etc.)
 ]
 

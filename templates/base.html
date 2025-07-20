@@ -60,8 +60,8 @@
             </button>
             <!-- Navigation Links -->
             <div class="hidden md:flex items-center space-x-6">
-                <a class="text-gray-600 hover:text-gray-900 transition-colors duration-300 {% if request.resolver_match.app_name == 'jobs' %} font-semibold text-gray-900 border-b-2 border-emerald-500 {% endif %}" href="{% url 'jobs:job_list' %}">Joburi</a>
-                <a class="text-gray-600 hover:text-gray-900 transition-colors duration-300 {% if request.resolver_match.view_name == 'payments:plan_list' %} font-semibold text-gray-900 border-b-2 border-emerald-500 {% endif %}" href="{% url 'payments:plan_list' %}">Abonamente</a>
+                <a class="text-gray-600 hover:text-gray-900 transition-colors duration-300 {% if request.resolver_match.app_name == 'jobs' %} font-semibold text-gray-900 border-b-2 border-emerald-500 {% endif %}" href="{% url 'joburi:lista_joburi' %}">Joburi</a>
+                <a class="text-gray-600 hover:text-gray-900 transition-colors duration-300 {% if request.resolver_match.view_name == 'plati:planuri' %} font-semibold text-gray-900 border-b-2 border-emerald-500 {% endif %}" href="{% url 'plati:planuri' %}">Abonamente</a>
                 <a class="text-gray-600 hover:text-gray-900 transition-colors duration-300 {% if request.resolver_match.view_name == 'core:about' %} font-semibold text-gray-900 border-b-2 border-emerald-500 {% endif %}" href="{% url 'core:about' %}">Despre noi</a>
                 <a class="text-gray-600 hover:text-gray-900 transition-colors duration-300 {% if request.resolver_match.view_name == 'core:contact' %} font-semibold text-gray-900 border-b-2 border-emerald-500 {% endif %}" href="{% url 'core:contact' %}">Contact</a>
 
@@ -73,44 +73,44 @@
                         </button>
                         <div id="user-menu" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden z-10 border border-gray-200">
                             {% if user.user_type == 'job_seeker' %}
-                                <a href="{% url 'accounts:jobseeker_dashboard' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboard Candidat</a>
-                            {% elif user.user_type == 'company' %}
-                                <a href="{% url 'accounts:company_dashboard' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboard Companie</a>
+                                <a href="{% url 'conturi:panou_candidat' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Panou de Control Candidat</a>
+                             {% else %}
+                             <a href="{% url 'conturi:panou_companie' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Panou de Control Companie</a>
                             {% endif %}
-                            <a href="{% url 'accounts:profile' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profil</a>
-                            <form method="post" action="{% url 'accounts:logout' %}" class="block w-full">
+                            <a href="{% url 'conturi:profil' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profil</a>
+                        <form method="post" action="{% url 'conturi:deconectare' %}" class="block w-full">
                                 {% csrf_token %}
                                 <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Deconectare</button>
                             </form>
                         </div>
                     </div>
                 {% else %}
-                    <a href="{% url 'accounts:login' %}" class="text-gray-600 hover:text-gray-900 transition-colors duration-300">Autentificare</a>
-                    <a href="{% url 'accounts:signup' %}" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out">Înregistrare</a>
+                    <a href="{% url 'conturi:autentificare' %}" class="text-gray-600 hover:text-gray-900 transition-colors duration-300">Autentificare</a>
+                        <a href="{% url 'conturi:inregistrare' %}" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out">Înregistrare</a>
                 {% endif %}
             </div>
         </div>
         <!-- Mobile Menu -->
         <div id="mobile-menu" class="md:hidden bg-white border-t border-gray-200">
-            <a class="block px-4 py-2 text-gray-700 hover:bg-gray-100" href="{% url 'jobs:job_list' %}">Joburi</a>
-            <a class="block px-4 py-2 text-gray-700 hover:bg-gray-100" href="{% url 'payments:plan_list' %}">Abonamente</a>
+            <a class="block px-4 py-2 text-gray-700 hover:bg-gray-100" href="{% url 'joburi:lista_joburi' %}">Joburi</a>
+            <a class="block px-4 py-2 text-gray-700 hover:bg-gray-100" href="{% url 'plati:planuri' %}">Abonamente</a>
             <a class="block px-4 py-2 text-gray-700 hover:bg-gray-100" href="{% url 'core:about' %}">Despre noi</a>
             <a class="block px-4 py-2 text-gray-700 hover:bg-gray-100" href="{% url 'core:contact' %}">Contact</a>
             <hr class="my-1 border-gray-200">
             {% if user.is_authenticated %}
                  {% if user.user_type == 'job_seeker' %}
-                    <a href="{% url 'accounts:jobseeker_dashboard' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboard Candidat</a>
-                {% elif user.user_type == 'company' %}
-                    <a href="{% url 'accounts:company_dashboard' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboard Companie</a>
+                            <a href="{% url 'conturi:panou_candidat' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Panou de Control Candidat</a>
+                        {% elif user.user_type == 'company' %}
+                            <a href="{% url 'conturi:panou_companie' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Panou de Control Companie</a>
                 {% endif %}
-                <a href="{% url 'accounts:profile' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profil</a>
-                <form method="post" action="{% url 'accounts:logout' %}" class="block w-full">
+                <a href="{% url 'conturi:profil' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profil</a>
+                            <form method="post" action="{% url 'conturi:deconectare' %}" class="block w-full">
                     {% csrf_token %}
                     <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Deconectare</button>
                 </form>
             {% else %}
-                <a href="{% url 'accounts:login' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Autentificare</a>
-                <a href="{% url 'accounts:signup' %}" class="block px-4 py-2 bg-emerald-500 text-white text-center font-bold rounded-md m-2 hover:bg-emerald-600 transition-colors duration-300">Înregistrare</a>
+                <a href="{% url 'conturi:autentificare' %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Autentificare</a>
+                        <a href="{% url 'conturi:inregistrare' %}" class="block px-4 py-2 bg-emerald-500 text-white text-center font-bold rounded-md m-2 hover:bg-emerald-600 transition-colors duration-300">Înregistrare</a>
             {% endif %}
         </div>
     </nav>

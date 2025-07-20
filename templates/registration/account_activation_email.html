@@ -136,7 +136,7 @@
             </div>
             
             <div style="text-align: center;">
-                <a href="{{ protocol }}://{{ domain }}{% url 'accounts:activate' uidb64=uid token=token %}" class="cta-button">
+                <a href="{{ protocol }}://{{ domain }}{% url 'conturi:activare' uidb64=uid token=token %}" class="cta-button">
                     🚀 Activează Contul Acum
                 </a>
             </div>
@@ -144,7 +144,7 @@
             <div class="backup-link">
                 <p><strong>Linkul nu funcționează?</strong></p>
                 <p>Copiați și inserați următoarea adresă URL în browserul dumneavoastră:</p>
-                <a href="{{ protocol }}://{{ domain }}{% url 'accounts:activate' uidb64=uid token=token %}">{{ protocol }}://{{ domain }}{% url 'accounts:activate' uidb64=uid token=token %}</a>
+                <a href="{{ protocol }}://{{ domain }}{% url 'conturi:activare' uidb64=uid token=token %}">{{ protocol }}://{{ domain }}{% url 'conturi:activare' uidb64=uid token=token %}</a>
             </div>
             
             {% if user.user_type == 'job_seeker' %}

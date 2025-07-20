@@ -75,7 +75,7 @@ class JobCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Job
     form_class = JobForm
     template_name = 'jobs/job_form.html'
-    success_url = reverse_lazy('accounts:company_dashboard')
+    success_url = reverse_lazy('conturi:panou_companie')
 
     def test_func(self):
         return self.request.user.user_type == 'company'
@@ -101,7 +101,7 @@ class JobUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Job
     form_class = JobForm
     template_name = 'jobs/job_form.html'
-    success_url = reverse_lazy('accounts:company_dashboard')
+    success_url = reverse_lazy('conturi:panou_companie')
 
     def test_func(self):
         job = self.get_object()
@@ -109,7 +109,7 @@ class JobUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def handle_no_permission(self):
         messages.error(self.request, "Nu aveți permisiunea să editați acest anunț.")
-        return redirect('accounts:company_dashboard')
+        return redirect('conturi:panou_companie')
 
     def form_valid(self, form):
         messages.success(self.request, f"Anunțul '{form.instance.title}' a fost actualizat cu succes.")
@@ -123,14 +123,14 @@ class JobUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 # --- Job Application ---
 
 class ApplyToJobView(LoginRequiredMixin, UserPassesTestMixin, View):
-    login_url = reverse_lazy('accounts:login')
+    login_url = reverse_lazy('conturi:autentificare')
 
     def test_func(self):
         return self.request.user.is_authenticated and self.request.user.user_type == 'job_seeker'
 
     def handle_no_permission(self):
         messages.error(self.request, "Doar candidații autentificați pot aplica la joburi.")
-        return redirect('accounts:login')
+        return redirect('conturi:autentificare')
 
     def post(self, request, *args, **kwargs):
         job_id = self.kwargs.get('pk')
@@ -139,34 +139,34 @@ class ApplyToJobView(LoginRequiredMixin, UserPassesTestMixin, View):
 
         if not hasattr(applicant, 'jobseekerprofile') or not applicant.jobseekerprofile.cv:
              messages.warning(request, "Vă rugăm să încărcați un CV în profilul dumneavoastră înainte de a aplica.")
-             return redirect('jobs:job_detail', slug=job.slug) # Use slug
+             return redirect('joburi:detalii_job', slug=job.slug) # Use slug
 
         if Application.objects.filter(job=job, applicant=applicant).exists():
             messages.info(request, "Ați aplicat deja la acest job.")
-            return redirect('jobs:job_detail', slug=job.slug) # Use slug
+            return redirect('joburi:detalii_job', slug=job.slug) # Use slug
 
         try:
             Application.objects.create(job=job, applicant=applicant)
             messages.success(request, f"Aplicația dumneavoastră pentru '{job.title}' a fost trimisă cu succes!")
-            return redirect('accounts:jobseeker_dashboard')
+            return redirect('conturi:panou_candidat')
         except IntegrityError:
              messages.error(request, "A apărut o eroare. Se pare că ați aplicat deja.")
-             return redirect('jobs:job_detail', slug=job.slug) # Use slug
+             return redirect('joburi:detalii_job', slug=job.slug) # Use slug
         except Exception as e:
             messages.error(request, f"A apărut o eroare la trimiterea aplicației: {e}")
-            return redirect('jobs:job_detail', slug=job.slug) # Use slug
+            return redirect('joburi:detalii_job', slug=job.slug) # Use slug
 
 # --- Save/Unsave Job ---
 
 class SaveJobView(LoginRequiredMixin, UserPassesTestMixin, View):
-    login_url = reverse_lazy('accounts:login')
+    login_url = reverse_lazy('conturi:autentificare')
 
     def test_func(self):
         return self.request.user.is_authenticated and self.request.user.user_type == 'job_seeker'
 
     def handle_no_permission(self):
         messages.error(self.request, "Doar candidații autentificați pot salva joburi.")
-        return redirect('accounts:login')
+        return redirect('conturi:autentificare')
 
     def post(self, request, *args, **kwargs):
         job_id = self.kwargs.get('pk')
@@ -180,18 +180,18 @@ class SaveJobView(LoginRequiredMixin, UserPassesTestMixin, View):
             messages.info(request, f"Jobul '{job.title}' este deja salvat.")
 
         # Use slug for reversing job_detail URL
-        return redirect(request.META.get('HTTP_REFERER', reverse('jobs:job_detail', kwargs={'slug': job.slug})))
+        return redirect(request.META.get('HTTP_REFERER', reverse('joburi:detalii_job', kwargs={'slug': job.slug})))
 
 
 class UnsaveJobView(LoginRequiredMixin, UserPassesTestMixin, View):
-    login_url = reverse_lazy('accounts:login')
+    login_url = reverse_lazy('conturi:autentificare')
 
     def test_func(self):
         return self.request.user.is_authenticated and self.request.user.user_type == 'job_seeker'
 
     def handle_no_permission(self):
         messages.error(self.request, "Doar candidații autentificați pot anula salvarea joburilor.")
-        return redirect('accounts:login')
+        return redirect('conturi:autentificare')
 
     def post(self, request, *args, **kwargs):
         job_id = self.kwargs.get('pk')
@@ -205,7 +205,7 @@ class UnsaveJobView(LoginRequiredMixin, UserPassesTestMixin, View):
             messages.info(request, f"Jobul '{job.title}' nu era salvat.")
 
         # Use slug for reversing job_detail URL
-        return redirect(request.META.get('HTTP_REFERER', reverse('jobs:job_detail', kwargs={'slug': job.slug})))
+        return redirect(request.META.get('HTTP_REFERER', reverse('joburi:detalii_job', kwargs={'slug': job.slug})))
 
 # --- View Applications for a Job ---
 
@@ -221,7 +221,7 @@ class JobApplicationsListView(LoginRequiredMixin, UserPassesTestMixin, ListView)
 
     def handle_no_permission(self):
         messages.error(self.request, "Nu aveți permisiunea să vizualizați aplicațiile pentru acest job.")
-        return redirect('accounts:company_dashboard')
+        return redirect('conturi:panou_companie')
 
     def get_queryset(self):
         job = get_object_or_404(Job, pk=self.kwargs['job_pk'])
@@ -259,7 +259,7 @@ class ReportJobView(LoginRequiredMixin, FormView):
             )
             messages.success(self.request, "Vă mulțumim! Raportarea a fost trimisă și va fi analizată.")
             # Redirect back to job detail page using slug
-            return redirect('jobs:job_detail', slug=job.slug)
+            return redirect('joburi:detalii_job', slug=job.slug)
         except Exception as e:
             messages.error(self.request, f"A apărut o eroare la trimiterea raportării: {e}")
             # Render the form again with an error
