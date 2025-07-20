@@ -1,23 +1,188 @@
-{% autoescape off %}
-Bună ziua, {{ user.username }},
-
-Vă mulțumim pentru înregistrarea pe platforma JoburiExpress!
-
-Pentru a vă activa contul, vă rugăm să accesați linkul de mai jos:
-
-<a href="{{ protocol }}://{{ domain }}{% url 'accounts:activate' uidb64=uid token=token %}" style="color: #10b981; text-decoration: none;">Activează contul</a>
-
-Dacă linkul de mai sus nu funcționează, vă rugăm să copiați și să inserați următoarea adresă URL în browserul dumneavoastră:
-{{ protocol }}://{{ domain }}{% url 'accounts:activate' uidb64=uid token=token %}
-
-{% if user.user_type == 'job_seeker' %}
-Sunteți la un pas de a explora noi oportunități de carieră. După activare, veți putea să vă completați profilul, să căutați joburi și să aplicați la cele care vi se potrivesc.
-{% elif user.user_type == 'company' %}
-Sunteți la un pas de a găsi candidatul ideal. După activare, veți putea posta anunțuri de angajare și gestiona aplicațiile primite.
-{% endif %}
-
-Vă dorim mult succes!
-
-Cu stimă,
-Echipa JoburiExpress
-{% endautoescape %}
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activează contul JoburiExpress</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8fafc;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        .content {
+            padding: 40px;
+        }
+        .greeting {
+            font-size: 18px;
+            color: #1f2937;
+            margin-bottom: 20px;
+        }
+        .message {
+            font-size: 16px;
+            color: #4b5563;
+            margin-bottom: 30px;
+            line-height: 1.7;
+        }
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white !important;
+            padding: 16px 32px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            text-align: center;
+            margin: 20px 0;
+            transition: transform 0.2s ease;
+        }
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(16, 185, 129, 0.3);
+        }
+        .backup-link {
+            background-color: #f3f4f6;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .backup-link p {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            color: #6b7280;
+        }
+        .backup-link a {
+            color: #10b981;
+            word-break: break-all;
+            text-decoration: none;
+        }
+        .user-type-message {
+            background-color: #f0f9ff;
+            border-left: 4px solid #10b981;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .footer {
+            background-color: #f9fafb;
+            padding: 30px 40px;
+            text-align: center;
+            border-top: 1px solid #e5e7eb;
+        }
+        .footer p {
+            margin: 0;
+            color: #6b7280;
+            font-size: 14px;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        @media (max-width: 600px) {
+            .container {
+                margin: 0;
+                border-radius: 0;
+            }
+            .header, .content, .footer {
+                padding: 20px;
+            }
+            .cta-button {
+                display: block;
+                width: 100%;
+                box-sizing: border-box;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">JoburiExpress</div>
+            <h1>Bun venit pe platforma noastră!</h1>
+        </div>
+        
+        <div class="content">
+            <div class="greeting">
+                Bună ziua, <strong>{{ user.username }}</strong>!
+            </div>
+            
+            <div class="message">
+                Vă mulțumim pentru înregistrarea pe platforma JoburiExpress! Suntem încântați să vă avem în comunitatea noastră.
+            </div>
+            
+            <div style="text-align: center;">
+                <a href="{{ protocol }}://{{ domain }}{% url 'accounts:activate' uidb64=uid token=token %}" class="cta-button">
+                    🚀 Activează Contul Acum
+                </a>
+            </div>
+            
+            <div class="backup-link">
+                <p><strong>Linkul nu funcționează?</strong></p>
+                <p>Copiați și inserați următoarea adresă URL în browserul dumneavoastră:</p>
+                <a href="{{ protocol }}://{{ domain }}{% url 'accounts:activate' uidb64=uid token=token %}">{{ protocol }}://{{ domain }}{% url 'accounts:activate' uidb64=uid token=token %}</a>
+            </div>
+            
+            {% if user.user_type == 'job_seeker' %}
+            <div class="user-type-message">
+                <h3 style="margin-top: 0; color: #10b981;">🎯 Pentru Candidați</h3>
+                <p>Sunteți la un pas de a explora noi oportunități de carieră! După activare, veți putea:</p>
+                <ul style="margin: 10px 0;">
+                    <li>Să vă completați profilul profesional</li>
+                    <li>Să căutați joburi potrivite pentru dumneavoastră</li>
+                    <li>Să aplicați la pozițiile care vă interesează</li>
+                    <li>Să salvați joburile favorite</li>
+                </ul>
+            </div>
+            {% elif user.user_type == 'company' %}
+            <div class="user-type-message">
+                <h3 style="margin-top: 0; color: #10b981;">🏢 Pentru Angajatori</h3>
+                <p>Sunteți la un pas de a găsi candidatul ideal! După activare, veți putea:</p>
+                <ul style="margin: 10px 0;">
+                    <li>Să postați anunțuri de angajare</li>
+                    <li>Să gestionați aplicațiile primite</li>
+                    <li>Să căutați candidați potriviți</li>
+                    <li>Să vă promovați compania</li>
+                </ul>
+            </div>
+            {% endif %}
+            
+            <div class="message">
+                <strong>Vă dorim mult succes în căutarea oportunităților!</strong>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><strong>Cu stimă,</strong></p>
+            <p>Echipa JoburiExpress</p>
+            <p style="margin-top: 15px; font-size: 12px;">
+                Acest email a fost trimis automat. Vă rugăm să nu răspundeți la acest mesaj.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

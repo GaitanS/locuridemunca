@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-5dx*3xtjz2tyde0m19u+4(l2gwvd6#meryuc$7_89!d&i)4k8g
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['joburiexpress.ro', '127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',  # Added for Sites framework
 
     # 3rd Party Apps
     'django_countries', # Added for CountryField
@@ -139,8 +140,15 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media') # For user-uploaded files
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Sites framework
+SITE_ID = 1
+
 # Custom User Model
 AUTH_USER_MODEL = 'accounts.User'
+
+# Domain configuration for production emails
+PRODUCTION_DOMAIN = 'joburiexpress.ro'  # Schimbă cu domeniul tău real
+USE_PRODUCTION_DOMAIN = not DEBUG  # Folosește domeniul de producție doar când DEBUG=False
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' 
 EMAIL_HOST = 'smtp.gmail.com' 

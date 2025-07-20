@@ -8,7 +8,7 @@ from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from .tokens import account_activation_token
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMultiAlternatives
 from jobs.models import Job, Application # Import Job and Application models
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -38,17 +38,26 @@ class JobSeekerSignUpView(CreateView):
         user.save()
 
         # Send activation email
-        current_site = get_current_site(self.request)
+        from django.conf import settings
+        if settings.USE_PRODUCTION_DOMAIN:
+            domain = settings.PRODUCTION_DOMAIN
+            protocol = 'https'
+        else:
+            current_site = get_current_site(self.request)
+            domain = current_site.domain
+            protocol = 'https' if self.request.is_secure() else 'http'
+            
         mail_subject = 'Activate your JoburiExpress account.'
         message = render_to_string('registration/account_activation_email.html', {
             'user': user,
-            'domain': current_site.domain,
+            'domain': domain,
             'uid': urlsafe_base64_encode(force_bytes(user.pk)),
             'token': account_activation_token.make_token(user),
-            'protocol': 'https' if self.request.is_secure() else 'http',
+            'protocol': protocol,
         })
         to_email = form.cleaned_data.get('email')
-        email = EmailMessage(mail_subject, message, to=[to_email])
+        email = EmailMultiAlternatives(mail_subject, '', to=[to_email])
+        email.attach_alternative(message, "text/html")
         email.send()
 
         messages.success(self.request, 'Vă rugăm să verificați emailul pentru a finaliza înregistrarea.')
@@ -80,17 +89,26 @@ class CompanySignUpView(CreateView):
         company_profile.save()
 
         # Send activation email
-        current_site = get_current_site(self.request)
+        from django.conf import settings
+        if settings.USE_PRODUCTION_DOMAIN:
+            domain = settings.PRODUCTION_DOMAIN
+            protocol = 'https'
+        else:
+            current_site = get_current_site(self.request)
+            domain = current_site.domain
+            protocol = 'https' if self.request.is_secure() else 'http'
+            
         mail_subject = 'Activate your JoburiPentruRomani account.'
         message = render_to_string('registration/account_activation_email.html', {
             'user': user,
-            'domain': current_site.domain,
+            'domain': domain,
             'uid': urlsafe_base64_encode(force_bytes(user.pk)),
             'token': account_activation_token.make_token(user),
-            'protocol': 'https' if self.request.is_secure() else 'http',
+            'protocol': protocol,
         })
         to_email = form.cleaned_data.get('email')
-        email = EmailMessage(mail_subject, message, to=[to_email])
+        email = EmailMultiAlternatives(mail_subject, '', to=[to_email])
+        email.attach_alternative(message, "text/html")
         email.send()
 
         messages.success(self.request, 'Vă rugăm să verificați emailul pentru a finaliza înregistrarea.')
