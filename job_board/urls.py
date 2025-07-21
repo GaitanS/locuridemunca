@@ -15,7 +15,8 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include # Import include
+from django.urls import path, include
+from django.views.generic.base import RedirectView
 from django.conf import settings # Import settings
 from django.conf.urls.static import static # Import static
 
@@ -24,7 +25,8 @@ urlpatterns = [
     path('conturi/', include('accounts.urls')), # Include accounts app URLs
     path('locuri-de-munca/', include('jobs.urls')),         # Include jobs app URLs
     path('plati/', include('payments.urls')), # Include payments app URLs
-    path('', include('core.urls')),              # Include core app URLs (homepage, etc.)
+        path('', include('core.urls')),              # Include core app URLs (homepage, etc.)
+    path('ads.txt', RedirectView.as_view(url='/static/ads.txt')),
 ]
 
 # Serve static and media files during development
